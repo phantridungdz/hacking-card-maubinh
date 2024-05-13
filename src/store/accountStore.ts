@@ -27,6 +27,19 @@ const useAccountStore = create<any>(
             };
           }
         }),
+      getSelectedAccounts: () => {
+        const store = useAccountStore.getState();
+        let selectedAccounts: any[] = [];
+        Object.keys(store.accounts).forEach((type) => {
+          selectedAccounts = [
+            ...selectedAccounts,
+            ...store.accounts[type].filter(
+              (acc: { isSelected: any }) => acc.isSelected
+            ),
+          ];
+        });
+        return selectedAccounts;
+      },
       clearAccounts: () =>
         set(() => ({
           accounts: { MAIN: [], SUB: [], BOT: [] },

@@ -97,6 +97,19 @@ export const getCardsArray = (ps: any) => {
   return ps.map((item: any) => ({ cs: item.cs, dn: item.dn }));
 };
 
+export const isMatchCards = (cardPlayer1: any[], cardPlayer2: any[]) => {
+  if (cardPlayer1.length < 2 || cardPlayer2.length < 2) {
+    return false;
+  }
+
+  const isFound1 =
+    cardPlayer1[0] === cardPlayer2[0] || cardPlayer1[0] === cardPlayer2[1];
+  const isFound2 =
+    cardPlayer1[1] === cardPlayer2[0] || cardPlayer1[1] === cardPlayer2[1];
+
+  return isFound1 && isFound2;
+};
+
 export const isFoundCards = (
   cardPlayer1: GameCard[],
   cardPlayer2: GameCard[]

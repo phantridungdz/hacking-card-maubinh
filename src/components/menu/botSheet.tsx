@@ -10,7 +10,7 @@ const BotSetting: React.FC<any> = ({ children, setIsOpen, isOpen }) => {
         !isOpen && 'hidden'
       }`}
     >
-      <div className="h-full bg-background p-4 w-1/3">
+      <div className="h-full bg-background p-4 w-[700px]">
         <div className="flex justify-between items-center top-4 w-full">
           <h1 className="text-xl font-semibold">Bot status</h1>
           <Button

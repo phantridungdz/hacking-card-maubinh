@@ -99,8 +99,8 @@ const extensions = [
     version: '3.1.6_0',
   },
   // {
-  //   id: 'npbfdllefekhdplbkdigpncggmojpefi',
-  //   version: '1.3.1_0',
+  //   id: 'ckdnkkilcbkocfdpcaohdehnbeaefndo', // zusty DevTools ID
+  //   version: '6.0_0',
   // },
 ];
 
@@ -108,7 +108,8 @@ app
   .whenReady()
   .then(async () => {
     await loadExtensions(extensions);
-    createWindow();
+    await createWindow();
+
     app.on('activate', () => {
       if (mainWindow === null) createWindow();
     });

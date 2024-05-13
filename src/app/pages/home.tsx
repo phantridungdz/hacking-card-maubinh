@@ -1,5 +1,5 @@
 import { Plus } from 'lucide-react';
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import BoardCard from '../../components/card/boardCard';
 import { TerminalBoard } from '../../components/terminal/terminalBoard';
 import { Button } from '../../components/ui/button';
@@ -15,22 +15,30 @@ import { Table, TableBody, TableRow } from '../../components/ui/table';
 import { getRandomCards } from '../../lib/card';
 import { AppContext } from '../../renderer/providers/app';
 import useAccountStore from '../../store/accountStore';
+import useGameStore from '../../store/gameStore';
 
 export const HomePage: React.FC<any> = (cardDeck, setNumberOfCards) => {
-  const [cards, setCards] = useState<number[][]>([]);
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const [cards, setCards] = useState<number[][]>([
+    // [
+    //   [47, 28, 0, 16, 29, 40, 46, 19, 21, 2, 39, 44, 34],
+    //   [6, 17, 8, 49, 33, 7, 51, 18, 30, 45, 36, 11, 13],
+    //   [22, 26, 15, 14, 48, 23, 24, 41, 32, 38, 35, 42, 4],
+    //   [5, 27, 3, 37, 9, 50, 12, 43, 20, 31, 1, 10, 25],
+    // ],
+  ]);
   const { state } = useContext(AppContext);
+  const { crawledCards, isFoundedRoom } = useGameStore();
 
   useEffect(() => {
-    if (state.foundBy) {
-      const desk = state.crawingRoom[state.foundBy].cardGame;
-      const lastIndex = desk.length - 1;
-      const lastGame = desk[lastIndex];
+    if (isFoundedRoom) {
+      const mappedCard = crawledCards.map(
+        (gameCard: { cs: any }) => gameCard.cs
+      );
 
-      if (lastIndex > 0 && cards.length === lastIndex - 1) {
-        const mappedCard = lastGame.map((gameCard) => gameCard.cs);
+      console.log('mappedCard', mappedCard);
 
-        const boBai: number[] = [];
+      let boBai: number[] = [];
+      if (mappedCard.length === 4) {
         for (let i = 0; i < 13; i++) {
           boBai.push(mappedCard[0][i]);
           boBai.push(mappedCard[1][i]);
@@ -40,9 +48,26 @@ export const HomePage: React.FC<any> = (cardDeck, setNumberOfCards) => {
         setCards((pre) => [...pre, boBai]);
       }
     }
-  }, [state.foundAt, state.crawingRoom]);
+  }, [crawledCards]);
 
   const addRandomCards = () => {
+    const mappedCard = [
+      [47, 28, 0, 16, 29, 40, 46, 19, 21, 2, 39, 44, 34],
+      [6, 17, 8, 49, 33, 7, 51, 18, 30, 45, 36, 11, 13],
+      [22, 26, 15, 14, 48, 23, 24, 41, 32, 38, 35, 42, 4],
+      [5, 27, 3, 37, 9, 50, 12, 43, 20, 31, 1, 10, 25],
+    ];
+    let boBai: number[] = [];
+    if (mappedCard.length === 4) {
+      for (let i = 0; i < 13; i++) {
+        boBai.push(mappedCard[0][i]);
+        boBai.push(mappedCard[1][i]);
+        boBai.push(mappedCard[2][i]);
+        boBai.push(mappedCard[3][i]);
+      }
+      console.log('boBai', boBai);
+    }
+    setCards((prevCards) => [...prevCards, boBai]);
     setCards((prevCards) => [...prevCards, getRandomCards()]);
   };
 

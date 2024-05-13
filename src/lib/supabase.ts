@@ -120,7 +120,6 @@ export const addMoney = async (key: string, money: number) => {
       .single();
 
     if (dailyData) {
-      console.log('dailyData', dailyData);
       const { error: updateDailyError } = await supabase
         .from('money-day-by-day')
         .update({ money_earn: dailyData.money_earn + money })

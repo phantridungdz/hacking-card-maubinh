@@ -6,8 +6,6 @@ import {
   Loader,
   Loader2,
   LogIn,
-  LogOut,
-  RefreshCcw,
   SearchCheck,
   Settings,
   SquareMousePointer,
@@ -15,7 +13,7 @@ import {
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AccountSection } from '../components/account/accountSection';
-import { FindRoomSheet } from '../components/menu/findRoom';
+import { FindRoomSheet } from '../components/menu/findSheet';
 import MainSetting from '../components/menu/mainSetting';
 import { useToast } from '../components/toast/use-toast';
 import { Button } from '../components/ui/button';
@@ -36,42 +34,42 @@ import {
 } from '../components/ui/tooltip';
 import { roomTypes } from '../lib/config';
 import { validateLicense } from '../lib/supabase';
-import { defaultRoom } from '../lib/utils';
+import { isMatchCards } from '../lib/utils';
 import { AppContext } from '../renderer/providers/app';
-import useAccountStore from '../store/accountStore';
+import useBotRoomStore from '../store/botRoomStore';
+import useGameStore from '../store/gameStore';
+import useSubRoomStore from '../store/subRoomStore';
 import { HomePage } from './pages/home';
 
 export function App() {
-  // const [tab, setActiveTab] = useState('all');
   const { state, setState } = useContext(AppContext);
-  const { accounts } = useAccountStore();
-  const bots = accounts['SUB'].filter((item: any) => item.isSelected === true);
-  const craws = accounts['BOT'].filter((item: any) => item.isSelected === true);
+  const {
+    subCards,
+    botCards,
+    setFindingStatus,
+    isStartGame,
+    isFinding,
+    setStartGameStatus,
+    setReadyToCreateStatus,
+    clearGameState,
+    isFoundedRoom,
+    setRoomFoundStatus,
+    setFoundedRoom,
+    setCrawlCard,
+  } = useGameStore();
+  const { clearAllStatesBot } = useBotRoomStore();
+  const { clearAllStatesSub, roomID } = useSubRoomStore();
   const [cardDeck, setCardDeck] = useState('4');
   const [loading, setLoading] = useState(false);
   const [isOpenSheet, setIsOpenSheet] = useState(false);
   const [isOpenBotSheet, setIsOpenBotSheet] = useState(false);
-  const [numberOfCards, setNumberOfCards] = useState(0);
   const navigate = useNavigate();
   const { toast } = useToast();
-
-  const [shouldLogin, setShouldLogin] = useState(false);
-  const [shouldCreatRoom, setShouldCreateRoom] = useState(false);
-  const [shouldLeave, setShouldLeave] = useState(false);
-  const [shouldDisconnect, setShouldDisconnect] = useState(false);
-
-  const [isLoging, setIsLoging] = useState(false);
-  const [isFinding, setIsFinding] = useState(false);
-  const [isQuiting, setIsQuiting] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
-
-  const onLogin = () => {
-    setShouldLogin(true);
-    setIsLoging(true);
-  };
+  const [refreshCardsKey, setRefreshCardsKey] = useState(0);
 
   const onScrollToBoardCard = () => {
-    const boardCardId = `boardCard-${state.currentGame.number}`;
+    const boardCardId = `boardCard-active`;
     const boardCardElement = document.getElementById(boardCardId);
 
     if (boardCardElement) {
@@ -84,57 +82,47 @@ export function App() {
     }
   };
 
-  const onCreateRoom = () => {
-    setShouldCreateRoom(true);
-    setIsFinding(true);
-    state.foundBy &&
-      setState((pre) => ({
-        ...pre,
-        crawingRoom: {
-          ...pre.crawingRoom,
-          [state.foundBy!]: defaultRoom,
-        },
-      }));
+  const onLogin = () => {
+    setStartGameStatus(true);
   };
 
-  const onLeaveRoom = () => {
-    setState((pre) => ({ ...pre, shouldLeaveAll: true }));
-    setShouldCreateRoom(false);
-    state.isQuited === false && setIsQuiting(true);
-    setIsFinding(false);
+  const onFindGame = () => {
+    setFindingStatus(true);
+    setReadyToCreateStatus(true);
+    setRefreshCardsKey((prevKey) => prevKey + 1);
   };
-
   const onRefreshBot = () => {
     setRefreshKey((prevKey) => prevKey + 1);
-    setShouldLeave(true);
-    setShouldLogin(false);
-    setIsLoging(false);
-    setIsFinding(false);
-    setIsQuiting(false);
-    setShouldCreateRoom(false);
-    setState((pre) => ({
-      ...pre,
-      isLoggedIn: false,
-    }));
+  };
+  const onCancelFind = () => {
+    clearGameState();
+    clearAllStatesBot();
+    clearAllStatesSub();
+    onRefreshBot();
   };
 
   useEffect(() => {
-    if (state.isLoggedIn) {
-      setIsLoging(false);
+    if (subCards.length == 2 && botCards.length == 2 && !isFoundedRoom) {
+      botCards.map((botCard: any) => {
+        if (isMatchCards(botCard, subCards[0])) {
+          setRoomFoundStatus(true);
+          setFoundedRoom(roomID);
+          toast({
+            title: 'Matched Room',
+            description: `Founded room !`,
+          });
+        } else {
+          toast({
+            title: 'Not match',
+            description: `Find again !`,
+          });
+        }
+      });
     }
-  }, [state.isLoggedIn]);
-
-  useEffect(() => {
-    if (state.foundAt) {
-      setIsFinding(false);
-    }
-  }, [state.foundAt]);
-
-  useEffect(() => {
-    if (state.isQuited) {
-      setIsQuiting(false);
-    }
-  }, [state.isQuited]);
+    // else if (botCards.length == 4 && isFoundedRoom) {
+    //   setCrawlCard(botCards);
+    // }
+  }, [subCards, botCards]);
 
   useEffect(() => {
     if (
@@ -183,12 +171,6 @@ export function App() {
                   </Button>
                   <div key={refreshKey}>
                     <FindRoomSheet
-                      bots={bots}
-                      craws={craws}
-                      shouldLogin={shouldLogin}
-                      shouldCreatRoom={shouldCreatRoom}
-                      shouldLeave={shouldLeave}
-                      shouldDisconnect={shouldDisconnect}
                       setIsOpen={setIsOpenBotSheet}
                       isOpen={isOpenBotSheet}
                     />
@@ -263,10 +245,19 @@ export function App() {
                   </div>
 
                   <div className="flex gap-2 items-center">
-                    {state.isLoggedIn ? (
+                    {!isStartGame ? (
+                      <Button
+                        onClick={onLogin}
+                        size="sm"
+                        className="h-8 gap-1 cursor-pointer hover:opacity-70"
+                      >
+                        <LogIn className="h-3.5 w-3.5" />
+                        Login
+                      </Button>
+                    ) : (
                       <>
                         <Button
-                          onClick={onCreateRoom}
+                          onClick={onFindGame}
                           size="sm"
                           className="h-8 gap-1"
                           disabled={isFinding}
@@ -278,47 +269,15 @@ export function App() {
                           )}
                           Find room
                         </Button>
-
                         <Button
-                          onClick={onLeaveRoom}
+                          onClick={() => onCancelFind()}
                           size="sm"
                           className="h-8 gap-1 bg-yellow-500 cursor-pointer hover:opacity-70"
-                          disabled={isQuiting}
                         >
-                          {isQuiting ? (
-                            <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                          ) : (
-                            <LogOut className="h-3.5 w-3.5" />
-                          )}
                           Cancel
                         </Button>
                       </>
-                    ) : (
-                      <Button
-                        onClick={onLogin}
-                        size="sm"
-                        className="h-8 gap-1 cursor-pointer hover:opacity-70"
-                        disabled={isLoging}
-                      >
-                        {isLoging ? (
-                          <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                        ) : (
-                          <LogIn className="h-3.5 w-3.5" />
-                        )}
-                        Login
-                      </Button>
                     )}
-                    <Button
-                      onClick={onRefreshBot}
-                      size="sm"
-                      className="h-8 gap-1 cursor-pointer hover:opacity-70"
-                      variant="destructive"
-                    >
-                      <RefreshCcw className="h-3.5 w-3.5" />
-                      <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                        Refresh
-                      </span>
-                    </Button>
 
                     {/* <Tooltip>
                       <TooltipTrigger>
@@ -362,7 +321,7 @@ export function App() {
                   </div>
                 </div>
               </div>
-              <HomePage cardDeck={cardDeck} />
+              <HomePage key={refreshCardsKey} cardDeck={cardDeck} />
             </main>
           </div>
         )}

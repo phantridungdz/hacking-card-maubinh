@@ -5,6 +5,7 @@ import { DndProvider, DragSourceMonitor, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { arrangCard } from '../../lib/arrangeCard';
 import { getCardImageUrl } from '../../lib/card';
+import useGameStore from '../../store/gameStore';
 import CardGame from '../card/card';
 import { Button } from '../ui/button';
 import { Card } from '../ui/card';
@@ -17,8 +18,7 @@ interface DraggableCardProps {
 interface HandCardProps {
   cardProp: number[];
   key: number;
-  isShowPlayer: boolean;
-  player: string;
+  setActiveBoard: any;
 }
 
 const DraggableCard: React.FC<DraggableCardProps> = ({
@@ -61,8 +61,7 @@ const DropCard: React.FC<DropCardProps> = ({ id, children, moveCard }) => {
 
 export const HandCard: React.FC<HandCardProps> = ({
   cardProp,
-  isShowPlayer,
-  player,
+  setActiveBoard,
 }) => {
   const [cards, setCards] = useState<number[]>(cardProp ?? []);
   const [part1, setPart1] = useState<number[]>(cards.slice(0, 5));
@@ -74,6 +73,7 @@ export const HandCard: React.FC<HandCardProps> = ({
   const [isInstant, setIsInstant] = useState<boolean>(false);
   const [titleInstant, setTitleInstant] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const { mainCard } = useGameStore();
 
   const moveCard = useCallback(
     (dragId: number, hoverId: number) => {
@@ -139,25 +139,25 @@ export const HandCard: React.FC<HandCardProps> = ({
     handleArrange();
   }, [cardProp]);
 
-  // useEffect(() => {
-  //   const handleData = (newData: any, position: any) => {
-  //     if (position === idHand) {
-  //       setCards(newData.cards);
-  //       setEvaluation1(newData.chi1);
-  //       setEvaluation2(newData.chi2);
-  //       setEvaluation3(newData.chi3);
-  //       setIsInstant(newData.instant ? true : false);
-  //       setTitleInstant(newData.instant);
-  //       setLoading(false);
-  //     }
-  //   };
+  function arraysAreEqual(array1: string | any[], array2: string | any[]) {
+    if (array1.length !== array2.length) {
+      return false;
+    }
 
-  //   window.backend.on('arrange-card', handleData);
+    for (let i = 0; i < array1.length; i++) {
+      if (array1[i] !== array2[i]) {
+        return false;
+      }
+    }
 
-  //   return () => {
-  //     window.backend.removeListener('arrange-card', handleData);
-  //   };
-  // }, []);
+    return true;
+  }
+
+  useEffect(() => {
+    if (arraysAreEqual(mainCard, cardProp)) {
+      setActiveBoard(true);
+    }
+  }, [mainCard, cardProp]);
 
   return (
     <DndProvider backend={HTML5Backend}>
@@ -166,7 +166,7 @@ export const HandCard: React.FC<HandCardProps> = ({
       >
         {titleInstant && (
           <div className="absolute top-[-20px] left-0 right-0 flex justify-center items-center ">
-            <Label className="shadow-[0_0px_10px_rgba(255,_31,_31,_0.8)] py-[5px] px-[10px] border bg-background rounded-sm z-[49] flex flex-row gap-[3px] items-center font-bold">
+            <Label className="shadow-[0_0px_10px_rgba(255,_31,_31,_0.8)] py-[5px] px-[10px] border bg-background rounded-sm z-[20] flex flex-row gap-[3px] items-center font-bold">
               <Star className="w-3.5 h-3.5"></Star>
               {titleInstant}
             </Label>

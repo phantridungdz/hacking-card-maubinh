@@ -16,6 +16,8 @@ import { ScrollArea } from '../../components/ui/scroll-area';
 import { addMoney } from '../../lib/supabase';
 import { highlightSyntax } from '../../lib/terminal';
 import { AppContext } from '../../renderer/providers/app';
+import useBotRoomStore from '../../store/botRoomStore';
+import useGameStore from '../../store/gameStore';
 import { useToast } from '../toast/use-toast';
 import { Toggle } from '../ui/toggle';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
@@ -34,19 +36,9 @@ export const TerminalBoard: React.FC<any> = ({ main }) => {
   const [isInLobby, setIsInLobby] = useState(false);
   const [currentSit, setCurrentSit] = useState('');
   const [autoInvite, setAutoInvite] = useState(false);
-
-  useEffect(() => {
-    setState((pre) => ({
-      ...pre,
-      currentGame: {
-        ...pre.currentGame,
-        sheet: {
-          ...pre.currentGame.sheet,
-          [currentSit]: main.username,
-        },
-      },
-    }));
-  }, [currentSit]);
+  const { roomID } = useBotRoomStore();
+  const { mainRoomID, isStartGame, setMainJoinStatus, setMainCard } =
+    useGameStore();
 
   const parseData = (dataString: string) => {
     try {
@@ -75,7 +67,7 @@ export const TerminalBoard: React.FC<any> = ({ main }) => {
     window.backend.sendMessage(
       'execute-script',
       account,
-      `__require('GamePlayManager').default.getInstance().joinRoom(${state.targetAt},0,'',true);`
+      `__require('GamePlayManager').default.getInstance().joinRoom(${roomID},0,'',true);`
     );
   }
 
@@ -90,13 +82,13 @@ export const TerminalBoard: React.FC<any> = ({ main }) => {
     }
   };
   async function outInRoom(account: any): Promise<void> {
-    if (state.targetAt) {
+    if (mainRoomID) {
       await outRoom(account);
       await new Promise((resolve) => setTimeout(resolve, 500));
       window.backend.sendMessage(
         'execute-script',
         account,
-        `__require('GamePlayManager').default.getInstance().joinRoom(${state.targetAt},0,'',true);`
+        `__require('GamePlayManager').default.getInstance().joinRoom(${mainRoomID},0,'',true);`
       );
     }
   }
@@ -216,6 +208,7 @@ export const TerminalBoard: React.FC<any> = ({ main }) => {
               title: 'Đã phát bài',
               description: currentCards,
             });
+            setMainCard(parsedData[1].cs);
 
             setData((currentData) => [
               ...currentData,
@@ -303,6 +296,22 @@ export const TerminalBoard: React.FC<any> = ({ main }) => {
       window.backend.removeListener('check-position', handleCheckPosition);
     };
   }, []);
+
+  useEffect(() => {
+    if (mainRoomID) {
+      window.backend.sendMessage(
+        'execute-script',
+        main,
+        `__require('GamePlayManager').default.getInstance().joinRoom(${mainRoomID},0,'',true);`
+      );
+    }
+  }, [mainRoomID]);
+  useEffect(() => {
+    if (isStartGame) {
+      openAccounts(main);
+      setMainJoinStatus(true);
+    }
+  }, [isStartGame]);
 
   useEffect(() => {
     window.backend.sendMessage(
