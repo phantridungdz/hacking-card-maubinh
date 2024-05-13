@@ -178,7 +178,6 @@ export const AccountTable: React.FC<any> = ({ accountType }) => {
     var mainBalance = rowData.main_balance;
 
     const data = (await accountLogin(rowData)) as any;
-    console.log('acc data', data);
     const cash = Array.isArray(data?.data) ? data?.data[0].main_balance : 0;
     mainBalance = cash;
 

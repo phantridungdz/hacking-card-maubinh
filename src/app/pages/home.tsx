@@ -35,8 +35,6 @@ export const HomePage: React.FC<any> = (cardDeck, setNumberOfCards) => {
         (gameCard: { cs: any }) => gameCard.cs
       );
 
-      console.log('mappedCard', mappedCard);
-
       let boBai: number[] = [];
       if (mappedCard.length === 4) {
         for (let i = 0; i < 13; i++) {
@@ -65,7 +63,6 @@ export const HomePage: React.FC<any> = (cardDeck, setNumberOfCards) => {
         boBai.push(mappedCard[2][i]);
         boBai.push(mappedCard[3][i]);
       }
-      console.log('boBai', boBai);
     }
     setCards((prevCards) => [...prevCards, boBai]);
     setCards((prevCards) => [...prevCards, getRandomCards()]);
@@ -89,9 +86,7 @@ export const HomePage: React.FC<any> = (cardDeck, setNumberOfCards) => {
                 {cards.map((card, index) => (
                   <TableRow
                     key={index}
-                    className={`relative !rounded-[20px] bg-opacity-60 ${
-                      index == state.currentGame.number && 'bg-[#a2a0a0]'
-                    }`}
+                    className={`relative !rounded-[20px] bg-opacity-60 `}
                   >
                     <BoardCard
                       cards={card}

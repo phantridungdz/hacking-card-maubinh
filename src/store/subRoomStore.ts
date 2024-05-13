@@ -11,6 +11,7 @@ const useSubRoomStore = create<any>(
       subRoomStatus: 'Not-ready',
       subsValid: [],
       isReadyToJoin: false,
+      isSubStart: false,
       addSub: (sub: any, role: string) =>
         set((state: { subs: any[] }) => ({
           subs: [...state.subs, { ...sub, role, status: 'idle' }],
@@ -53,6 +54,10 @@ const useSubRoomStore = create<any>(
       setReadyToJoinStatus: (status: boolean) =>
         set(() => ({
           isReadyToJoin: status,
+        })),
+      setSubStart: (status: boolean) =>
+        set(() => ({
+          isSubStart: status,
         })),
       joinLobby: (subUsername: string) =>
         set(

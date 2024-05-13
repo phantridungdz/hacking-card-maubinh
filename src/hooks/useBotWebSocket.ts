@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
+import { binhLungCard } from '../lib/arrangeCard';
 import { login } from '../lib/login';
 import useBotRoomStore from '../store/botRoomStore';
 import useGameStore from '../store/gameStore';
@@ -162,12 +163,22 @@ export default function useBotWebSocket(bot: any, roomID: number) {
           if (message[1].cs && message[1].T === 60000) {
             updateBotStatus(bot.username, `${message[1].cs}`);
             addCard('botCards', message[1].cs);
-            sendMessage(
-              `[5,"Simms",${roomID},{"cmd":606,"cs":[${message[1].cs}]}]`
-            );
-            sendMessage(
-              `[5,"Simms",${roomID},{"cmd":603,"cs":[${message[1].cs}]}]`
-            );
+            if (!isFoundedRoom) {
+              const baiLung = binhLungCard(message[1].cs) as any;
+              sendMessage(
+                `[5,"Simms",${roomID},{"cmd":606,"cs":[${baiLung.cards}]}]`
+              );
+              sendMessage(
+                `[5,"Simms",${roomID},{"cmd":603,"cs":[${baiLung.cards}]}]`
+              );
+            } else {
+              sendMessage(
+                `[5,"Simms",${roomID},{"cmd":606,"cs":[${message[1].cs}]}]`
+              );
+              sendMessage(
+                `[5,"Simms",${roomID},{"cmd":603,"cs":[${message[1].cs}]}]`
+              );
+            }
             // updateBotStatus(bot.username, `${message[1].cs}`);
           }
           //ping-pong

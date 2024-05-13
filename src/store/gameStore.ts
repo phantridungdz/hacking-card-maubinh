@@ -15,6 +15,8 @@ const useGameStore = create<any>(
       roomsReady: 0,
       mainRoomID: null,
       isMainJoin: false,
+      roomType: 100,
+      activeGame: 0,
       mainCard: [],
       addCard: (type: 'subCards' | 'botCards', card: any) =>
         set((state: { [x: string]: any[] }) => ({
@@ -47,6 +49,14 @@ const useGameStore = create<any>(
         set(() => ({
           mainCard: card,
         })),
+      setActiveGame: (index: number) =>
+        set(() => ({
+          activeGame: index,
+        })),
+      setRoomType: (type: boolean) =>
+        set(() => ({
+          roomType: type,
+        })),
       setRoomFoundStatus: (status: boolean) =>
         set(() => ({
           isFoundedRoom: status,
@@ -67,9 +77,9 @@ const useGameStore = create<any>(
         set(() => ({
           isFinding: status,
         })),
-      setFoundedRoom: (status: boolean) =>
+      setFoundedRoom: (roomID: boolean) =>
         set(() => ({
-          mainRoomID: status,
+          mainRoomID: roomID,
         })),
       setMainJoinStatus: (status: boolean) =>
         set(() => ({
@@ -94,7 +104,6 @@ const useGameStore = create<any>(
           isReadyToCreate: false,
           isFinding: false,
           roomsReady: 0,
-          mainRoomID: null,
           isMainJoin: false,
         })),
     }),

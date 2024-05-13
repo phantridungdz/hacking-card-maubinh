@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
+import { binhLungCard } from '../lib/arrangeCard';
 import { login } from '../lib/login';
+import useBotRoomStore from '../store/botRoomStore';
 import useGameStore from '../store/gameStore';
 import useSubRoomStore from '../store/subRoomStore';
 
@@ -28,8 +30,7 @@ export default function useHostWebSocket(sub: any, roomID: number) {
     subsValid,
     updateRoomID,
     setReadyToJoinStatus,
-    subRoomStatus,
-    outLobby,
+    setSubStart,
   } = useSubRoomStore();
   const {
     isReadyToCreate,
@@ -39,7 +40,9 @@ export default function useHostWebSocket(sub: any, roomID: number) {
     isStartGame,
     isReadyToFind,
     isFoundedRoom,
+    roomType,
   } = useGameStore();
+  const { isBotStart } = useBotRoomStore();
   const connectionStatus = {
     [ReadyState.CONNECTING]: 'Đang kết nối',
     [ReadyState.OPEN]: 'Sẵn sàng',
@@ -126,6 +129,7 @@ export default function useHostWebSocket(sub: any, roomID: number) {
           if (message[1].cmd === 205 && message[1].ps) {
             updateSubStatus(sub.username, 'Out room');
             sendMessage(`[4,"Simms",${roomID}]`);
+
             setReadyToJoinStatus(false);
           }
           // //In-lobby
@@ -137,10 +141,12 @@ export default function useHostWebSocket(sub: any, roomID: number) {
           // }
           //Created-room
           if (message[1].cmd === 308 && message[1].ri) {
-            updateRoomID(message[1].ri.rid);
+            updateRoomID(message[1].ri.rid.toString());
             joinRoom(sub.username);
             updateSubStatus(sub.username, 'Joined Room');
             updateStatus('Created Room');
+            setSubStart(true);
+            setSubStart(false);
             setReadyToJoinStatus(true);
             sendMessage(`[3,"Simms",${message[1].ri.rid},""]`);
           }
@@ -158,11 +164,12 @@ export default function useHostWebSocket(sub: any, roomID: number) {
           if (message[1].cs && message[1].T === 60000) {
             updateSubStatus(sub.username, `${message[1].cs}`);
             addCard('subCards', message[1].cs);
+            const baiLung = binhLungCard(message[1].cs) as any;
             sendMessage(
-              `[5,"Simms",${roomID},{"cmd":606,"cs":[${message[1].cs}]}]`
+              `[5,"Simms",${roomID},{"cmd":606,"cs":[${baiLung.cards}]}]`
             );
             sendMessage(
-              `[5,"Simms",${roomID},{"cmd":603,"cs":[${message[1].cs}]}]`
+              `[5,"Simms",${roomID},{"cmd":603,"cs":[${baiLung.cards}]}]`
             );
             updateSubStatus(sub.username, `${message[1].cs}`);
           }
@@ -191,17 +198,20 @@ export default function useHostWebSocket(sub: any, roomID: number) {
   }, [lastMessage]);
 
   useEffect(() => {
-    if (isReadyToFind && isReadyToCreate && !createdRoom) {
+    if (
+      (isReadyToFind && isReadyToCreate && !createdRoom) ||
+      (isBotStart && !createdRoom)
+    ) {
       if (!isFoundedRoom) {
         sendMessage(
-          '[6,"Simms","channelPlugin",{"cmd":308,"aid":1,"gid":4,"b":100,"Mu":4,"iJ":true,"inc":false,"pwd":""}]'
+          `[6,"Simms","channelPlugin",{"cmd":308,"aid":1,"gid":4,"b":${roomType},"Mu":4,"iJ":true,"inc":false,"pwd":""}]`
         );
         updateSubStatus(sub.username, 'Create Room');
         updateStatus('Create Room');
         setCreatedRoom(true);
       }
     }
-  }, [lastMessage, isReadyToCreate, isReadyToFind]);
+  }, [lastMessage, isReadyToCreate, isReadyToFind, isBotStart]);
 
   const onDisconnect = useCallback(() => {
     setSocketUrl('');

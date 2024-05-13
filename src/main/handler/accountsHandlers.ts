@@ -29,14 +29,14 @@ export const setupAccountHandlers = (
     userProxy: string;
     passProxy: string;
   }) {
-    // const existingInstance = puppeteerInstances.find(
-    //   (inst) => inst.username === account.username
-    // );
+    const existingInstance = puppeteerInstances.find(
+      (inst) => inst.username === account.username
+    );
 
-    // if (existingInstance) {
-    //   console.log(`Account ${account.username} is already running.`);
-    //   return;
-    // }
+    if (existingInstance) {
+      console.log(`Account ${account.username} is already running.`);
+      return;
+    }
     try {
       let userProfilePath;
       const usernamePc = os.userInfo().username;

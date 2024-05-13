@@ -559,6 +559,70 @@ function mBaiSapXep(t: any) {
   };
 }
 
-export const arrangCard = (cards: any) => {
+function swapElements(array: any[]) {
+  // Check if the array has at least 13 elements (3 initial + 5 middle + 5 last)
+  if (array.length < 13) {
+    console.error('Array does not have enough elements to perform the swap.');
+    return array;
+  }
+
+  // Keeping the first three elements unchanged
+  let firstThree = array.slice(0, 3);
+
+  // Getting the middle five elements (positions 3-7)
+  let middleFive = array.slice(3, 8);
+
+  // Getting the last five elements
+  let lastFive = array.slice(array.length - 5);
+
+  // Constructing the new array
+  return [
+    ...firstThree,
+    ...lastFive,
+    ...middleFive,
+    ...array.slice(8, array.length - 5),
+  ];
+}
+
+export const binhLung = (t: any) => {
+  if (13 !== t.length) return [];
+  var e = t.map((cardCode: number) => decodeCard2(cardCode));
+  var n = sapXep2(e, undefined) as any;
+  var sortedList = n.list;
+  var result: any[];
+  if (n.mark3 > 544 || n.mark3 > 476) sortedList = n.list;
+  if (n.mb > 0) sortedList = n.list;
+  else if (n.mark3 > 408 || n.mark3 > 340) {
+    var o = t.map((cardCode: number) => decodeCard2(cardCode));
+    var a = -1;
+    n.mark3 > 408 ? (a = 1) : n.mark3 > 340 && (a = 2);
+    var s = sapXep2(o, a) as any;
+    // n.mark3 = s.mark3;
+    // n.mark2 = s.mark2;
+    // n.mark1 = s.mark1;
+    sortedList = s.p > n.p || s.mb > 0 ? s.list : n.list;
+  }
+
+  result = swapElements(sortedList).map((item: any) => item.serverCode);
+
+  var orderedResult = result.map((code) =>
+    result.find((item) => item === code)
+  );
+
+  return {
+    cards: orderedResult.reverse(),
+    chi1: getTextOfListCard(n.mark3),
+    chi2: getTextOfListCard(n.mark2),
+    chi3: getTextOfListCard(n.mark1),
+    instant: getTextofMauBinh(n.mb),
+  };
+};
+
+export const arrangeCard = (cards: any) => {
   return mBaiSapXep(cards);
+};
+
+export const binhLungCard = (cards: any) => {
+  console.log('binhLung(cards)', binhLung(cards));
+  return binhLung(cards);
 };

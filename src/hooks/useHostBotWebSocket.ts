@@ -1,10 +1,14 @@
 import { useCallback, useEffect, useState } from 'react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
+import { useToast } from '../components/toast/use-toast';
+import { binhLungCard } from '../lib/arrangeCard';
 import { login } from '../lib/login';
 import useBotRoomStore from '../store/botRoomStore';
 import useGameStore from '../store/gameStore';
+import useSubRoomStore from '../store/subRoomStore';
 
 export default function useHostWebSocket(bot: any, roomID: number) {
+  const { toast } = useToast();
   const [socketUrl, setSocketUrl] = useState('');
   const [shouldConnect, setShouldConnect] = useState(false);
   const [joinedLobby, setJoinedLobby] = useState(false);
@@ -30,6 +34,7 @@ export default function useHostWebSocket(bot: any, roomID: number) {
     setReadyToJoinStatus,
     botsReady,
     clearBotReady,
+    setBotStart,
   } = useBotRoomStore();
   const {
     isReadyToCreate,
@@ -41,6 +46,7 @@ export default function useHostWebSocket(bot: any, roomID: number) {
     isFoundedRoom,
     setCrawlCard,
   } = useGameStore();
+  const { isSubStart } = useSubRoomStore();
   const connectionStatus = {
     [ReadyState.CONNECTING]: 'Đang kết nối',
     [ReadyState.OPEN]: 'Sẵn sàng',
@@ -108,7 +114,10 @@ export default function useHostWebSocket(bot: any, roomID: number) {
           //Detect-user-join
           if (message[1].cmd === 200) {
             if (!botsValid.includes(message[1].p.dn)) {
-              console.log(`Có chó vào phòng:${message[1].p.dn}`);
+              toast({
+                title: `Người chơi khác vào phòng:${message[1].p.dn}`,
+                description: 'Quan sát để tránh không tìm được bài.',
+              });
               // updateBotStatus(
               //   bot.username,
               //   'Phát hiện người chơi khác vào phòng'
@@ -153,10 +162,14 @@ export default function useHostWebSocket(bot: any, roomID: number) {
           // }
           //Created-room
           if (message[1].cmd === 308 && message[1].ri) {
-            updateRoomID(message[1].ri.rid);
+            updateRoomID(message[1].ri.rid.toString());
             joinRoom(bot.username);
             updateBotStatus(bot.username, 'Joined Room');
             updateStatus('Created Room');
+            if (!isFoundedRoom) {
+              setBotStart(true);
+              setBotStart(false);
+            }
             setReadyToJoinStatus(true);
             sendMessage(`[3,"Simms",${message[1].ri.rid},""]`);
           }
@@ -180,12 +193,23 @@ export default function useHostWebSocket(bot: any, roomID: number) {
           if (message[1].cs && message[1].T === 60000) {
             updateBotStatus(bot.username, `${message[1].cs}`);
             addCard('botCards', message[1].cs);
-            sendMessage(
-              `[5,"Simms",${roomID},{"cmd":606,"cs":[${message[1].cs}]}]`
-            );
-            sendMessage(
-              `[5,"Simms",${roomID},{"cmd":603,"cs":[${message[1].cs}]}]`
-            );
+
+            if (!isFoundedRoom) {
+              const baiLung = binhLungCard(message[1].cs) as any;
+              sendMessage(
+                `[5,"Simms",${roomID},{"cmd":606,"cs":[${baiLung.cards}]}]`
+              );
+              sendMessage(
+                `[5,"Simms",${roomID},{"cmd":603,"cs":[${baiLung.cards}]}]`
+              );
+            } else {
+              sendMessage(
+                `[5,"Simms",${roomID},{"cmd":606,"cs":[${message[1].cs}]}]`
+              );
+              sendMessage(
+                `[5,"Simms",${roomID},{"cmd":603,"cs":[${message[1].cs}]}]`
+              );
+            }
             updateBotStatus(bot.username, `${message[1].cs}`);
           }
         }
@@ -213,7 +237,10 @@ export default function useHostWebSocket(bot: any, roomID: number) {
   }, [lastMessage]);
 
   useEffect(() => {
-    if (isReadyToFind && isReadyToCreate && !createdRoom) {
+    if (
+      (isReadyToFind && isReadyToCreate && !createdRoom) ||
+      (isSubStart && !createdRoom)
+    ) {
       sendMessage(
         '[6,"Simms","channelPlugin",{"cmd":308,"aid":1,"gid":4,"b":100,"Mu":4,"iJ":true,"inc":false,"pwd":""}]'
       );
@@ -221,7 +248,7 @@ export default function useHostWebSocket(bot: any, roomID: number) {
       updateStatus('Create Room');
       setCreatedRoom(true);
     }
-  }, [lastMessage, isReadyToCreate, isReadyToFind]);
+  }, [lastMessage, isReadyToCreate, isReadyToFind, isSubStart]);
   useEffect(() => {
     if (isFoundedRoom) {
       if (botsReady.length == 3) {

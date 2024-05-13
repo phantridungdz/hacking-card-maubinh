@@ -16,7 +16,6 @@ import { ScrollArea } from '../../components/ui/scroll-area';
 import { addMoney } from '../../lib/supabase';
 import { highlightSyntax } from '../../lib/terminal';
 import { AppContext } from '../../renderer/providers/app';
-import useBotRoomStore from '../../store/botRoomStore';
 import useGameStore from '../../store/gameStore';
 import { useToast } from '../toast/use-toast';
 import { Toggle } from '../ui/toggle';
@@ -36,7 +35,6 @@ export const TerminalBoard: React.FC<any> = ({ main }) => {
   const [isInLobby, setIsInLobby] = useState(false);
   const [currentSit, setCurrentSit] = useState('');
   const [autoInvite, setAutoInvite] = useState(false);
-  const { roomID } = useBotRoomStore();
   const { mainRoomID, isStartGame, setMainJoinStatus, setMainCard } =
     useGameStore();
 
@@ -64,11 +62,13 @@ export const TerminalBoard: React.FC<any> = ({ main }) => {
     );
   };
   function joinRoom(account: any): void {
-    window.backend.sendMessage(
-      'execute-script',
-      account,
-      `__require('GamePlayManager').default.getInstance().joinRoom(${roomID},0,'',true);`
-    );
+    if (mainRoomID) {
+      window.backend.sendMessage(
+        'execute-script',
+        account,
+        `__require('GamePlayManager').default.getInstance().joinRoom(${mainRoomID},0,'',true);`
+      );
+    }
   }
 
   function checkPosition(account: any): void {

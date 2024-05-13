@@ -12,7 +12,7 @@ const useBotRoomStore = create<any>(
       botsValid: [],
       botsReady: [],
       isReadyToJoin: false,
-
+      isBotStart: false,
       addBot: (bot: any, role: string) =>
         set((state: { bots: any[] }) => ({
           bots: [...state.bots, { ...bot, role, status: 'idle' }],
@@ -23,7 +23,9 @@ const useBotRoomStore = create<any>(
         })),
       addBotReady: (botUsername: string) =>
         set((state: { botsReady: string[] }) => ({
-          botsReady: [...state.botsReady, botUsername],
+          botsReady: state.botsReady.includes(botUsername)
+            ? state.botsReady
+            : [...state.botsReady, botUsername],
         })),
 
       removeBot: (botUsername: any) =>
@@ -64,7 +66,10 @@ const useBotRoomStore = create<any>(
         set(() => ({
           isReadyToJoin: status,
         })),
-
+      setBotStart: (status: boolean) =>
+        set(() => ({
+          isBotStart: status,
+        })),
       joinLobby: (botUsername: string) =>
         set(
           (state: {

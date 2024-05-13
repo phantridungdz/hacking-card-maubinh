@@ -55,7 +55,10 @@ export function App() {
     isFoundedRoom,
     setRoomFoundStatus,
     setFoundedRoom,
-    setCrawlCard,
+    mainRoomID,
+    setMainCard,
+    roomType,
+    setRoomType,
   } = useGameStore();
   const { clearAllStatesBot } = useBotRoomStore();
   const { clearAllStatesSub, roomID } = useSubRoomStore();
@@ -87,6 +90,7 @@ export function App() {
   };
 
   const onFindGame = () => {
+    setMainCard([]);
     setFindingStatus(true);
     setReadyToCreateStatus(true);
     setRefreshCardsKey((prevKey) => prevKey + 1);
@@ -106,7 +110,7 @@ export function App() {
       botCards.map((botCard: any) => {
         if (isMatchCards(botCard, subCards[0])) {
           setRoomFoundStatus(true);
-          setFoundedRoom(roomID);
+          setFoundedRoom(roomID.toString());
           toast({
             title: 'Matched Room',
             description: `Founded room !`,
@@ -134,10 +138,7 @@ export function App() {
   }, []);
 
   const handleRoomTypeChange = (money: number) => {
-    setState((pre) => ({
-      ...pre,
-      initialRoom: { ...pre.initialRoom, roomType: money },
-    }));
+    setRoomType(money);
   };
 
   function formatCurrency(value: number) {
@@ -182,6 +183,13 @@ export function App() {
                         {state.targetAt && `Room: ${state.targetAt}`}
                       </span>
                     </div>
+                    {mainRoomID && (
+                      <div className="flex p-[10px] rounded-sm border">
+                        <Label className="">
+                          Room ID: <span className="">{mainRoomID}</span>
+                        </Label>
+                      </div>
+                    )}
                     <RadioGroup
                       defaultValue={cardDeck}
                       onValueChange={(value) => {
@@ -221,7 +229,7 @@ export function App() {
                           className="h-8 gap-1 !border-[#fff]"
                         >
                           <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                            {formatCurrency(state.initialRoom.roomType)}
+                            {formatCurrency(roomType)}
                           </span>
                           <DollarSign className="h-3.5 w-3.5" />
                           <ChevronDown />

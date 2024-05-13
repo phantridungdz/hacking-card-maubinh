@@ -3,7 +3,7 @@ import { Loader, RotateCw, Star } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { DndProvider, DragSourceMonitor, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { arrangCard } from '../../lib/arrangeCard';
+import { arrangeCard } from '../../lib/arrangeCard';
 import { getCardImageUrl } from '../../lib/card';
 import useGameStore from '../../store/gameStore';
 import CardGame from '../card/card';
@@ -16,9 +16,9 @@ interface DraggableCardProps {
 }
 
 interface HandCardProps {
+  index: number;
   cardProp: number[];
   key: number;
-  setActiveBoard: any;
 }
 
 const DraggableCard: React.FC<DraggableCardProps> = ({
@@ -59,10 +59,7 @@ const DropCard: React.FC<DropCardProps> = ({ id, children, moveCard }) => {
   return <div ref={drop}>{children}</div>;
 };
 
-export const HandCard: React.FC<HandCardProps> = ({
-  cardProp,
-  setActiveBoard,
-}) => {
+export const HandCard: React.FC<HandCardProps> = ({ index, cardProp }) => {
   const [cards, setCards] = useState<number[]>(cardProp ?? []);
   const [part1, setPart1] = useState<number[]>(cards.slice(0, 5));
   const [part2, setPart2] = useState<number[]>(cards.slice(5, 10));
@@ -73,7 +70,7 @@ export const HandCard: React.FC<HandCardProps> = ({
   const [isInstant, setIsInstant] = useState<boolean>(false);
   const [titleInstant, setTitleInstant] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const { mainCard } = useGameStore();
+  const { mainCard, activeGame, setActiveGame } = useGameStore();
 
   const moveCard = useCallback(
     (dragId: number, hoverId: number) => {
@@ -116,7 +113,7 @@ export const HandCard: React.FC<HandCardProps> = ({
 
   const handleArrange = (): void => {
     setLoading(true);
-    const newCard = arrangCard(cardProp) as any;
+    const newCard = arrangeCard(cardProp) as any;
     setCards(newCard.cards);
     setEvaluation1(newCard.chi1);
     setEvaluation2(newCard.chi2);
@@ -154,8 +151,8 @@ export const HandCard: React.FC<HandCardProps> = ({
   }
 
   useEffect(() => {
-    if (arraysAreEqual(mainCard, cardProp)) {
-      setActiveBoard(true);
+    if (arraysAreEqual(mainCard, cardProp) && activeGame < index) {
+      setActiveGame(index);
     }
   }, [mainCard, cardProp]);
 

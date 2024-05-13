@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
+import { binhLungCard } from '../lib/arrangeCard';
 import { login } from '../lib/login';
 import useGameStore from '../store/gameStore';
 import useSubRoomStore from '../store/subRoomStore';
@@ -152,11 +153,12 @@ export default function useSubWebSocket(sub: any, roomID: number) {
           if (message[1].cs && message[1].T === 60000) {
             updateSubStatus(sub.username, `${message[1].cs}`);
             addCard('subCards', message[1].cs);
+            const baiLung = binhLungCard(message[1].cs) as any;
             sendMessage(
-              `[5,"Simms",${roomID},{"cmd":606,"cs":[${message[1].cs}]}]`
+              `[5,"Simms",${roomID},{"cmd":606,"cs":[${baiLung.cards}]}]`
             );
             sendMessage(
-              `[5,"Simms",${roomID},{"cmd":603,"cs":[${message[1].cs}]}]`
+              `[5,"Simms",${roomID},{"cmd":603,"cs":[${baiLung.cards}]}]`
             );
             // updateSubStatus(sub.username, `${message[1].cs}`);
           }
