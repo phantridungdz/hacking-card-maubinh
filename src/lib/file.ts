@@ -1,5 +1,3 @@
-import { toast } from '../components/toast/use-toast';
-
 // const { accounts, updateAccount, addAccount, removeAccount } =
 //     useAccountStore();
 const updateFile = async (accountsUpdate: any, accountType: string) => {
@@ -28,10 +26,6 @@ const updateFile = async (accountsUpdate: any, accountType: string) => {
     accountType
   );
 
-  toast({
-    title: 'Updated account',
-    description: `All tasks done for ${accountType.toLowerCase()} account`,
-  });
   // }
 };
 

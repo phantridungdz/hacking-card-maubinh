@@ -32,7 +32,6 @@ const useGameStore = create<any>(
         set(() => ({
           crawledCards: card,
         })),
-
       removeSubCard: () =>
         set(() => ({
           subCards: [],
@@ -41,7 +40,6 @@ const useGameStore = create<any>(
         set(() => ({
           botCards: [],
         })),
-
       clearCards: () =>
         set(() => ({
           subCards: [],

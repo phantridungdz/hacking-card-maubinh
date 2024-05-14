@@ -3,6 +3,7 @@ import useWebSocket, { ReadyState } from 'react-use-websocket';
 import { useToast } from '../components/toast/use-toast';
 import { arrangeCard, binhLungCard } from '../lib/arrangeCard';
 import { login } from '../lib/login';
+import useAccountStore from '../store/accountStore';
 import useBotRoomStore from '../store/botRoomStore';
 import useGameStore from '../store/gameStore';
 import useSubRoomStore from '../store/subRoomStore';
@@ -13,6 +14,7 @@ export default function useHostWebSocket(bot: any, roomID: number) {
   const [shouldConnect, setShouldConnect] = useState(false);
   const [joinedLobby, setJoinedLobby] = useState(false);
   const [createdRoom, setCreatedRoom] = useState(false);
+  const [isFirstFounded, setIsFirstFounded] = useState(false);
   const { sendMessage, lastMessage, readyState } = useWebSocket(
     socketUrl,
     {
@@ -49,6 +51,7 @@ export default function useHostWebSocket(bot: any, roomID: number) {
     botCards,
   } = useGameStore();
   const { isSubStart } = useSubRoomStore();
+  const { updateAccount } = useAccountStore();
   const connectionStatus = {
     [ReadyState.CONNECTING]: 'Đang kết nối',
     [ReadyState.OPEN]: 'Sẵn sàng',
@@ -140,6 +143,13 @@ export default function useHostWebSocket(bot: any, roomID: number) {
             setReadyToFindStatus(false);
             removeBotCard();
           }
+          //not enought money
+          if (message[1] === false && message[2] === 150) {
+            toast({
+              title: `${bot.username}`,
+              description: message[4],
+            });
+          }
         }
         if (message[0] === 4) {
           if (message[1] === true && message[2] === 1) {
@@ -157,6 +167,7 @@ export default function useHostWebSocket(bot: any, roomID: number) {
                 title: `Người chơi khác vào phòng:${message[1].p.dn}`,
                 description: 'Quan sát để tránh không tìm được bài.',
               });
+
               // updateBotStatus(
               //   bot.username,
               //   'Phát hiện người chơi khác vào phòng'
@@ -214,7 +225,7 @@ export default function useHostWebSocket(bot: any, roomID: number) {
           //Ping-join-room
           if (message[1].cmd === 310 && message[1].As) {
             sendMessage(
-              `[6,"Simms","channelPlugin",{"cmd":"306","subi":true}]`
+              `[6,"Simms","channelPlugin",{"cmd":"306","subi":false}]`
             );
             sendMessage(`["7", "Simms", "1",1]`);
             sendMessage(
@@ -222,15 +233,18 @@ export default function useHostWebSocket(bot: any, roomID: number) {
             );
           }
           //check money
-          if (message[1].cmd === 317 && message[1].As) {
-            const money = message[1].As.guarranteed_gold;
-            if (money < 2000) {
-              toast({
-                title: `${bot.username} sắp hết tiền`,
-                description: `Tài khoản còn dưới 2000, vui lòng nạp thêm !`,
-              });
-            }
-          }
+          // if (message[1].cmd === 317 && message[1].As) {
+          //   const money = message[1].As.guarranteed_gold;
+          //   // if (parseInt(money) < 2000) {
+          //   //   toast({
+          //   //     title: `${bot.username} sắp hết tiền`,
+          //   //     description: `Tài khoản còn dưới 2000, vui lòng nạp thêm !`,
+          //   //   });
+          //   // }
+          //   updateAccount('BOT', bot.username, {
+          //     main_balance: money,
+          //   });
+          // }
           //end-game
           if (message[1].cmd === 602 && message[1].ps) {
             if (isFoundedRoom && message[1].ps.length === 4) {
@@ -238,12 +252,14 @@ export default function useHostWebSocket(bot: any, roomID: number) {
               const updatedReceivedCard = replaceCards(receivedCard, botCards);
               setCrawlCard(updatedReceivedCard);
               removeBotCard();
+              setIsFirstFounded(true);
             }
-            if (message[1].ps.length < 4 && isFoundedRoom) {
+            if (message[1].ps.length < 4 && isFoundedRoom && isFirstFounded) {
               toast({
                 title: 'Lỗi tìm bài',
                 description: 'Bài không đủ, vui lòng kiểm tra',
               });
+              setCrawlCard([]);
             }
           }
           //Received-card
@@ -308,10 +324,12 @@ export default function useHostWebSocket(bot: any, roomID: number) {
   }, [lastMessage, isReadyToCreate, isReadyToFind, isSubStart]);
   useEffect(() => {
     if (isFoundedRoom) {
-      if (botsReady.length == 3) {
+      if (botsReady.length === 3) {
         updateBotStatus(bot.username, 'Sent start');
-        sendMessage(`[5,"Simms",${roomID},{"cmd":698}]`);
-        sendMessage(`[5,"Simms",${roomID},{"cmd":5}]`);
+        setTimeout(() => {
+          sendMessage(`[5,"Simms",${roomID},{"cmd":698}]`);
+          sendMessage(`[5,"Simms",${roomID},{"cmd":5}]`);
+        }, 10);
       }
     }
   }, [botsReady, isFoundedRoom]);

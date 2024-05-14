@@ -3,6 +3,7 @@ import useWebSocket, { ReadyState } from 'react-use-websocket';
 import { toast } from '../components/toast/use-toast';
 import { binhLungCard } from '../lib/arrangeCard';
 import { login } from '../lib/login';
+import useAccountStore from '../store/accountStore';
 import useGameStore from '../store/gameStore';
 import useSubRoomStore from '../store/subRoomStore';
 
@@ -39,7 +40,7 @@ export default function useSubWebSocket(sub: any, roomID: number) {
     isStartGame,
     clearGameState,
   } = useGameStore();
-
+  const { updateAccount } = useAccountStore();
   const connectionStatus = {
     [ReadyState.CONNECTING]: 'Đang kết nối',
     [ReadyState.OPEN]: 'Sẵn sàng',
@@ -106,6 +107,13 @@ export default function useSubWebSocket(sub: any, roomID: number) {
             setReadyToFindStatus(false);
             removeSubCard();
           }
+          //not enought money
+          if (message[1] === false && message[2] === 150) {
+            toast({
+              title: `${sub.username}`,
+              description: message[4],
+            });
+          }
         }
         if (message[0] === 4) {
           if (message[1] === true && message[2] === 1) {
@@ -155,7 +163,7 @@ export default function useSubWebSocket(sub: any, roomID: number) {
           //Ping-join-lobby
           if (message[1].cmd === 310 && message[1].As) {
             sendMessage(
-              `[6,"Simms","channelPlugin",{"cmd":"306","subi":true}]`
+              `[6,"Simms","channelPlugin",{"cmd":"306","subi":false}]`
             );
             sendMessage(`["7", "Simms", "1",1]`);
             sendMessage(
@@ -163,15 +171,18 @@ export default function useSubWebSocket(sub: any, roomID: number) {
             );
           }
           //check money
-          if (message[1].cmd === 317 && message[1].As) {
-            const money = message[1].As.guarranteed_gold;
-            if (money < 2000) {
-              toast({
-                title: `${sub.username} sắp hết tiền`,
-                description: `Tài khoản còn dưới 2000, vui lòng nạp thêm !`,
-              });
-            }
-          }
+          // if (message[1].cmd === 317 && message[1].As) {
+          //   const money = message[1].As.guarranteed_gold;
+          //   if (parseInt(money) < 2000) {
+          //     // toast({
+          //     //   title: `${sub.username} sắp hết tiền`,
+          //     //   description: `Tài khoản còn dưới 2000, vui lòng nạp thêm !`,
+          //     // });
+          //     updateAccount('SUB', sub.username, {
+          //       main_balance: money,
+          //     });
+          //   }
+          // }
           //Received-card
           if (message[1].cs && message[1].T === 60000) {
             updateSubStatus(sub.username, `${message[1].cs}`);

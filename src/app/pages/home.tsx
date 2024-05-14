@@ -30,7 +30,10 @@ export const HomePage: React.FC<any> = (cardDeck, setNumberOfCards) => {
   const { crawledCards, isFoundedRoom } = useGameStore();
 
   useEffect(() => {
-    if (isFoundedRoom) {
+    if (isFoundedRoom && crawledCards.length === 0) {
+      setCards((pre) => [...pre, []]);
+    }
+    if (isFoundedRoom && crawledCards.length > 1) {
       const mappedCard = crawledCards.map(
         (gameCard: { cs: any }) => gameCard.cs
       );
@@ -116,7 +119,6 @@ export const HomePage: React.FC<any> = (cardDeck, setNumberOfCards) => {
             </CardFooter>
           )}
         </Card>
-        {/* <Sticky scrollElement=".scrollarea"> */}
         <div>
           <div className=" sticky top-[90px]">
             <Card className="w-full flex flex-col gap-4 border-0 ">
@@ -127,7 +129,6 @@ export const HomePage: React.FC<any> = (cardDeck, setNumberOfCards) => {
             </Card>
           </div>
         </div>
-        {/* </Sticky> */}
       </main>
     </div>
   );
