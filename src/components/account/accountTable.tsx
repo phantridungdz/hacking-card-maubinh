@@ -13,7 +13,6 @@ import {
 } from '@tanstack/react-table';
 import {
   ArrowUpDown,
-  ChevronDown,
   DollarSign,
   MoreHorizontal,
   Paperclip,
@@ -45,7 +44,6 @@ import {
 } from '../ui/dialog';
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
@@ -509,7 +507,7 @@ export const AccountTable: React.FC<any> = ({ accountType }) => {
               </Button>
             </TooltipTrigger>
           </Tooltip>
-
+          {/*
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="ml-auto">
@@ -535,7 +533,7 @@ export const AccountTable: React.FC<any> = ({ accountType }) => {
                   );
                 })}
             </DropdownMenuContent>
-          </DropdownMenu>
+          </DropdownMenu> */}
         </div>
       </div>
       <div className="rounded-md border">

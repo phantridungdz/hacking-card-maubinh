@@ -75,7 +75,6 @@ export const setupAccountHandlers = (
           '--window-position=0,0',
           '--ignore-certifcate-errors',
           '--ignore-certifcate-errors-spki-list',
-          '--remote-debugging-port=42796',
           // '--proxy-server=socks5://hndc35.proxyno1.com:42796',
           `${
             account.proxy &&
@@ -88,6 +87,9 @@ export const setupAccountHandlers = (
       const pages = await browser.pages();
 
       const page = pages[0];
+      await page.setUserAgent(
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+      );
       if (
         account.userProxy &&
         account.userProxy.trim().toLowerCase() !== 'undefined'
@@ -119,6 +121,15 @@ export const setupAccountHandlers = (
         browser: browser,
         page: page,
         client: client,
+      });
+
+      browser.on('disconnected', () => {
+        puppeteerInstances = puppeteerInstances.filter(
+          (instance) => instance.browser !== browser
+        );
+        console.log(
+          `Browser for account ${account.username} has been disconnected and removed from the list.`
+        );
       });
 
       let specificWebSocketRequestId: any = null;
@@ -226,13 +237,6 @@ export const setupAccountHandlers = (
       return true;
     }
   }
-  // const accountArrange = {
-  //   username: 'giuchansapbai',
-  //   password: 'zxcv123123',
-  //   proxy: '',
-  //   port: '',
-  // };
-  // startPuppeteerForAccount(accountArrange);
 
   ipcMain.on('open-accounts', async (event, account) => {
     await startPuppeteerForAccount(account);

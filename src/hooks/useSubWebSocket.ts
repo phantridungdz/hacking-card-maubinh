@@ -48,6 +48,15 @@ export default function useSubWebSocket(sub: any, roomID: number) {
     [ReadyState.UNINSTANTIATED]: 'Uninstantiated',
   }[readyState];
 
+  useEffect(() => {
+    if (readyState === ReadyState.CLOSED) {
+      toast({
+        title: 'Connection Error',
+        description: 'Kết nối bị gián đoạn, vui lòng thử lại.',
+      });
+    }
+  }, [readyState]);
+
   const onConnect = async (sub: any) => {
     login(sub)
       .then(async (data: any) => {
@@ -152,6 +161,16 @@ export default function useSubWebSocket(sub: any, roomID: number) {
             sendMessage(
               `[6,"Simms","channelPlugin",{"cmd":300,"aid":"1","gid":4}]`
             );
+          }
+          //check money
+          if (message[1].cmd === 317 && message[1].As) {
+            const money = message[1].As.guarranteed_gold;
+            if (money < 2000) {
+              toast({
+                title: `${sub.username} sắp hết tiền`,
+                description: `Tài khoản còn dưới 2000, vui lòng nạp thêm !`,
+              });
+            }
           }
           //Received-card
           if (message[1].cs && message[1].T === 60000) {

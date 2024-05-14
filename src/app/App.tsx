@@ -59,6 +59,8 @@ export function App() {
     setMainCard,
     roomType,
     setRoomType,
+    isLogining,
+    setIsLogining,
   } = useGameStore();
   const { clearAllStatesBot } = useBotRoomStore();
   const { clearAllStatesSub, roomID } = useSubRoomStore();
@@ -87,6 +89,7 @@ export function App() {
 
   const onLogin = () => {
     setStartGameStatus(true);
+    setIsLogining(true);
   };
 
   const onFindGame = () => {
@@ -268,7 +271,7 @@ export function App() {
                           onClick={onFindGame}
                           size="sm"
                           className="h-8 gap-1"
-                          disabled={isFinding}
+                          disabled={isLogining}
                         >
                           {isFinding ? (
                             <Loader2 className="h-3.5 w-3.5 animate-spin cursor-pointer hover:opacity-70" />

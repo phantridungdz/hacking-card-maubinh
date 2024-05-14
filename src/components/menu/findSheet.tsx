@@ -17,7 +17,7 @@ export function FindRoomSheet({ isOpen, setIsOpen }: FindRoomSheetProps) {
   const [roomsReady, setRoomsReady] = useState(0);
 
   const { accounts, updateAccount } = useAccountStore();
-  const { setReadyToFindStatus } = useGameStore();
+  const { setReadyToFindStatus, setIsLogining } = useGameStore();
 
   const { addBot, bots, botRoomStatus } = useBotRoomStore();
   const { addSub, subs, subRoomStatus } = useSubRoomStore();
@@ -74,10 +74,9 @@ export function FindRoomSheet({ isOpen, setIsOpen }: FindRoomSheetProps) {
   useEffect(() => {
     if (roomsReady === 2) {
       setReadyToFindStatus(true);
+      setIsLogining(false);
     } else {
-      // setTimeout(() => {
       setReadyToFindStatus(false);
-      // }, 300);
     }
   }, [roomsReady]);
 

@@ -7,6 +7,7 @@ const useGameStore = create<any>(
       subCards: [],
       botCards: [],
       crawledCards: [],
+      validCards: [],
       isFoundedRoom: false,
       isStartGame: false,
       isReadyToFind: false,
@@ -15,6 +16,7 @@ const useGameStore = create<any>(
       roomsReady: 0,
       mainRoomID: null,
       isMainJoin: false,
+      isLogining: false,
       roomType: 100,
       activeGame: 0,
       mainCard: [],
@@ -56,6 +58,10 @@ const useGameStore = create<any>(
       setRoomType: (type: boolean) =>
         set(() => ({
           roomType: type,
+        })),
+      setIsLogining: (status: boolean) =>
+        set(() => ({
+          isLogining: status,
         })),
       setRoomFoundStatus: (status: boolean) =>
         set(() => ({
@@ -105,6 +111,8 @@ const useGameStore = create<any>(
           isFinding: false,
           roomsReady: 0,
           isMainJoin: false,
+          isLogining: false,
+          crawledCards: [],
         })),
     }),
     {

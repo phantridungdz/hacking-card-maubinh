@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import { useToast } from '../components/toast/use-toast';
-import { binhLungCard } from '../lib/arrangeCard';
+import { arrangeCard, binhLungCard } from '../lib/arrangeCard';
 import { login } from '../lib/login';
 import useBotRoomStore from '../store/botRoomStore';
 import useGameStore from '../store/gameStore';
@@ -46,6 +46,7 @@ export default function useHostWebSocket(bot: any, roomID: number) {
     isFoundedRoom,
     setCrawlCard,
     clearGameState,
+    botCards,
   } = useGameStore();
   const { isSubStart } = useSubRoomStore();
   const connectionStatus = {
@@ -55,6 +56,40 @@ export default function useHostWebSocket(bot: any, roomID: number) {
     [ReadyState.CLOSED]: 'Đã đóng',
     [ReadyState.UNINSTANTIATED]: 'Uninstantiated',
   }[readyState];
+
+  useEffect(() => {
+    if (readyState === ReadyState.CLOSED) {
+      toast({
+        title: 'Connection Error',
+        description: 'Kết nối bị gián đoạn, vui lòng thử lại.',
+      });
+    }
+  }, [readyState]);
+
+  function arraysEqual(arr1: any[], arr2: any[]) {
+    if (arr1.length !== arr2.length) {
+      return false;
+    }
+    let sortedArr1 = arr1.slice().sort();
+    let sortedArr2 = arr2.slice().sort();
+    for (let i = 0; i < sortedArr1.length; i++) {
+      if (sortedArr1[i] !== sortedArr2[i]) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function replaceCards(receivedCard: any[], arrays: any) {
+    return receivedCard.map((cardSet) => {
+      for (let array of arrays) {
+        if (arraysEqual(cardSet.cs, array)) {
+          return { ...cardSet, cs: array };
+        }
+      }
+      return cardSet;
+    });
+  }
 
   const onConnect = async (bot: any) => {
     login(bot)
@@ -186,10 +221,23 @@ export default function useHostWebSocket(bot: any, roomID: number) {
               `[6,"Simms","channelPlugin",{"cmd":300,"aid":"1","gid":4}]`
             );
           }
+          //check money
+          if (message[1].cmd === 317 && message[1].As) {
+            const money = message[1].As.guarranteed_gold;
+            if (money < 2000) {
+              toast({
+                title: `${bot.username} sắp hết tiền`,
+                description: `Tài khoản còn dưới 2000, vui lòng nạp thêm !`,
+              });
+            }
+          }
           //end-game
           if (message[1].cmd === 602 && message[1].ps) {
             if (isFoundedRoom && message[1].ps.length === 4) {
-              setCrawlCard(message[1].ps);
+              const receivedCard = message[1].ps;
+              const updatedReceivedCard = replaceCards(receivedCard, botCards);
+              setCrawlCard(updatedReceivedCard);
+              removeBotCard();
             }
             if (message[1].ps.length < 4 && isFoundedRoom) {
               toast({
@@ -202,7 +250,6 @@ export default function useHostWebSocket(bot: any, roomID: number) {
           if (message[1].cs && message[1].T === 60000) {
             updateBotStatus(bot.username, `${message[1].cs}`);
             addCard('botCards', message[1].cs);
-
             if (!isFoundedRoom) {
               const baiLung = binhLungCard(message[1].cs) as any;
               sendMessage(
@@ -212,12 +259,12 @@ export default function useHostWebSocket(bot: any, roomID: number) {
                 `[5,"Simms",${roomID},{"cmd":603,"cs":[${baiLung.cards}]}]`
               );
             } else {
-              // const arrangedCard = arrangeCard(message[1].cs) as any;
+              const arrangedCard = arrangeCard(message[1].cs) as any;
               sendMessage(
-                `[5,"Simms",${roomID},{"cmd":606,"cs":[${message[1].cs}]}]`
+                `[5,"Simms",${roomID},{"cmd":606,"cs":[${arrangedCard.cards}]}]`
               );
               sendMessage(
-                `[5,"Simms",${roomID},{"cmd":603,"cs":[${message[1].cs}]}]`
+                `[5,"Simms",${roomID},{"cmd":603,"cs":[${arrangedCard.cards}]}]`
               );
             }
             updateBotStatus(bot.username, `${message[1].cs}`);
