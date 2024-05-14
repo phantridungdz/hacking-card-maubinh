@@ -100,12 +100,17 @@ export default function useBotWebSocket(bot: any, roomID: number) {
             removeBotCard();
           }
         }
+        //Outed Room
         if (message[0] === 4) {
           if (message[1] === true && message[2] === 1) {
             // updateBotStatus(bot.username, 'Outed Room');
             outRoom(bot.username);
             setJoinedRoom(false);
             removeBotCard();
+            if (isFoundedRoom) {
+              sendMessage(`[3,"Simms",${roomID},"",true]`);
+              updateBotStatus(bot.username, 'Joining Room');
+            }
           }
         }
         if (message[0] === 5) {

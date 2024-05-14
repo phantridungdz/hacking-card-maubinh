@@ -73,6 +73,7 @@ export const AccountTable: React.FC<any> = ({ accountType }) => {
   const [rowSelected, setRowSelected] = useState<any>();
   const [errorAddProxy, setErrorAddProxy] = useState<any>();
   const [useAuthForProxy, setUseAuthForProxy] = useState(false);
+  const [readedFile, setReadedFile] = useState(false);
 
   const { accounts, updateAccount, addAccount, removeAccount } =
     useAccountStore();
@@ -160,11 +161,14 @@ export const AccountTable: React.FC<any> = ({ accountType }) => {
   }, []);
 
   useEffect(() => {
-    readFile(accountType);
+    if (!readedFile) {
+      readFile(accountType);
+      setReadedFile(true);
+    }
   }, []);
 
   useEffect(() => {
-    if (accounts[accountType]) {
+    if (accounts[accountType] && readedFile) {
       setDataTable(accounts[accountType]);
       updateFile(accounts[accountType], accountType);
     }

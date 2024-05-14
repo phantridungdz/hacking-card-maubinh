@@ -5,6 +5,7 @@ import { toast } from '../components/toast/use-toast';
 const useAccountStore = create<any>(
   devtools(
     (set) => ({
+      isLoadedAccount: false,
       accounts: { MAIN: [], SUB: [], BOT: [] },
       addAccount: (type: string, account: any) =>
         set((state: { accounts: { [x: string]: any[] } }) => {
@@ -40,6 +41,10 @@ const useAccountStore = create<any>(
         });
         return selectedAccounts;
       },
+      setLoadedAccount: (status: any) =>
+        set(() => ({
+          isLoadedAccount: status,
+        })),
       clearAccounts: () =>
         set(() => ({
           accounts: { MAIN: [], SUB: [], BOT: [] },

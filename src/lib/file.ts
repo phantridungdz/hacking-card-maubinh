@@ -1,5 +1,7 @@
 import { toast } from '../components/toast/use-toast';
 
+// const { accounts, updateAccount, addAccount, removeAccount } =
+//     useAccountStore();
 const updateFile = async (accountsUpdate: any, accountType: string) => {
   // const accountsUpdate = accounts[accountType];
   // console.log('accountsUpdate', accountsUpdate);
@@ -18,19 +20,19 @@ const updateFile = async (accountsUpdate: any, accountType: string) => {
         `${account.username}|${account.password}|${account.isSelected}|${account.proxy}|${account.port}|${account.userProxy}|${account.passProxy}|`
     )
     .join('\n');
-  if (accountsText) {
-    window.backend.sendMessage(
-      'update-file',
-      accountsText,
-      [`account/${accountType.toLowerCase()}Account.txt`],
-      accountType
-    );
+  // if (accountsText) {
+  window.backend.sendMessage(
+    'update-file',
+    accountsText,
+    [`account/${accountType.toLowerCase()}Account.txt`],
+    accountType
+  );
 
-    toast({
-      title: 'Updated account',
-      description: `All tasks done for ${accountType.toLowerCase()} account`,
-    });
-  }
+  toast({
+    title: 'Updated account',
+    description: `All tasks done for ${accountType.toLowerCase()} account`,
+  });
+  // }
 };
 
 const readFile = (accountType: string) => {
