@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
+import { toast } from '../components/toast/use-toast';
 import { binhLungCard } from '../lib/arrangeCard';
 import { login } from '../lib/login';
 import useGameStore from '../store/gameStore';
@@ -36,7 +37,7 @@ export default function useSubWebSocket(sub: any, roomID: number) {
     setReadyToFindStatus,
     addCard,
     isStartGame,
-    isReadyToFind,
+    clearGameState,
   } = useGameStore();
 
   const connectionStatus = {
@@ -50,8 +51,8 @@ export default function useSubWebSocket(sub: any, roomID: number) {
   const onConnect = async (sub: any) => {
     login(sub)
       .then(async (data: any) => {
-        const user = data?.data[0];
-        if (user) {
+        if (data.code == 200) {
+          const user = data?.data[0];
           const connectURL = 'wss://cardskgw.ryksockesg.net/websocket';
           await setSocketUrl(connectURL);
           await setShouldConnect(true);
@@ -60,14 +61,17 @@ export default function useSubWebSocket(sub: any, roomID: number) {
           );
           addSubValid(user.fullname);
         } else {
+          toast({ title: 'Error', description: data?.message });
           setSocketUrl('');
           setShouldConnect(false);
+          clearGameState();
         }
       })
       .catch((err: Error) => {
         console.error('Error when calling login function:', err);
         setSocketUrl('');
         setShouldConnect(false);
+        clearGameState();
       });
   };
 

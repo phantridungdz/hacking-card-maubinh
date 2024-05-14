@@ -623,6 +623,5 @@ export const arrangeCard = (cards: any) => {
 };
 
 export const binhLungCard = (cards: any) => {
-  console.log('binhLung(cards)', binhLung(cards));
   return binhLung(cards);
 };

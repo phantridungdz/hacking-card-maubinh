@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
+import { toast } from '../components/toast/use-toast';
 import { login } from '../lib/login';
 import useBotRoomStore from '../store/botRoomStore';
 import useGameStore from '../store/gameStore';
@@ -37,6 +38,7 @@ export default function useWaiterWebSocket(bot: any, roomID: number) {
     addCard,
     isStartGame,
     isFoundedRoom,
+    clearGameState,
   } = useGameStore();
 
   const connectionStatus = {
@@ -50,8 +52,8 @@ export default function useWaiterWebSocket(bot: any, roomID: number) {
   const onConnect = async (bot: any) => {
     login(bot)
       .then(async (data: any) => {
-        const user = data?.data[0];
-        if (user) {
+        if (data.code == 200) {
+          const user = data?.data[0];
           const connectURL = 'wss://cardskgw.ryksockesg.net/websocket';
           await setSocketUrl(connectURL);
           await setShouldConnect(true);
@@ -60,14 +62,17 @@ export default function useWaiterWebSocket(bot: any, roomID: number) {
           );
           addBotValid(user.fullname);
         } else {
+          toast({ title: 'Error', description: data?.message });
           setSocketUrl('');
           setShouldConnect(false);
+          clearGameState();
         }
       })
       .catch((err: Error) => {
         console.error('Error when calling login function:', err);
         setSocketUrl('');
         setShouldConnect(false);
+        clearGameState();
       });
   };
 
@@ -158,6 +163,7 @@ export default function useWaiterWebSocket(bot: any, roomID: number) {
           if (message[1].cs && message[1].T === 60000) {
             updateBotStatus(bot.username, `${message[1].cs}`);
             addCard('botCards', message[1].cs);
+            // const arrangedCard = arrangeCard(message[1].cs) as any;
             sendMessage(
               `[5,"Simms",${roomID},{"cmd":606,"cs":[${message[1].cs}]}]`
             );

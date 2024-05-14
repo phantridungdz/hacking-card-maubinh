@@ -45,6 +45,7 @@ export default function useHostWebSocket(bot: any, roomID: number) {
     isReadyToFind,
     isFoundedRoom,
     setCrawlCard,
+    clearGameState,
   } = useGameStore();
   const { isSubStart } = useSubRoomStore();
   const connectionStatus = {
@@ -58,8 +59,8 @@ export default function useHostWebSocket(bot: any, roomID: number) {
   const onConnect = async (bot: any) => {
     login(bot)
       .then(async (data: any) => {
-        const user = data?.data[0];
-        if (user) {
+        if (data.code == 200) {
+          const user = data?.data[0];
           const connectURL = 'wss://cardskgw.ryksockesg.net/websocket';
           await setSocketUrl(connectURL);
           await setShouldConnect(true);
@@ -68,14 +69,17 @@ export default function useHostWebSocket(bot: any, roomID: number) {
           );
           addBotValid(user.fullname);
         } else {
+          toast({ title: 'Error', description: data?.message });
           setSocketUrl('');
           setShouldConnect(false);
+          clearGameState();
         }
       })
       .catch((err: Error) => {
         console.error('Error when calling login function:', err);
         setSocketUrl('');
         setShouldConnect(false);
+        clearGameState();
       });
   };
 
@@ -149,7 +153,6 @@ export default function useHostWebSocket(bot: any, roomID: number) {
               sendMessage(`[4,"Simms",${roomID}]`);
               setReadyToJoinStatus(false);
             } else {
-              console.log('isFoundedRoom', isFoundedRoom);
               clearBotReady();
             }
           }
@@ -188,6 +191,12 @@ export default function useHostWebSocket(bot: any, roomID: number) {
             if (isFoundedRoom && message[1].ps.length === 4) {
               setCrawlCard(message[1].ps);
             }
+            if (message[1].ps.length < 4 && isFoundedRoom) {
+              toast({
+                title: 'Lỗi tìm bài',
+                description: 'Bài không đủ, vui lòng kiểm tra',
+              });
+            }
           }
           //Received-card
           if (message[1].cs && message[1].T === 60000) {
@@ -203,6 +212,7 @@ export default function useHostWebSocket(bot: any, roomID: number) {
                 `[5,"Simms",${roomID},{"cmd":603,"cs":[${baiLung.cards}]}]`
               );
             } else {
+              // const arrangedCard = arrangeCard(message[1].cs) as any;
               sendMessage(
                 `[5,"Simms",${roomID},{"cmd":606,"cs":[${message[1].cs}]}]`
               );

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
+import { toast } from '../components/toast/use-toast';
 import { binhLungCard } from '../lib/arrangeCard';
 import { login } from '../lib/login';
 import useBotRoomStore from '../store/botRoomStore';
@@ -38,6 +39,7 @@ export default function useBotWebSocket(bot: any, roomID: number) {
     addCard,
     isStartGame,
     isFoundedRoom,
+    clearGameState,
   } = useGameStore();
 
   const connectionStatus = {
@@ -51,8 +53,8 @@ export default function useBotWebSocket(bot: any, roomID: number) {
   const onConnect = async (bot: any) => {
     login(bot)
       .then(async (data: any) => {
-        const user = data?.data[0];
-        if (user) {
+        if (data.code == 200) {
+          const user = data?.data[0];
           const connectURL = 'wss://cardskgw.ryksockesg.net/websocket';
           await setSocketUrl(connectURL);
           await setShouldConnect(true);
@@ -61,14 +63,17 @@ export default function useBotWebSocket(bot: any, roomID: number) {
           );
           addBotValid(user.fullname);
         } else {
+          toast({ title: 'Error', description: data?.message });
           setSocketUrl('');
           setShouldConnect(false);
+          clearGameState();
         }
       })
       .catch((err: Error) => {
         console.error('Error when calling login function:', err);
         setSocketUrl('');
         setShouldConnect(false);
+        clearGameState();
       });
   };
 
@@ -172,6 +177,7 @@ export default function useBotWebSocket(bot: any, roomID: number) {
                 `[5,"Simms",${roomID},{"cmd":603,"cs":[${baiLung.cards}]}]`
               );
             } else {
+              // const arrangedCard = arrangeCard(message[1].cs) as any;
               sendMessage(
                 `[5,"Simms",${roomID},{"cmd":606,"cs":[${message[1].cs}]}]`
               );
