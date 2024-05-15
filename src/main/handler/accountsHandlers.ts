@@ -94,8 +94,6 @@ export const setupAccountHandlers = (
         account.userProxy &&
         account.userProxy.trim().toLowerCase() !== 'undefined'
       ) {
-        console.log('userProxy', account.userProxy.trim());
-        console.log('passProxy', account.passProxy.trim());
         await page.authenticate({
           username: account.userProxy.trim(),
           password: account.passProxy.trim(),

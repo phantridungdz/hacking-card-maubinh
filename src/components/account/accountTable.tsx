@@ -19,7 +19,6 @@ import * as React from 'react';
 
 import { useEffect, useState } from 'react';
 import {
-  addUniqueAccounts,
   checkBalance,
   generateAccount,
   readValidAccount,
@@ -49,6 +48,7 @@ import {
   TableHeader,
   TableRow,
 } from '../ui/table';
+import AccountMenu from './accountMenu';
 
 export const AccountTable: React.FC<any> = ({ accountType }) => {
   const { toast } = useToast();
@@ -64,26 +64,6 @@ export const AccountTable: React.FC<any> = ({ accountType }) => {
 
   const { accounts, updateAccount, addAccount, removeAccount } =
     useAccountStore();
-  // const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const handleFileChange = (event: any) => {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = async (e: any) => {
-      const text = e.target.result;
-      const newAccounts = readValidAccount(text);
-      addUniqueAccounts(newAccounts, accounts, accountType, addAccount);
-    };
-    reader.onerror = () => {
-      toast({
-        title: 'Error',
-        description: `Failed to read file`,
-      });
-    };
-    reader.readAsText(file);
-  };
 
   useEffect(() => {
     const handleReadFile = (data: any, accountTypeReceived: any) => {
@@ -135,7 +115,7 @@ export const AccountTable: React.FC<any> = ({ accountType }) => {
         isSelected: value,
       });
       if (value) {
-        checkBalance(account, accountType);
+        checkBalance(account, accountType, updateAccount);
       }
     });
 
@@ -252,7 +232,7 @@ export const AccountTable: React.FC<any> = ({ accountType }) => {
               type="button"
               variant="ghost"
               size="icon"
-              onClick={() => checkBalance(rowData, accountType)}
+              onClick={() => checkBalance(rowData, accountType, updateAccount)}
             >
               <RefreshCcw className="w-3.5 h-3.5" />
             </Button>
@@ -282,7 +262,9 @@ export const AccountTable: React.FC<any> = ({ accountType }) => {
                 Delete account
               </DropdownMenuItem>
               <DropdownMenuItem
-                onClick={() => checkBalance(rowData, accountType)}
+                onClick={() =>
+                  checkBalance(rowData, accountType, updateAccount)
+                }
               >
                 Check balance
               </DropdownMenuItem>
@@ -353,6 +335,13 @@ export const AccountTable: React.FC<any> = ({ accountType }) => {
           }
           className="max-w-sm"
         />
+        <AccountMenu
+          isDialogAddAccountOpen={isDialogAddAccountOpen}
+          setDialogAddAccountOpen={setDialogAddAccountOpen}
+          table={table}
+          accountType={accountType}
+          updateAccount={updateAccount}
+        />
       </div>
       <div className="rounded-md border">
         <Table>
@@ -405,15 +394,7 @@ export const AccountTable: React.FC<any> = ({ accountType }) => {
           </TableBody>
         </Table>
       </div>
-      {/* <div className="flex items-center p-3 pt-0">
-        <input
-          type="file"
-          accept=".txt"
-          ref={fileInputRef}
-          onChange={handleFileChange}
-          style={{ display: 'none' }}
-        />
-      </div> */}
+
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">
           {table.getFilteredSelectedRowModel().rows.length} of{' '}

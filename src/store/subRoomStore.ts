@@ -9,6 +9,7 @@ const useSubRoomStore = create<any>(
       subsInRoom: [],
       roomID: null,
       subRoomStatus: 'Not-ready',
+      subMoneyChange: 0,
       subsValid: [],
       isReadyToJoin: false,
       isSubStart: false,
@@ -40,7 +41,10 @@ const useSubRoomStore = create<any>(
         set(() => ({
           roomID: id,
         })),
-
+      updateSubMoneyChange: (newMoneyChange: any) =>
+        set(() => ({
+          subMoneyChange: newMoneyChange,
+        })),
       updateStatus: (newStatus: any) =>
         set(() => ({
           subRoomStatus: newStatus,

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import { useToast } from '../components/toast/use-toast';
-import { arrangeCard, binhLungCard } from '../lib/arrangeCard';
+import { binhLungCard } from '../lib/arrangeCard';
 import { login } from '../lib/login';
 import useAccountStore from '../store/accountStore';
 import useBotRoomStore from '../store/botRoomStore';
@@ -15,6 +15,8 @@ export default function useHostWebSocket(bot: any, roomID: number) {
   const [joinedLobby, setJoinedLobby] = useState(false);
   const [createdRoom, setCreatedRoom] = useState(false);
   const [isFirstFounded, setIsFirstFounded] = useState(false);
+  const [fullName, setFullName] = useState();
+  const [botMoneyChange, setBotMoneyChange] = useState('');
   const { sendMessage, lastMessage, readyState } = useWebSocket(
     socketUrl,
     {
@@ -50,8 +52,8 @@ export default function useHostWebSocket(bot: any, roomID: number) {
     clearGameState,
     botCards,
   } = useGameStore();
-  const { isSubStart } = useSubRoomStore();
   const { updateAccount } = useAccountStore();
+  const { isSubStart } = useSubRoomStore();
   const connectionStatus = {
     [ReadyState.CONNECTING]: 'Đang kết nối',
     [ReadyState.OPEN]: 'Sẵn sàng',
@@ -106,6 +108,7 @@ export default function useHostWebSocket(bot: any, roomID: number) {
             `[1,"Simms","","",{"agentId":"1","accessToken":"${user.token}","reconnect":false}]`
           );
           addBotValid(user.fullname);
+          setFullName(user.fullname);
         } else {
           toast({ title: 'Error', description: data?.message });
           setSocketUrl('');
@@ -233,18 +236,29 @@ export default function useHostWebSocket(bot: any, roomID: number) {
             );
           }
           //check money
-          // if (message[1].cmd === 317 && message[1].As) {
-          //   const money = message[1].As.guarranteed_gold;
-          //   // if (parseInt(money) < 2000) {
-          //   //   toast({
-          //   //     title: `${bot.username} sắp hết tiền`,
-          //   //     description: `Tài khoản còn dưới 2000, vui lòng nạp thêm !`,
-          //   //   });
-          //   // }
-          //   updateAccount('BOT', bot.username, {
-          //     main_balance: money,
-          //   });
-          // }
+          if (message[1].cmd === 200 && message[1].p) {
+            const money = message[1].p.As.gold;
+            if (parseInt(money) < 2000) {
+              toast({
+                title: `${bot.username} sắp hết tiền`,
+                description: `Tài khoản còn dưới 2000, vui lòng nạp thêm !`,
+              });
+            }
+            updateAccount('BOT', bot.username, {
+              main_balance: money,
+            });
+          }
+          if (
+            message[1].cmd === 602 &&
+            (message[1].hsl == false || message[1].hsl == true)
+          ) {
+            const user = message[1].ps.find(
+              (item: { dn: string }) => item.dn === fullName
+            );
+            if (user) {
+              setBotMoneyChange(user.mX);
+            }
+          }
           //end-game
           if (message[1].cmd === 602 && message[1].ps) {
             if (isFoundedRoom && message[1].ps.length === 4) {
@@ -275,7 +289,7 @@ export default function useHostWebSocket(bot: any, roomID: number) {
                 `[5,"Simms",${roomID},{"cmd":603,"cs":[${baiLung.cards}]}]`
               );
             } else {
-              const arrangedCard = arrangeCard(message[1].cs) as any;
+              const arrangedCard = binhLungCard(message[1].cs) as any;
               sendMessage(
                 `[5,"Simms",${roomID},{"cmd":606,"cs":[${arrangedCard.cards}]}]`
               );
@@ -329,7 +343,7 @@ export default function useHostWebSocket(bot: any, roomID: number) {
         setTimeout(() => {
           sendMessage(`[5,"Simms",${roomID},{"cmd":698}]`);
           sendMessage(`[5,"Simms",${roomID},{"cmd":5}]`);
-        }, 10);
+        }, 50);
       }
     }
   }, [botsReady, isFoundedRoom]);
@@ -356,5 +370,6 @@ export default function useHostWebSocket(bot: any, roomID: number) {
     connectionStatus,
     onConnect,
     onDisconnect,
+    botMoneyChange,
   };
 }

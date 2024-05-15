@@ -94,7 +94,7 @@ export const handleActive = async (
 export const addMoney = async (key: string, money: number) => {
   try {
     const today = format(new Date(), 'yyyy-MM-dd');
-
+    console.log('da kiem ve', money);
     const { data: licenseData, error: licenseError } = await supabase
       .from('license-key')
       .select('money_earn')

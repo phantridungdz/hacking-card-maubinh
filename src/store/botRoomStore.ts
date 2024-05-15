@@ -9,6 +9,7 @@ const useBotRoomStore = create<any>(
       botsInRoom: [],
       roomID: null,
       botRoomStatus: 'Not-ready',
+      botMoneyChange: 0,
       botsValid: [],
       botsReady: [],
       isReadyToJoin: false,
@@ -55,6 +56,10 @@ const useBotRoomStore = create<any>(
       updateStatus: (newStatus: any) =>
         set(() => ({
           botRoomStatus: newStatus,
+        })),
+      updateBotMoneyChange: (newMoneyChange: any) =>
+        set(() => ({
+          botMoneyChange: newMoneyChange,
         })),
       updateBotStatus: (botUsername: string, newStatus: string) =>
         set((state: { bots: any[] }) => ({

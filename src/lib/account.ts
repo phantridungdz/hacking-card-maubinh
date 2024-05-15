@@ -1,9 +1,6 @@
 import { now } from 'lodash';
 import { toast } from '../components/toast/use-toast';
-import useAccountStore from '../store/accountStore';
 import { accountLogin } from './login';
-
-const { accounts, removeAccount, updateAccount } = useAccountStore();
 
 const readValidAccount = (input: string): any => {
   return input
@@ -96,14 +93,18 @@ const generateAccount = (account: any) => {
     proxy: account.proxy,
     port: account.port,
     userProxy: account.userProxy,
-    passProxy: account.userProxy,
+    passProxy: account.passProxy,
     time: now(),
     aff_id: 'hit',
     main_balance: 0,
   };
 };
 
-const checkBalance = async (rowData: any, accountType: string) => {
+const checkBalance = async (
+  rowData: any,
+  accountType: string,
+  updateAccount: any
+) => {
   var mainBalance = rowData.main_balance;
 
   const data = (await accountLogin(rowData)) as any;

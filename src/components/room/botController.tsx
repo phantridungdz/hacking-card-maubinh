@@ -1,10 +1,10 @@
 // import useBotWebSocket from '../../hooks/useBotWebSocket';
-import { BotIcon } from 'lucide-react';
+import { BotIcon, DollarSign } from 'lucide-react';
 import useBotWebSocket from '../../hooks/useBotWebSocket';
 import { Card } from '../ui/card';
 
 export const BotController: React.FC<any> = ({ bot, roomID }) => {
-  const { connectionStatus } = useBotWebSocket(bot, roomID);
+  const { connectionStatus, botMoneyChange } = useBotWebSocket(bot, roomID);
 
   return (
     <fieldset className=" rounded-lg border p-4 text-right">
@@ -16,10 +16,14 @@ export const BotController: React.FC<any> = ({ bot, roomID }) => {
       <div className="flex flex-col gap-2">
         <Card
           x-chunk="dashboard-07-chunk-1"
-          className="grid grid-cols-3 p-2 text-left"
+          className="grid grid-cols-4 p-2 text-left"
         >
           <div>{bot.username}</div>
           <div className="col-span-2">{bot.status}</div>
+          <div className="flex flex-row justify-center items-center">
+            <DollarSign className="w-3.5 h-3.5" />
+            {botMoneyChange}
+          </div>
         </Card>
       </div>
     </fieldset>

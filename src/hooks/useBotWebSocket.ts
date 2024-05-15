@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import { toast } from '../components/toast/use-toast';
-import { arrangeCard, binhLungCard } from '../lib/arrangeCard';
+import { binhLungCard } from '../lib/arrangeCard';
 import { login } from '../lib/login';
 import useAccountStore from '../store/accountStore';
 import useBotRoomStore from '../store/botRoomStore';
@@ -12,6 +12,8 @@ export default function useBotWebSocket(bot: any, roomID: number) {
   const [shouldConnect, setShouldConnect] = useState(false);
   const [joinedLobby, setJoinedLobby] = useState(false);
   const [joinedRoom, setJoinedRoom] = useState(false);
+  const [fullName, setFullName] = useState();
+  const [botMoneyChange, setBotMoneyChange] = useState('');
   const { sendMessage, lastMessage, readyState } = useWebSocket(
     socketUrl,
     {
@@ -72,6 +74,7 @@ export default function useBotWebSocket(bot: any, roomID: number) {
             `[1,"Simms","","",{"agentId":"1","accessToken":"${user.token}","reconnect":false}]`
           );
           addBotValid(user.fullname);
+          setFullName(user.fullname);
         } else {
           toast({ title: 'Error', description: data?.message });
           setSocketUrl('');
@@ -152,7 +155,11 @@ export default function useBotWebSocket(bot: any, roomID: number) {
           }
 
           //send-Ready
-          if (message[1].cmd === 204 || message[1].cmd === 607) {
+          if (
+            message[1].cmd === 204 ||
+            message[1].cmd === 607 ||
+            message[1].cmd === 5
+          ) {
             // updateBotStatus(bot.username, 'Sent ready');
             sendMessage(`[5,"Simms",${roomID},{"cmd":5}]`);
             console.log(
@@ -187,18 +194,29 @@ export default function useBotWebSocket(bot: any, roomID: number) {
             );
           }
           //check money
-          // if (message[1].cmd === 317 && message[1].As) {
-          //   const money = message[1].As.guarranteed_gold;
-          //   // if (parseInt(money) < 2000) {
-          //   //   toast({
-          //   //     title: `${bot.username} sắp hết tiền`,
-          //   //     description: `Tài khoản còn dưới 2000, vui lòng nạp thêm !`,
-          //   //   });
-          //   // }
-          //   updateAccount('BOT', bot.username, {
-          //     main_balance: money,
-          //   });
-          // }
+          if (message[1].cmd === 200 && message[1].p) {
+            const money = message[1].p.As.gold;
+            if (parseInt(money) < 2000) {
+              toast({
+                title: `${bot.username} sắp hết tiền`,
+                description: `Tài khoản còn dưới 2000, vui lòng nạp thêm !`,
+              });
+            }
+            updateAccount('BOT', bot.username, {
+              main_balance: money,
+            });
+          }
+          if (
+            message[1].cmd === 602 &&
+            (message[1].hsl == false || message[1].hsl == true)
+          ) {
+            const user = message[1].ps.find(
+              (item: { dn: string }) => item.dn === fullName
+            );
+            if (user) {
+              setBotMoneyChange(user.mX);
+            }
+          }
           //Received-card
           if (message[1].cs && message[1].T === 60000) {
             updateBotStatus(bot.username, `${message[1].cs}`);
@@ -212,7 +230,7 @@ export default function useBotWebSocket(bot: any, roomID: number) {
                 `[5,"Simms",${roomID},{"cmd":603,"cs":[${baiLung.cards}]}]`
               );
             } else {
-              const arrangedCard = arrangeCard(message[1].cs) as any;
+              const arrangedCard = binhLungCard(message[1].cs) as any;
               sendMessage(
                 `[5,"Simms",${roomID},{"cmd":606,"cs":[${arrangedCard.cards}]}]`
               );
@@ -273,5 +291,6 @@ export default function useBotWebSocket(bot: any, roomID: number) {
     connectionStatus,
     onConnect,
     onDisconnect,
+    botMoneyChange,
   };
 }
