@@ -1,5 +1,9 @@
 import { now } from 'lodash';
 import { toast } from '../components/toast/use-toast';
+import useAccountStore from '../store/accountStore';
+import { accountLogin } from './login';
+
+const { accounts, removeAccount, updateAccount } = useAccountStore();
 
 const readValidAccount = (input: string): any => {
   return input
@@ -80,12 +84,6 @@ const addUniqueAccounts = async (
 };
 
 const generateAccount = (account: any) => {
-  var cash = 0;
-  // if (account.isSelected) {
-  //   const data = (await accountLogin(account)) as any;
-  //   cash = Array.isArray(data?.data) ? data?.data[0].main_balance : 0;
-  // }
-
   return {
     username: account.username,
     password: account.password,
@@ -105,4 +103,22 @@ const generateAccount = (account: any) => {
   };
 };
 
-export { accountExists, addUniqueAccounts, generateAccount, readValidAccount };
+const checkBalance = async (rowData: any, accountType: string) => {
+  var mainBalance = rowData.main_balance;
+
+  const data = (await accountLogin(rowData)) as any;
+  const cash = Array.isArray(data?.data) ? data?.data[0].main_balance : 0;
+  mainBalance = cash;
+
+  updateAccount(accountType, rowData.username, {
+    main_balance: data.code === 200 ? mainBalance : data.message,
+  });
+};
+
+export {
+  accountExists,
+  addUniqueAccounts,
+  checkBalance,
+  generateAccount,
+  readValidAccount,
+};

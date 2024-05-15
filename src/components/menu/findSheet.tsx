@@ -94,12 +94,6 @@ export function FindRoomSheet({ isOpen, setIsOpen }: FindRoomSheetProps) {
           </span>
         </p>
       </div>
-      {/* <div className="flex gap-2">
-        <Button onClick={() => setStartGameStatus(true)}>Connect</Button>
-        <Button onClick={() => setStartGameStatus(false)}>Disconnect</Button>
-        <Button onClick={() => setReadyToCreateStatus(true)}>Create</Button>
-        <Button onClick={() => setRoomFoundStatus(true)}>Founded Game !</Button>
-      </div> */}
       <ScrollArea className="h-full rounded-md flex flex-col">
         <div className="flex flex-col  text-white space-y-4 flex-1 w-full">
           <SubRoomController />

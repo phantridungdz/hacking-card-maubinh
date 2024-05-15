@@ -1,5 +1,3 @@
-'use client';
-
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -15,33 +13,25 @@ import {
   ArrowUpDown,
   DollarSign,
   MoreHorizontal,
-  Paperclip,
-  Plus,
   RefreshCcw,
-  Trash,
 } from 'lucide-react';
 import * as React from 'react';
 
-import { Label } from '@radix-ui/react-label';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   addUniqueAccounts,
+  checkBalance,
   generateAccount,
   readValidAccount,
 } from '../../lib/account';
 import { readFile, updateFile } from '../../lib/file';
 import { accountLogin } from '../../lib/login';
 import useAccountStore from '../../store/accountStore';
+import AddAccount from '../model/addAccount';
+import AddProxy from '../model/addProxy';
 import { useToast } from '../toast/use-toast';
 import { Button } from '../ui/button';
 import { Checkbox } from '../ui/checkbox';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogTitle,
-  DialogTrigger,
-} from '../ui/dialog';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -59,9 +49,9 @@ import {
   TableHeader,
   TableRow,
 } from '../ui/table';
-import { Tooltip, TooltipTrigger } from '../ui/tooltip';
 
 export const AccountTable: React.FC<any> = ({ accountType }) => {
+  const { toast } = useToast();
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -69,52 +59,13 @@ export const AccountTable: React.FC<any> = ({ accountType }) => {
   const [isDialogAddAccountOpen, setDialogAddAccountOpen] = useState(false);
   const [isDialogProxyOpen, setDialogProxyOpen] = useState(false);
   const [rowSelected, setRowSelected] = useState<any>();
-  const [errorAddProxy, setErrorAddProxy] = useState<any>();
-  const [useAuthForProxy, setUseAuthForProxy] = useState(false);
+
   const [readedFile, setReadedFile] = useState(false);
 
   const { accounts, updateAccount, addAccount, removeAccount } =
     useAccountStore();
-  const { toast } = useToast();
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const usernameRef = useRef<HTMLInputElement>(null);
-  const passwordRef = useRef<HTMLInputElement>(null);
-  const proxyRef = useRef<HTMLInputElement>(null);
-  const portRef = useRef<HTMLInputElement>(null);
-  const authUsernameRef = useRef<HTMLInputElement>(null);
-  const authPasswordRef = useRef<HTMLInputElement>(null);
+  // const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleAddAccount = () => {
-    if (usernameRef.current && passwordRef.current) {
-      const newAccount = {
-        username: usernameRef.current.value,
-        password: passwordRef.current.value,
-      };
-      addAccount(accountType, generateAccount(newAccount));
-      setDialogAddAccountOpen(false);
-    }
-  };
-  const handleAddProxy = (row: any) => {
-    if (!proxyRef.current?.value) {
-      setErrorAddProxy('Please input proxy');
-      return;
-    }
-    if (!portRef.current?.value) {
-      setErrorAddProxy('Please input port');
-      return;
-    }
-
-    if (proxyRef.current && portRef.current && row) {
-      const newProxy = {
-        proxy: proxyRef.current.value,
-        port: portRef.current.value,
-        userProxy: useAuthForProxy ? authUsernameRef.current?.value : '',
-        passProxy: useAuthForProxy ? authPasswordRef.current?.value : '',
-      };
-      updateAccount(accountType, row.username, newProxy);
-      setDialogProxyOpen(false);
-    }
-  };
   const handleFileChange = (event: any) => {
     const file = event.target.files[0];
     if (!file) return;
@@ -176,59 +127,6 @@ export const AccountTable: React.FC<any> = ({ accountType }) => {
     removeAccount(accountType, rowData.username);
   };
 
-  const checkBalance = async (rowData: any) => {
-    var mainBalance = rowData.main_balance;
-
-    const data = (await accountLogin(rowData)) as any;
-    const cash = Array.isArray(data?.data) ? data?.data[0].main_balance : 0;
-    mainBalance = cash;
-
-    updateAccount(accountType, rowData.username, {
-      main_balance: data.code === 200 ? mainBalance : data.message,
-    });
-  };
-
-  const handleDeleteSelectedRows = () => {
-    const selectedRows = table.getSelectedRowModel().rows;
-    selectedRows.forEach((row: any) => {
-      removeAccount(accountType, row.original.username);
-    });
-    toast({
-      title: 'Deleted accounts',
-      description: `${selectedRows.length} account(s) deleted.`,
-    });
-  };
-
-  const refreshAccount = async () => {
-    const selectedAccounts = accounts[accountType].filter(
-      (account: any) => account.isSelected
-    );
-
-    if (!selectedAccounts.length) {
-      toast({
-        title: 'No Selected Accounts',
-        description: 'No selected accounts available to refresh.',
-      });
-      return;
-    }
-
-    const checkBalances = selectedAccounts.map((account: any) =>
-      checkBalance(account)
-    );
-
-    try {
-      await Promise.all(checkBalances);
-      toast({
-        title: 'Refreshed',
-        description: `Selected accounts refreshed and balances updated.`,
-      });
-    } catch (error) {
-      toast({
-        title: 'Error',
-        description: `Failed to refresh some accounts`,
-      });
-    }
-  };
   const onCheckAll = async (value: any) => {
     const selectedAccounts = accounts[accountType];
 
@@ -237,7 +135,7 @@ export const AccountTable: React.FC<any> = ({ accountType }) => {
         isSelected: value,
       });
       if (value) {
-        checkBalance(account);
+        checkBalance(account, accountType);
       }
     });
 
@@ -354,7 +252,7 @@ export const AccountTable: React.FC<any> = ({ accountType }) => {
               type="button"
               variant="ghost"
               size="icon"
-              onClick={() => checkBalance(rowData)}
+              onClick={() => checkBalance(rowData, accountType)}
             >
               <RefreshCcw className="w-3.5 h-3.5" />
             </Button>
@@ -383,7 +281,9 @@ export const AccountTable: React.FC<any> = ({ accountType }) => {
               <DropdownMenuItem onClick={() => handleDeleteRow(rowData)}>
                 Delete account
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => checkBalance(rowData)}>
+              <DropdownMenuItem
+                onClick={() => checkBalance(rowData, accountType)}
+              >
                 Check balance
               </DropdownMenuItem>
               {accountType == 'MAIN' && (
@@ -402,11 +302,9 @@ export const AccountTable: React.FC<any> = ({ accountType }) => {
       },
     },
   ];
-
   const cashIndex = columns.findIndex(
     (col: any) => col.accessorKey === 'main_balance'
   );
-
   if (accountType === 'MAIN') {
     columns.splice(cashIndex + 1, 0, {
       accessorKey: 'proxy',
@@ -455,86 +353,6 @@ export const AccountTable: React.FC<any> = ({ accountType }) => {
           }
           className="max-w-sm"
         />
-
-        <div className="flex flex-row justify-end items-center">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => {
-                  if (fileInputRef.current) {
-                    fileInputRef.current.click();
-                  }
-                }}
-              >
-                <Paperclip className="size-4" />
-              </Button>
-            </TooltipTrigger>
-            <Dialog
-              open={isDialogAddAccountOpen}
-              onOpenChange={setDialogAddAccountOpen}
-            >
-              <DialogTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setDialogAddAccountOpen(true)}
-                >
-                  <Plus className="size-4" />
-                  <span className="sr-only">Add account</span>
-                </Button>
-              </DialogTrigger>
-            </Dialog>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                type="button"
-                onClick={handleDeleteSelectedRows}
-              >
-                <Trash className="w-3.5 h-3.5" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                type="button"
-                onClick={refreshAccount}
-              >
-                <RefreshCcw className="w-3.5 h-3.5" />
-              </Button>
-            </TooltipTrigger>
-          </Tooltip>
-          {/*
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="ml-auto">
-                <ChevronDown className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              {table
-                .getAllColumns()
-                .filter((column) => column.getCanHide())
-                .map((column) => {
-                  return (
-                    <DropdownMenuCheckboxItem
-                      key={column.id}
-                      className="capitalize"
-                      checked={column.getIsVisible()}
-                      onCheckedChange={(value: any) =>
-                        column.toggleVisibility(!!value)
-                      }
-                    >
-                      {column.id}
-                    </DropdownMenuCheckboxItem>
-                  );
-                })}
-            </DropdownMenuContent>
-          </DropdownMenu> */}
-        </div>
       </div>
       <div className="rounded-md border">
         <Table>
@@ -587,7 +405,7 @@ export const AccountTable: React.FC<any> = ({ accountType }) => {
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center p-3 pt-0">
+      {/* <div className="flex items-center p-3 pt-0">
         <input
           type="file"
           accept=".txt"
@@ -595,92 +413,24 @@ export const AccountTable: React.FC<any> = ({ accountType }) => {
           onChange={handleFileChange}
           style={{ display: 'none' }}
         />
-      </div>
+      </div> */}
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">
           {table.getFilteredSelectedRowModel().rows.length} of{' '}
           {table.getFilteredRowModel().rows.length} row(s) selected.
         </div>
       </div>
-      <Dialog open={isDialogProxyOpen} onOpenChange={setDialogProxyOpen}>
-        <DialogContent>
-          <DialogTitle>Add proxy</DialogTitle>
-          <DialogDescription className={`${errorAddProxy && 'text-red-500'}`}>
-            {errorAddProxy
-              ? errorAddProxy
-              : 'Enter the details of the new proxy.'}
-          </DialogDescription>
-          <Input ref={proxyRef} placeholder="Proxy" className="mb-4" />
-          <Input
-            ref={portRef}
-            type="password"
-            placeholder="Port"
-            className="mb-4"
-          />
-          <div className="flex flex-row items-center justify-start gap-2">
-            <Checkbox
-              className="bg-white"
-              checked={useAuthForProxy}
-              onCheckedChange={() => setUseAuthForProxy(!useAuthForProxy)}
-            />
-            <Label>Is use authentication ?</Label>
-          </div>
-
-          {useAuthForProxy && (
-            <>
-              <Input
-                ref={authUsernameRef}
-                placeholder="Username for Proxy"
-                className="mb-4"
-              />
-              <Input
-                ref={authPasswordRef}
-                type="password"
-                placeholder="Password for Proxy"
-                className="mb-4"
-              />
-            </>
-          )}
-          <div className="flex justify-end space-x-2">
-            <Button
-              variant="secondary"
-              onClick={() => setDialogProxyOpen(false)}
-            >
-              Cancel
-            </Button>
-            <Button onClick={() => handleAddProxy(rowSelected)}>
-              Set proxy
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
-      <Dialog
-        open={isDialogAddAccountOpen}
-        onOpenChange={setDialogAddAccountOpen}
-      >
-        <DialogContent>
-          <DialogTitle>Add New Account</DialogTitle>
-          <DialogDescription>
-            Enter the details of the new account.
-          </DialogDescription>
-          <Input ref={usernameRef} placeholder="Username" className="mb-4" />
-          <Input
-            ref={passwordRef}
-            type="password"
-            placeholder="Password"
-            className="mb-4"
-          />
-          <div className="flex justify-end space-x-2">
-            <Button
-              variant="secondary"
-              onClick={() => setDialogAddAccountOpen(false)}
-            >
-              Cancel
-            </Button>
-            <Button onClick={handleAddAccount}>Add Account</Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+      <AddProxy
+        isDialogProxyOpen={isDialogProxyOpen}
+        setDialogProxyOpen={setDialogProxyOpen}
+        rowSelected={rowSelected}
+        accountType={accountType}
+      />
+      <AddAccount
+        isDialogAddAccountOpen={isDialogAddAccountOpen}
+        setDialogAddAccountOpen={setDialogAddAccountOpen}
+        accountType={accountType}
+      />
     </div>
   );
 };
