@@ -155,20 +155,12 @@ export default function useBotWebSocket(bot: any, roomID: number) {
           }
 
           //send-Ready
-          if (
-            message[1].cmd === 204 ||
-            message[1].cmd === 607 ||
-            message[1].cmd === 5
-          ) {
+          if (message[1].cmd === 204 || message[1].cmd === 5) {
             // updateBotStatus(bot.username, 'Sent ready');
             sendMessage(`[5,"Simms",${roomID},{"cmd":5}]`);
-            console.log(
-              'botsReady.includes(bot.userName)',
-              botsReady.includes(bot.userName)
-            );
-            if (!botsReady.includes(bot.userName)) {
-              addBotReady(bot.username);
-            }
+            // if (!botsReady.includes(bot.userName)) {
+            addBotReady(bot.username);
+            // }
           }
           //end-game-> out room
           if (message[1].cmd === 205 && message[1].ps) {
@@ -194,18 +186,18 @@ export default function useBotWebSocket(bot: any, roomID: number) {
             );
           }
           //check money
-          if (message[1].cmd === 200 && message[1].p) {
-            const money = message[1].p.As.gold;
-            if (parseInt(money) < 2000) {
-              toast({
-                title: `${bot.username} sắp hết tiền`,
-                description: `Tài khoản còn dưới 2000, vui lòng nạp thêm !`,
-              });
-            }
-            updateAccount('BOT', bot.username, {
-              main_balance: money,
-            });
-          }
+          // if (message[1].cmd === 200 && message[1].p) {
+          //   const money = message[1].p.As.gold;
+          //   if (parseInt(money) < 2000) {
+          //     toast({
+          //       title: `${bot.username} sắp hết tiền`,
+          //       description: `Tài khoản còn dưới 2000, vui lòng nạp thêm !`,
+          //     });
+          //   }
+          //   updateAccount('BOT', bot.username, {
+          //     main_balance: money,
+          //   });
+          // }
           if (
             message[1].cmd === 602 &&
             (message[1].hsl == false || message[1].hsl == true)

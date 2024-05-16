@@ -182,7 +182,7 @@ export default function useHostWebSocket(bot: any, roomID: number) {
           //send-Start
           if (message[1].cmd === 204 || message[1].cmd === 607) {
             if (isFoundedRoom) {
-              if (botsReady.length == 3) {
+              if (botsReady.length === 3) {
                 updateBotStatus(bot.username, 'Sent start');
                 sendMessage(`[5,"Simms",${roomID},{"cmd":698}]`);
                 sendMessage(`[5,"Simms",${roomID},{"cmd":5}]`);
@@ -236,18 +236,18 @@ export default function useHostWebSocket(bot: any, roomID: number) {
             );
           }
           //check money
-          if (message[1].cmd === 200 && message[1].p) {
-            const money = message[1].p.As.gold;
-            if (parseInt(money) < 2000) {
-              toast({
-                title: `${bot.username} sắp hết tiền`,
-                description: `Tài khoản còn dưới 2000, vui lòng nạp thêm !`,
-              });
-            }
-            updateAccount('BOT', bot.username, {
-              main_balance: money,
-            });
-          }
+          // if (message[1].cmd === 200 && message[1].p) {
+          //   const money = message[1].p.As.gold;
+          //   if (parseInt(money) < 2000) {
+          //     toast({
+          //       title: `${bot.username} sắp hết tiền`,
+          //       description: `Tài khoản còn dưới 2000, vui lòng nạp thêm !`,
+          //     });
+          //   }
+          //   updateAccount('BOT', bot.username, {
+          //     main_balance: money,
+          //   });
+          // }
           if (
             message[1].cmd === 602 &&
             (message[1].hsl == false || message[1].hsl == true)
@@ -343,7 +343,7 @@ export default function useHostWebSocket(bot: any, roomID: number) {
         setTimeout(() => {
           sendMessage(`[5,"Simms",${roomID},{"cmd":698}]`);
           sendMessage(`[5,"Simms",${roomID},{"cmd":5}]`);
-        }, 50);
+        }, 150);
       }
     }
   }, [botsReady, isFoundedRoom]);

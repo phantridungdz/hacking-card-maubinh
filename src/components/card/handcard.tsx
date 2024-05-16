@@ -118,6 +118,7 @@ export const HandCard: React.FC<HandCardProps> = ({ index, cardProp }) => {
     setEvaluation1(newCard.chi1);
     setEvaluation2(newCard.chi2);
     setEvaluation3(newCard.chi3);
+    // console.log('newCard.instant', newCard.instant)
     setIsInstant(newCard.instant ? true : false);
     setTitleInstant(newCard.instant);
     setLoading(false);

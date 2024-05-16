@@ -54,12 +54,17 @@ const AddProxy: React.FC<any> = ({
             ? errorAddProxy
             : 'Enter the details of the new proxy.'}
         </DialogDescription>
-        <Input ref={proxyRef} placeholder="Proxy" className="mb-4" />
+        <Input
+          ref={proxyRef}
+          placeholder="Proxy"
+          className="mb-4"
+          defaultValue={rowSelected?.proxy}
+        />
         <Input
           ref={portRef}
-          type="password"
           placeholder="Port"
           className="mb-4"
+          defaultValue={rowSelected?.port}
         />
         <div className="flex flex-row items-center justify-start gap-2">
           <Checkbox
@@ -76,12 +81,13 @@ const AddProxy: React.FC<any> = ({
               ref={authUsernameRef}
               placeholder="Username for Proxy"
               className="mb-4"
+              defaultValue={rowSelected?.userProxy}
             />
             <Input
               ref={authPasswordRef}
-              type="password"
               placeholder="Password for Proxy"
               className="mb-4"
+              defaultValue={rowSelected?.passProxy}
             />
           </>
         )}

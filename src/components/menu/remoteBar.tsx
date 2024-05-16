@@ -1,5 +1,6 @@
 import {
   Bot,
+  CirclePlus,
   Loader2,
   LogIn,
   SearchCheck,
@@ -20,6 +21,7 @@ import {
 import useBotRoomStore from '../../store/botRoomStore';
 import useGameStore from '../../store/gameStore';
 import useSubRoomStore from '../../store/subRoomStore';
+import CreateAccount from '../model/createAccount';
 
 const RemoteBar: React.FC<any> = ({
   cardDeck,
@@ -28,27 +30,22 @@ const RemoteBar: React.FC<any> = ({
   setIsOpenSheet,
 }) => {
   const {
-    subCards,
-    botCards,
     setFindingStatus,
     isStartGame,
     isFinding,
     setStartGameStatus,
     setReadyToCreateStatus,
     clearGameState,
-    isFoundedRoom,
-    setRoomFoundStatus,
-    setFoundedRoom,
     mainRoomID,
     setMainCard,
     isLogining,
     setIsLogining,
-    setRoomType,
   } = useGameStore();
   const { clearAllStatesBot } = useBotRoomStore();
   const { clearAllStatesSub } = useSubRoomStore();
   const [refreshKey, setRefreshKey] = useState(0);
   const [isOpenBotSheet, setIsOpenBotSheet] = useState(false);
+  const [isOpenCreateAccount, setIsOpenCreateAccount] = useState(false);
 
   const onLogin = () => {
     setStartGameStatus(true);
@@ -83,19 +80,26 @@ const RemoteBar: React.FC<any> = ({
       window.scrollTo({ top: y, behavior: 'smooth' });
     }
   };
-  const handleRoomTypeChange = (money: number) => {
-    setRoomType(money);
-  };
   return (
     <div className="flex items-center fixed top-0 left-0 right-0  py-[15px] bg-background border-b z-[21] px-[10px]">
       <div className="ml-auto w-full flex items-center gap-2 justify-between">
-        <Button
-          onClick={() => setIsOpenBotSheet(true)}
-          size="sm"
-          className="h-8 gap-1"
-        >
-          <Bot />
-        </Button>
+        <div className="flex justify-start items-center gap-2">
+          <Button
+            onClick={() => setIsOpenBotSheet(true)}
+            size="sm"
+            className="h-8 gap-1"
+          >
+            <Bot />
+          </Button>
+          <Button
+            onClick={() => setIsOpenCreateAccount(true)}
+            size="sm"
+            className="h-8 gap-1"
+          >
+            <CirclePlus className="w-3.5 h-3.5" />
+            Create Account
+          </Button>
+        </div>
         <div key={refreshKey}>
           <FindRoomSheet
             setIsOpen={setIsOpenBotSheet}
@@ -149,20 +153,6 @@ const RemoteBar: React.FC<any> = ({
               </Button>
             </>
           )}
-
-          {/* <Tooltip>
-                      <TooltipTrigger>
-                        <div
-                          style={{ fontFamily: 'monospace' }}
-                          className="h-8 text-[19px] flex justify-center items-center px-[10px] rounded-sm bg-green-600"
-                        >
-                          <HandCardIcon /> {numberOfCards}
-                        </div>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Number of cards crawled</p>
-                      </TooltipContent>
-                    </Tooltip> */}
           <Tooltip>
             <TooltipTrigger>
               <div
@@ -191,6 +181,10 @@ const RemoteBar: React.FC<any> = ({
           </Tooltip>
         </div>
       </div>
+      <CreateAccount
+        isOpenCreateAccount={isOpenCreateAccount}
+        setIsOpenCreateAccount={setIsOpenCreateAccount}
+      />
     </div>
   );
 };

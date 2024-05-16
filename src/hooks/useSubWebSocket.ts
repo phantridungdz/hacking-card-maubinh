@@ -174,18 +174,18 @@ export default function useSubWebSocket(sub: any, roomID: number) {
             );
           }
           //check money
-          if (message[1].cmd === 200 && message[1].p) {
-            const money = message[1].p.As.gold;
-            if (parseInt(money) < 2000) {
-              toast({
-                title: `${sub.username} sắp hết tiền`,
-                description: `Tài khoản còn dưới 2000, vui lòng nạp thêm !`,
-              });
-            }
-            updateAccount('SUB', sub.username, {
-              main_balance: money,
-            });
-          }
+          // if (message[1].cmd === 200 && message[1].p) {
+          //   const money = message[1].p.As.gold;
+          //   if (parseInt(money) < 2000) {
+          //     toast({
+          //       title: `${sub.username} sắp hết tiền`,
+          //       description: `Tài khoản còn dưới 2000, vui lòng nạp thêm !`,
+          //     });
+          //   }
+          //   updateAccount('SUB', sub.username, {
+          //     main_balance: money,
+          //   });
+          // }
           if (
             message[1].cmd === 602 &&
             (message[1].hsl == false || message[1].hsl == true)

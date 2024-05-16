@@ -126,6 +126,7 @@
     "@tanstack/react-table": "^8.16.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
+    "crypto-js": "^4.2.0",
     "dotenv": "^16.4.5",
     "electron-debug": "^3.2.0",
     "electron-log": "^4.4.7",

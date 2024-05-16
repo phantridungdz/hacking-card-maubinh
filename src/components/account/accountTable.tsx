@@ -11,9 +11,13 @@ import {
 } from '@tanstack/react-table';
 import {
   ArrowUpDown,
+  Check,
   DollarSign,
   MoreHorizontal,
+  Plug,
   RefreshCcw,
+  RemoveFormatting,
+  Trash,
 } from 'lucide-react';
 import * as React from 'react';
 
@@ -28,6 +32,7 @@ import { accountLogin } from '../../lib/login';
 import useAccountStore from '../../store/accountStore';
 import AddAccount from '../model/addAccount';
 import AddProxy from '../model/addProxy';
+import Deposit from '../model/deposit';
 import { useToast } from '../toast/use-toast';
 import { Button } from '../ui/button';
 import { Checkbox } from '../ui/checkbox';
@@ -57,6 +62,7 @@ export const AccountTable: React.FC<any> = ({ accountType }) => {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [dataTable, setDataTable] = useState<any>([]);
   const [isDialogAddAccountOpen, setDialogAddAccountOpen] = useState(false);
+  const [isDialogDepositOpen, setDialogDepositOpen] = useState(false);
   const [isDialogProxyOpen, setDialogProxyOpen] = useState(false);
   const [rowSelected, setRowSelected] = useState<any>();
 
@@ -105,6 +111,14 @@ export const AccountTable: React.FC<any> = ({ accountType }) => {
 
   const handleDeleteRow = (rowData: any) => {
     removeAccount(accountType, rowData.username);
+  };
+
+  const removeProxy = (rowData: any) => {
+    console.log('rowData', rowData);
+    updateAccount(accountType, rowData.username, {
+      proxy: '',
+      passProxy: '',
+    });
   };
 
   const onCheckAll = async (value: any) => {
@@ -240,7 +254,6 @@ export const AccountTable: React.FC<any> = ({ accountType }) => {
         );
       },
     },
-
     {
       id: 'actions',
       enableHiding: false,
@@ -258,26 +271,50 @@ export const AccountTable: React.FC<any> = ({ accountType }) => {
             <DropdownMenuContent align="end" className="z-[1000]">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => handleDeleteRow(rowData)}>
+              <DropdownMenuItem
+                className="flex flex-row items-center gap-1"
+                onClick={() => handleDeleteRow(rowData)}
+              >
+                <RemoveFormatting className="w-3.5 h-3.5" />
                 Delete account
               </DropdownMenuItem>
               <DropdownMenuItem
+                className="flex flex-row items-center gap-1"
                 onClick={() =>
                   checkBalance(rowData, accountType, updateAccount)
                 }
               >
+                <Check className="w-3.5 h-3.5" />
                 Check balance
               </DropdownMenuItem>
-              {accountType == 'MAIN' && (
-                <DropdownMenuItem
-                  onClick={() => {
-                    setDialogProxyOpen(true);
-                    setRowSelected(rowData);
-                  }}
-                >
-                  Set proxy
-                </DropdownMenuItem>
-              )}
+              <DropdownMenuItem
+                onClick={() => removeProxy(rowData)}
+                className="flex flex-row items-center gap-1"
+              >
+                <Trash className="w-3.5 h-3.5" />
+                Remove Proxy
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  setDialogDepositOpen(true);
+                  setRowSelected(rowData);
+                }}
+                className="flex flex-row items-center gap-1"
+              >
+                <DollarSign className="w-3.5 h-3.5" />
+                Deposit
+              </DropdownMenuItem>
+
+              <DropdownMenuItem
+                className="flex flex-row items-center gap-1"
+                onClick={() => {
+                  setDialogProxyOpen(true);
+                  setRowSelected(rowData);
+                }}
+              >
+                <Plug className="w-3.5 h-3.5" />
+                Set proxy
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         );
@@ -411,6 +448,11 @@ export const AccountTable: React.FC<any> = ({ accountType }) => {
         isDialogAddAccountOpen={isDialogAddAccountOpen}
         setDialogAddAccountOpen={setDialogAddAccountOpen}
         accountType={accountType}
+      />
+      <Deposit
+        isDialogDepositOpen={isDialogDepositOpen}
+        setDialogDepositOpen={setDialogDepositOpen}
+        rowSelected={rowSelected}
       />
     </div>
   );

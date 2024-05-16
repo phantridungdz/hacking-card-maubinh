@@ -4,12 +4,13 @@ import {
   Chrome,
   Home,
   MapPin,
+  Play,
   PlusCircle,
   RefreshCcw,
   TrashIcon,
   UserPlus,
 } from 'lucide-react';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Button } from '../../components/ui/button';
 import { Label } from '../../components/ui/label';
 import { ScrollArea } from '../../components/ui/scroll-area';
@@ -35,6 +36,8 @@ export const TerminalBoard: React.FC<any> = ({ main }) => {
   const [isInLobby, setIsInLobby] = useState(false);
   const [currentSit, setCurrentSit] = useState('');
   const [autoInvite, setAutoInvite] = useState(false);
+  const [autoStart, setAutoStart] = useState(false);
+  const autoStartRef = useRef(autoStart);
   const { mainRoomID, isStartGame, setMainJoinStatus, setMainCard } =
     useGameStore();
 
@@ -59,6 +62,13 @@ export const TerminalBoard: React.FC<any> = ({ main }) => {
       'execute-script',
       account,
       `__require('GameController').default.prototype.sendLeaveRoom();`
+    );
+  };
+  const sendStart = (account: any): void => {
+    window.backend.sendMessage(
+      'execute-script',
+      account,
+      `__require('CardGameCommonRequest').default.getInstance().sendStart(698)`
     );
   };
   function joinRoom(account: any): void {
@@ -113,6 +123,10 @@ export const TerminalBoard: React.FC<any> = ({ main }) => {
       arrangeCardCommand
     );
   }
+  useEffect(() => {
+    autoStartRef.current = autoStart;
+    console.log('autoStart:', autoStart);
+  }, [autoStart]);
 
   const handleData = ({ data, username, displayName }: any) => {
     if (username === main.username) {
@@ -150,6 +164,16 @@ export const TerminalBoard: React.FC<any> = ({ main }) => {
           }));
         }
         if (parsedData[0] == 5) {
+          if (
+            parsedData[1].cmd === 204 ||
+            parsedData[1].cmd === 607 ||
+            parsedData[1].cmd === 5
+          ) {
+            if (autoStartRef.current) {
+              console.log('sendStart', parsedData);
+              sendStart(main);
+            }
+          }
           checkPosition(main);
           if (parsedData[2] === state.targetAt) {
             // console.log('Đang trong ván');
@@ -185,19 +209,6 @@ export const TerminalBoard: React.FC<any> = ({ main }) => {
             } else {
               console.log('Username not found.');
             }
-
-            setState((pre) => {
-              return {
-                ...pre,
-                currentGame: {
-                  ...pre.currentGame,
-                  number:
-                    pre.activeMain === main.username
-                      ? pre.currentGame.number + 1
-                      : pre.currentGame.number,
-                },
-              };
-            });
           }
           if (parsedData[1].cs && parsedData[1].cmd === 600) {
             const currentCards = parsedData[1].cs
@@ -214,17 +225,6 @@ export const TerminalBoard: React.FC<any> = ({ main }) => {
               ...currentData,
               parsedData[1].cs.toString().split(',').map(Number),
             ]);
-
-            // First game
-            main.username &&
-              setState((pre) => {
-                return {
-                  ...pre,
-                  activeMain: main.username,
-                };
-              });
-
-            arrangeCards(main);
           }
         }
         if (parsedData[0] !== '7' && parsedData[0] != 5) {
@@ -350,7 +350,7 @@ export const TerminalBoard: React.FC<any> = ({ main }) => {
               </Label>
             </div>
           </div>
-          <div className="grid grid-cols-7 gap-2">
+          <div className="grid grid-cols-8 gap-2">
             <Tooltip>
               <TooltipTrigger>
                 <div
@@ -438,6 +438,11 @@ export const TerminalBoard: React.FC<any> = ({ main }) => {
             <div className="h-full w-full rounded-[5px] flex justify-center items-center border">
               <Toggle pressed={autoInvite} onPressedChange={setAutoInvite}>
                 <UserPlus className="h-3.5 w-3.5" />
+              </Toggle>
+            </div>
+            <div className="h-full w-full rounded-[5px] flex justify-center items-center border">
+              <Toggle pressed={autoStart} onPressedChange={setAutoStart}>
+                <Play className="h-3.5 w-3.5" />
               </Toggle>
             </div>
           </div>

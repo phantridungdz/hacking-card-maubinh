@@ -1,5 +1,4 @@
-import axios, { AxiosRequestConfig } from 'axios';
-import CryptoJS from 'crypto-js';
+import axios from 'axios';
 import { BotStatus } from '../renderer/providers/app';
 import { loginUrl } from './config';
 
@@ -37,57 +36,15 @@ export interface LoginParams {
   fg: string;
   time: number;
   aff_id: string;
-  proxy: string;
-  passProxy: string;
-  userProxy: string;
-  port: string;
 }
-
-const generateRandomHex = (size: number): string => {
-  const randomBytes = CryptoJS.lib.WordArray.random(size);
-  return randomBytes.toString(CryptoJS.enc.Hex);
-};
-const getRandomOS = (): string => {
-  const osChoices = ['Mac', 'Windows', 'Linux'];
-  return osChoices[Math.floor(Math.random() * osChoices.length)];
-};
-const getCurrentTimestamp = (): number => {
-  return Math.floor(Date.now() / 1000);
-};
 
 const login = async (botInfo: LoginParams): Promise<LoginResponse | null> => {
   const credentials = {
-    aff_id: botInfo.aff_id,
-    browser: botInfo.browser,
-    device: botInfo.device,
-    fg: generateRandomHex(16),
-    os: getRandomOS(),
-    password: botInfo.password,
-    sign: generateRandomHex(16),
-    time: getCurrentTimestamp(),
-    username: botInfo.username,
+    ...botInfo,
   };
 
   try {
-    const proxyConfig: AxiosRequestConfig = {
-      proxy: {
-        host: botInfo.proxy,
-        port: Number(botInfo.port),
-        auth: {
-          username: botInfo.userProxy,
-          password: botInfo.passProxy,
-        },
-      },
-    };
-    const response = await axios.post<LoginResponse>(
-      loginUrl,
-      credentials,
-      proxyConfig
-    );
-    await axios.get<ConnectTokenResponse>(
-      'https://apirvp4.traskiprik.info/sw/collect',
-      proxyConfig
-    );
+    const response = await axios.post<LoginResponse>(loginUrl, credentials);
     return response.data;
   } catch (error) {
     console.error(
@@ -108,7 +65,6 @@ const getConnectToken = async (
   try {
     const url = `https://maubinh.twith.club/signalr/negotiate?access_token=${token}`;
     const response = await axios.get<ConnectTokenResponse>(url);
-
     return response.data;
   } catch (error) {
     console.error(
