@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import { useToast } from '../components/toast/use-toast';
 import { binhLungCard } from '../lib/arrangeCard';
-import { login } from '../lib/login';
+import { login } from '../service/login';
 import useAccountStore from '../store/accountStore';
 import useBotRoomStore from '../store/botRoomStore';
 import useGameStore from '../store/gameStore';
@@ -10,6 +10,17 @@ import useSubRoomStore from '../store/subRoomStore';
 
 export default function useHostWebSocket(bot: any, roomID: number) {
   const { toast } = useToast();
+  //http://AH0BP35KJc:cbxPHb8M6J@146.19.196.50:40276
+  const proxyUrl =
+    'http://' +
+    bot.userProxy +
+    ':' +
+    bot.passProxy +
+    '@' +
+    bot.proxy +
+    ':' +
+    bot.port;
+  // const agent = new HttpProxyAgent(proxyUrl);
   const [socketUrl, setSocketUrl] = useState('');
   const [shouldConnect, setShouldConnect] = useState(false);
   const [joinedLobby, setJoinedLobby] = useState(false);
@@ -23,6 +34,8 @@ export default function useHostWebSocket(bot: any, roomID: number) {
       shouldReconnect: () => true,
       reconnectInterval: 3000,
       reconnectAttempts: 10,
+      // agent: agent,
+      // queryParams: {agent}
     },
     shouldConnect
   );
@@ -178,17 +191,24 @@ export default function useHostWebSocket(bot: any, roomID: number) {
               // sendMessage(`[4,"Simms",${roomID}]`);
             }
           }
+          // if (message[1].cmd === 5 && message[1].dn === fullName) {
+          //   console.log('message[1].dn', message[1].dn);
+          //   console.log('fullName', fullName);
+          // }
 
           //send-Start
           if (message[1].cmd === 204 || message[1].cmd === 607) {
-            if (isFoundedRoom) {
+            if (isFoundedRoom && message[1].cmd === 607) {
               if (botsReady.length === 3) {
+                console.log('botsReady.length', botsReady.length);
                 updateBotStatus(bot.username, 'Sent start');
                 sendMessage(`[5,"Simms",${roomID},{"cmd":698}]`);
                 sendMessage(`[5,"Simms",${roomID},{"cmd":5}]`);
                 clearBotReady();
               }
-            } else {
+            }
+            if (!isFoundedRoom) {
+              console.log('vẫn send mesage');
               updateBotStatus(bot.username, 'Sent start');
               sendMessage(`[5,"Simms",${roomID},{"cmd":698}]`);
               sendMessage(`[5,"Simms",${roomID},{"cmd":5}]`);
@@ -339,11 +359,10 @@ export default function useHostWebSocket(bot: any, roomID: number) {
   useEffect(() => {
     if (isFoundedRoom) {
       if (botsReady.length === 3) {
+        console.log('botsReady.length', botsReady.length);
         updateBotStatus(bot.username, 'Sent start');
-        setTimeout(() => {
-          sendMessage(`[5,"Simms",${roomID},{"cmd":698}]`);
-          sendMessage(`[5,"Simms",${roomID},{"cmd":5}]`);
-        }, 150);
+        sendMessage(`[5,"Simms",${roomID},{"cmd":698}]`);
+        sendMessage(`[5,"Simms",${roomID},{"cmd":5}]`);
       }
     }
   }, [botsReady, isFoundedRoom]);

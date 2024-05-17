@@ -1,9 +1,4 @@
-// const { accounts, updateAccount, addAccount, removeAccount } =
-//     useAccountStore();
 const updateFile = async (accountsUpdate: any, accountType: string) => {
-  // const accountsUpdate = accounts[accountType];
-  // console.log('accountsUpdate', accountsUpdate);
-
   const accountsText = accountsUpdate
     .map(
       (account: {
@@ -18,24 +13,18 @@ const updateFile = async (accountsUpdate: any, accountType: string) => {
         `${account.username}|${account.password}|${account.isSelected}|${account.proxy}|${account.port}|${account.userProxy}|${account.passProxy}|`
     )
     .join('\n');
-  // if (accountsText) {
   window.backend.sendMessage(
     'update-file',
     accountsText,
     [`account/${accountType.toLowerCase()}Account.txt`],
     accountType
   );
-
-  // }
 };
 
 const readFile = (accountType: string) => {
   window.backend.sendMessage(
     'read-file',
-    [
-      // `C:/Users/PC/AppData/Local/Programs/electron-react-boilerplate/resources/account/${accountType.toLowerCase()}Account.txt`,
-      `account/${accountType.toLowerCase()}Account.txt`,
-    ],
+    [`account/${accountType.toLowerCase()}Account.txt`],
     accountType
   );
 };

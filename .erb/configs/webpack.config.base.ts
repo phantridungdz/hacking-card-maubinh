@@ -43,6 +43,12 @@ export default <WebpackConfig>{
   resolve: {
     extensions: ['.js', '.jsx', '.json', '.ts', '.tsx'],
     modules: [webpackPaths.srcPath, 'node_modules'],
+
+    fallback: {
+      https: require.resolve('https-browserify'), // previously added
+      http: require.resolve('stream-http'), // previously added
+      url: require.resolve('url-polyfill'), // add this for `url`
+    },
   },
 
   plugins: [

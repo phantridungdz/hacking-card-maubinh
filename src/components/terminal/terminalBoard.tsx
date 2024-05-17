@@ -14,26 +14,32 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Button } from '../../components/ui/button';
 import { Label } from '../../components/ui/label';
 import { ScrollArea } from '../../components/ui/scroll-area';
-import { addMoney } from '../../lib/supabase';
 import { highlightSyntax } from '../../lib/terminal';
 import { AppContext } from '../../renderer/providers/app';
 import useGameStore from '../../store/gameStore';
 import { useToast } from '../toast/use-toast';
 import { Toggle } from '../ui/toggle';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
+import { getAddNameTagCommand } from './commandTerminal';
 import {
-  arrangeCardCommand,
-  checkPositionCommand,
-  getAddNameTagCommand,
-  inviteCommand,
-} from './commandTerminal';
+  arrangeCards,
+  checkPosition,
+  createRoom,
+  invitePlayer,
+  joinLobby,
+  joinRoom,
+  moneyChange,
+  openAccounts,
+  outInRoom,
+  outRoom,
+  sendStart,
+} from './handlerTerminal';
 
 export const TerminalBoard: React.FC<any> = ({ main }) => {
   const { toast } = useToast();
   const [data, setData] = useState<unknown[]>([]);
   const { state, setState } = useContext(AppContext);
   const [isLogin, setIsLogin] = useState(false);
-  const [isInLobby, setIsInLobby] = useState(false);
   const [currentSit, setCurrentSit] = useState('');
   const [autoInvite, setAutoInvite] = useState(false);
   const [autoStart, setAutoStart] = useState(false);
@@ -50,189 +56,85 @@ export const TerminalBoard: React.FC<any> = ({ main }) => {
       return [];
     }
   };
-  const createRoom = (account: any): void => {
-    window.backend.sendMessage(
-      'execute-script',
-      account,
-      `__require('GamePlayManager').default.getInstance().requestcreateRoom(4,100,4,)`
-    );
-  };
-  const outRoom = (account: any): void => {
-    window.backend.sendMessage(
-      'execute-script',
-      account,
-      `__require('GameController').default.prototype.sendLeaveRoom();`
-    );
-  };
-  const sendStart = (account: any): void => {
-    window.backend.sendMessage(
-      'execute-script',
-      account,
-      `__require('CardGameCommonRequest').default.getInstance().sendStart(698)`
-    );
-  };
-  function joinRoom(account: any): void {
-    if (mainRoomID) {
-      window.backend.sendMessage(
-        'execute-script',
-        account,
-        `__require('GamePlayManager').default.getInstance().joinRoom(${mainRoomID},0,'',true);`
-      );
-    }
-  }
-
-  function checkPosition(account: any): void {
-    window.backend.sendMessage('check-position', account, checkPositionCommand);
-  }
-  const moneyChange = async (key: string | null, money: number) => {
-    if (money && key) {
-      addMoney(key, money);
-    } else {
-      toast({ title: 'Error', description: 'Not have money to change.' });
-    }
-  };
-  async function outInRoom(account: any): Promise<void> {
-    if (mainRoomID) {
-      await outRoom(account);
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      window.backend.sendMessage(
-        'execute-script',
-        account,
-        `__require('GamePlayManager').default.getInstance().joinRoom(${mainRoomID},0,'',true);`
-      );
-    }
-  }
-  const joinLobby = (account: any): void => {
-    window.backend.sendMessage(
-      'execute-script',
-      account,
-      `__require('LobbyViewController').default.Instance.onClickIConGame(null,"vgcg_4");`
-    );
-  };
-
-  async function invitePlayer(account: any): Promise<void> {
-    await window.backend.sendMessage('execute-script', account, inviteCommand);
-  }
-  async function openAccounts(account: any) {
-    await window.backend.sendMessage('open-accounts', account);
-  }
-  async function arrangeCards(account: any) {
-    await window.backend.sendMessage(
-      'execute-script',
-      account,
-      arrangeCardCommand
-    );
-  }
-  useEffect(() => {
-    autoStartRef.current = autoStart;
-    console.log('autoStart:', autoStart);
-  }, [autoStart]);
 
   const handleData = ({ data, username, displayName }: any) => {
     if (username === main.username) {
       setIsLogin(true);
-      if (!data.includes('[6,1') && !data.includes('["7","Simms",')) {
-        const parsedData = parseData(data);
-        // if (parsedData[1]?.ri?.rid) {
-        //   setCurrentRoom(parsedData[1].ri.rid.toString());
-        // }
-        // if (parsedData[0] == 3) {
-        //   setCurrentRoom(parsedData[3].toString());
-        // }
-        if (parsedData[0] == 4 && parsedData[1] == true) {
-          // setCurrentRoom('');
-          // setCurrentSit('');
-        }
-        if (parsedData[0] == 5 && parsedData[1].cmd === 317) {
-          window.backend.sendMessage(
-            'check-room',
-            main,
-            `__require('GamePlayManager').default.getInstance().getRoomId()`
-          );
-        }
-        if (parsedData[0] == 5 && parsedData[1].cmd === 300) {
-          // setCurrentRoom('');
-          // setCurrentSit('');
-        }
-        if (parsedData[0] == 3 && parsedData[1] === true) {
-          setState((pre) => ({
-            ...pre,
-            initialRoom: {
-              ...pre.initialRoom,
-              isSubJoin: true,
-            },
-          }));
-        }
-        if (parsedData[0] == 5) {
-          if (
-            parsedData[1].cmd === 204 ||
-            parsedData[1].cmd === 607 ||
-            parsedData[1].cmd === 5
-          ) {
-            if (autoStartRef.current) {
-              console.log('sendStart', parsedData);
-              sendStart(main);
-            }
-          }
-          checkPosition(main);
-          if (parsedData[2] === state.targetAt) {
-            // console.log('Đang trong ván');
-          }
-          if (parsedData[1].cmd === 205) {
-          }
-          if (parsedData[1].p) {
-            if (parsedData[1].p.uid) {
-              toast({
-                title: parsedData[1].p.dn,
-                description: 'Đã ra khỏi phòng.',
-              });
-            } else {
-              toast({
-                title: parsedData[1].p.dn,
-                description: 'Đã vào phòng.',
-              });
-            }
-          }
-          if (
-            parsedData[1].cmd === 602 &&
-            (parsedData[1].hsl == false || parsedData[1].hsl == true)
-          ) {
-            const user = parsedData[1].ps.find(
-              (item: { dn: string }) => item.dn === displayName
-            );
-            if (user) {
-              const licenseKey =
-                process.env.NODE_ENV != 'development'
-                  ? localStorage.getItem('license-key')
-                  : ('local-chase' as string);
-              moneyChange(licenseKey, parseInt(user.mX));
-            } else {
-              console.log('Username not found.');
-            }
-          }
-          if (parsedData[1].cs && parsedData[1].cmd === 600) {
-            const currentCards = parsedData[1].cs
-              .toString()
-              .split(',')
-              .map(Number);
-            toast({
-              title: 'Đã phát bài',
-              description: currentCards,
-            });
-            setMainCard(parsedData[1].cs);
 
-            setData((currentData) => [
-              ...currentData,
-              parsedData[1].cs.toString().split(',').map(Number),
-            ]);
+      const parsedData = parseData(data);
+      if (parsedData[0] == 5 && parsedData[1].cmd === 317) {
+      }
+      if (parsedData[0] == 3 && parsedData[1] === true) {
+        setState((pre) => ({
+          ...pre,
+          initialRoom: {
+            ...pre.initialRoom,
+            isSubJoin: true,
+          },
+        }));
+      }
+      if (parsedData[0] == 5) {
+        if (
+          parsedData[1].cmd === 204 ||
+          parsedData[1].cmd === 607 ||
+          parsedData[1].cmd === 5
+        ) {
+          if (autoStartRef.current) {
+            sendStart(main);
           }
         }
-        if (parsedData[0] !== '7' && parsedData[0] != 5) {
-          setData((currentData) => [...currentData, parsedData]);
+        checkPosition(main);
+        if (parsedData[1].cmd === 205) {
         }
+        if (parsedData[1].p) {
+          console.log('parsedData Ra vào phòng', parsedData);
+          toast({
+            title: parsedData[1].p.dn,
+            description: 'Đã vào phòng.',
+          });
+        }
+        if (
+          parsedData[1].cmd === 602 &&
+          (parsedData[1].hsl == false || parsedData[1].hsl == true)
+        ) {
+          const user = parsedData[1].ps.find(
+            (item: { dn: string }) => item.dn === displayName
+          );
+          if (user) {
+            const licenseKey =
+              process.env.NODE_ENV != 'development'
+                ? localStorage.getItem('license-key')
+                : ('local-chase' as string);
+            moneyChange(licenseKey, parseInt(user.mX));
+          } else {
+            console.log('Username not found.');
+          }
+        }
+        if (parsedData[1].cs && parsedData[1].cmd === 600) {
+          const currentCards = parsedData[1].cs
+            .toString()
+            .split(',')
+            .map(Number);
+          toast({
+            title: 'Đã phát bài',
+            description: currentCards,
+          });
+          setMainCard(parsedData[1].cs);
+
+          setData((currentData) => [
+            ...currentData,
+            parsedData[1].cs.toString().split(',').map(Number),
+          ]);
+
+          arrangeCards(main);
+        }
+      }
+      if (parsedData[0] !== '7' && parsedData[0] != 5) {
+        setData((currentData) => [...currentData, parsedData]);
       }
     }
   };
+
   const handleDataSent = ({ data, username }: any) => {
     if (username === main.username) {
       if (data == `[ 1, true, 0, "rik_${main.username}", "Simms", null ]`) {
@@ -246,12 +148,6 @@ export const TerminalBoard: React.FC<any> = ({ main }) => {
       ) {
         const parsedData = parseData(data);
 
-        if (parsedData[0] == 6 && parsedData[3].cmd === 301) {
-          setIsInLobby(false);
-        }
-        if (parsedData[0] == 6 && parsedData[3].cmd === 300) {
-          setIsInLobby(true);
-        }
         if (parsedData[0] == 3 && parsedData[2] === 19) {
           window.backend.sendMessage(
             'check-room',
@@ -268,6 +164,10 @@ export const TerminalBoard: React.FC<any> = ({ main }) => {
       setCurrentSit(parseInt(data + 1).toString());
     }
   };
+
+  useEffect(() => {
+    autoStartRef.current = autoStart;
+  }, [autoStart]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -306,6 +206,7 @@ export const TerminalBoard: React.FC<any> = ({ main }) => {
       );
     }
   }, [mainRoomID]);
+
   useEffect(() => {
     if (isStartGame) {
       openAccounts(main);
@@ -396,7 +297,7 @@ export const TerminalBoard: React.FC<any> = ({ main }) => {
             <Tooltip>
               <TooltipTrigger>
                 <div
-                  onClick={() => joinRoom(main)}
+                  onClick={() => joinRoom(main, mainRoomID)}
                   style={{ fontFamily: 'monospace' }}
                   className="rounded-[5px] px-[5px] py-[0px] h-full bg-white flex items-center hover:bg-slate-400 justify-center cursor-pointer hover:opacity-70"
                 >
@@ -424,7 +325,7 @@ export const TerminalBoard: React.FC<any> = ({ main }) => {
             <Tooltip>
               <TooltipTrigger>
                 <div
-                  onClick={() => outInRoom(main)}
+                  onClick={() => outInRoom(main, mainRoomID)}
                   style={{ fontFamily: 'monospace' }}
                   className="rounded-[5px] px-[5px] py-[0px] h-[30px] bg-white flex items-center hover:bg-slate-400 justify-center cursor-pointer hover:opacity-70"
                 >
@@ -473,18 +374,6 @@ export const TerminalBoard: React.FC<any> = ({ main }) => {
           </ScrollArea>
         </div>
       </div>
-      {/* <div className="flex justify-center mt-4">
-        <div className="w-[50%]">
-          {currentCards && (
-            <HandCard
-              cardProp={currentCards}
-              key={0}
-              isShowPlayer={false}
-              player={main.username}
-            />
-          )}
-        </div>
-      </div> */}
     </fieldset>
   );
 };

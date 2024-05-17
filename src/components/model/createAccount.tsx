@@ -1,8 +1,12 @@
-import axios from 'axios';
 import { ChevronDown } from 'lucide-react';
 import React, { useRef, useState } from 'react';
 import { generateAccount } from '../../lib/account';
 import { accountType } from '../../lib/config';
+import { generateRandomHex } from '../../lib/utils';
+import {
+  registerAccount,
+  updateAccountDisplayName,
+} from '../../service/register';
 import useAccountStore from '../../store/accountStore';
 import { useToast } from '../toast/use-toast';
 import { Button } from '../ui/button';
@@ -34,9 +38,7 @@ const CreateAccount: React.FC<any> = ({
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const inGameNameRef = useRef<HTMLInputElement>(null);
-  const generateRandomFg = () => {
-    return Math.random().toString(36).substring(2, 18);
-  };
+
   const handleAddAccount = async () => {
     if (usernameRef.current && passwordRef.current && inGameNameRef.current) {
       const newAccount = {
@@ -50,7 +52,7 @@ const CreateAccount: React.FC<any> = ({
         avatar: 'Avatar35',
         browser: 'chrome',
         device: 'Computer',
-        fg: generateRandomFg(),
+        fg: generateRandomHex(16),
         fullname: newAccount.fullname,
         os: 'Windows',
         password: newAccount.password,
@@ -58,26 +60,16 @@ const CreateAccount: React.FC<any> = ({
       };
 
       try {
-        const response = await axios.post(
-          'https://bordergw.api-inovated.com/user/register.aspx',
-          payload
-        );
+        const response = await registerAccount(payload);
         if (response.data.code === 200) {
-          addAccount(accountTypeS, generateAccount(newAccount));
-
           const inGameNamePayload = {
             fullname: newAccount.fullname,
           };
-          const updateDisplayName = await axios.post(
-            'https://bordergw.api-inovated.com/user/update.aspx',
-            inGameNamePayload,
-            {
-              headers: {
-                'X-Token': response.data.data[0].session_id,
-              },
-            }
+          const updateDisplayName = updateAccountDisplayName(
+            response.data.data[0].session_id,
+            inGameNamePayload
           );
-          if (updateDisplayName.data.code === 200) {
+          if ((await updateDisplayName).data.code === 200) {
             toast({
               title: 'Create account',
               description: response.data.message,
@@ -89,6 +81,7 @@ const CreateAccount: React.FC<any> = ({
             });
             setErrorMessage(response.data.message);
           }
+          addAccount(accountTypeS, generateAccount(newAccount));
           setIsOpenCreateAccount(false);
         } else {
           toast({

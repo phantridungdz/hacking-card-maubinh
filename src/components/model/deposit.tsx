@@ -2,7 +2,7 @@ import axios from 'axios';
 import { ChevronDown } from 'lucide-react';
 import React, { useRef, useState } from 'react';
 import { cardAmounts, homeNets } from '../../lib/config';
-import { login } from '../../lib/login';
+import { login } from '../../service/login';
 import { useToast } from '../toast/use-toast';
 import { Button } from '../ui/button';
 import {
@@ -54,7 +54,6 @@ const Deposit: React.FC<any> = ({
               },
             }
           );
-          console.log('response', response);
           if (response.data.code === 200) {
             toast({
               title: 'Đã gửi lệnh',
@@ -95,7 +94,6 @@ const Deposit: React.FC<any> = ({
                 <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
                   {homeNet}
                 </span>
-
                 <ChevronDown />
               </Button>
             </DropdownMenuTrigger>

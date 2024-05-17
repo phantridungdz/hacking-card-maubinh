@@ -1,6 +1,7 @@
 import { now } from 'lodash';
 import { toast } from '../components/toast/use-toast';
-import { accountLogin } from './login';
+import { login } from '../service/login';
+import { generateRandomHex } from './utils';
 
 const readValidAccount = (input: string): any => {
   return input
@@ -89,7 +90,7 @@ const generateAccount = (account: any) => {
     os: 'Windows',
     device: 'Computer',
     browser: 'chrome',
-    fg: 'fea47ac6e0fd72cd768e977d51f3dc45',
+    fg: generateRandomHex(16),
     proxy: account.proxy,
     port: account.port,
     userProxy: account.userProxy,
@@ -107,7 +108,7 @@ const checkBalance = async (
 ) => {
   var mainBalance = rowData.main_balance;
 
-  const data = (await accountLogin(rowData)) as any;
+  const data = (await login(rowData)) as any;
   const cash = Array.isArray(data?.data) ? data?.data[0].main_balance : 0;
   mainBalance = cash;
 

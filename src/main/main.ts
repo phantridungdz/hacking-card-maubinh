@@ -6,6 +6,7 @@ import { loadExtensions } from './extension/installer';
 import { setupAccountHandlers } from './handler/accountsHandlers';
 import { setupArrangeCardHandlers } from './handler/arrangeCardHandlers';
 import { setupFileHandlers } from './handler/fileHandlers';
+import { setupProxyWebsocketHandler } from './handler/proxyWebsocketHandler';
 import { setupReadHardwareHandlers } from './handler/readHardwareHandler';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
@@ -83,6 +84,7 @@ const createWindow = async () => {
   setupFileHandlers();
   setupAccountHandlers(mainWindow);
   setupArrangeCardHandlers();
+  setupProxyWebsocketHandler();
 
   new AppUpdater();
 };
@@ -98,10 +100,6 @@ const extensions = [
     id: 'lmhkpmbekcpmknklioeibfkpmmfibljd', // React DevTools ID
     version: '3.1.6_0',
   },
-  // {
-  //   id: 'ckdnkkilcbkocfdpcaohdehnbeaefndo', // zusty DevTools ID
-  //   version: '6.0_0',
-  // },
 ];
 
 app

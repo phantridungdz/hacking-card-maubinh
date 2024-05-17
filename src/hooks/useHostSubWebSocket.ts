@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import { toast } from '../components/toast/use-toast';
 import { binhLungCard } from '../lib/arrangeCard';
-import { login } from '../lib/login';
+import { login } from '../service/login';
 import useAccountStore from '../store/accountStore';
 import useBotRoomStore from '../store/botRoomStore';
 import useGameStore from '../store/gameStore';

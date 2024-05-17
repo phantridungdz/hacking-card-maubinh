@@ -28,7 +28,7 @@ import {
   readValidAccount,
 } from '../../lib/account';
 import { readFile, updateFile } from '../../lib/file';
-import { accountLogin } from '../../lib/login';
+import { login } from '../../service/login';
 import useAccountStore from '../../store/accountStore';
 import AddAccount from '../model/addAccount';
 import AddProxy from '../model/addProxy';
@@ -114,7 +114,6 @@ export const AccountTable: React.FC<any> = ({ accountType }) => {
   };
 
   const removeProxy = (rowData: any) => {
-    console.log('rowData', rowData);
     updateAccount(accountType, rowData.username, {
       proxy: '',
       passProxy: '',
@@ -172,7 +171,7 @@ export const AccountTable: React.FC<any> = ({ accountType }) => {
             row.toggleSelected(!!value);
             var mainBalance = row.original.main_balance;
             if (value) {
-              const data = (await accountLogin(row.original)) as any;
+              const data = (await login(row.original)) as any;
               const cash = Array.isArray(data?.data)
                 ? data?.data[0].main_balance
                 : 0;

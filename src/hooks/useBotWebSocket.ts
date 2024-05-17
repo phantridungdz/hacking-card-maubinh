@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import { toast } from '../components/toast/use-toast';
 import { binhLungCard } from '../lib/arrangeCard';
-import { login } from '../lib/login';
+import { login } from '../service/login';
 import useAccountStore from '../store/accountStore';
 import useBotRoomStore from '../store/botRoomStore';
 import useGameStore from '../store/gameStore';
@@ -153,13 +153,25 @@ export default function useBotWebSocket(bot: any, roomID: number) {
             }
             // updateBotStatus(bot.username, 'Joined Room');
           }
-
+          if (message[1].cmd === 5 && message[1].dn === fullName) {
+            console.log('message[1].dn', message[1].dn);
+            console.log('fullName', fullName);
+            if (!botsReady.includes(bot.userName)) {
+              setTimeout(() => {
+                addBotReady(bot.username);
+              }, 100);
+            }
+          }
           //send-Ready
-          if (message[1].cmd === 204 || message[1].cmd === 5) {
+          if (
+            message[1].cmd === 204 ||
+            message[1].cmd === 607 ||
+            message[1].cmd === 5
+          ) {
             // updateBotStatus(bot.username, 'Sent ready');
             sendMessage(`[5,"Simms",${roomID},{"cmd":5}]`);
             // if (!botsReady.includes(bot.userName)) {
-            addBotReady(bot.username);
+            // addBotReady(bot.username);
             // }
           }
           //end-game-> out room

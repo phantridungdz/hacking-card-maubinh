@@ -1,11 +1,9 @@
 // import useBotWebSocket from '../../hooks/useBotWebSocket';
 import { Clock, DollarSign } from 'lucide-react';
 import useWaiterWebSocket from '../../hooks/useWaiterBotWebSocket';
-import useBotRoomStore from '../../store/botRoomStore';
 import { Card } from '../ui/card';
 
 export const WaiterController: React.FC<any> = ({ bot, roomID }) => {
-  const { joinRoom } = useBotRoomStore();
   const { connectionStatus, botMoneyChange } = useWaiterWebSocket(bot, roomID);
   return (
     <fieldset className=" rounded-lg border p-4 text-right">

@@ -7,3 +7,6 @@ export const homeNets = ['VIETTEL', 'MOBIFONE', 'VINAPHONE'];
 
 export const loginUrl = 'https://bordergw.api-inovated.com/user/login.aspx';
 export const hostWSS = 'wss://cardskgw.ryksockesg.net/websocket';
+export const trackingIPUrl = 'https://apirvp4.traskiprik.info/sw/collect';
+export const accessToken =
+  'https://maubinh.twith.club/signalr/negotiate?access_token=';
