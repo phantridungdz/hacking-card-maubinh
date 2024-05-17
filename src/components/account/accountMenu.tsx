@@ -1,10 +1,7 @@
 import { Paperclip, Plus, RefreshCcw, Trash } from 'lucide-react';
 import React, { useRef } from 'react';
-import {
-  addUniqueAccounts,
-  checkBalance,
-  readValidAccount,
-} from '../../lib/account';
+import { addUniqueAccounts, readValidAccount } from '../../lib/account';
+import { checkBalance } from '../../service/balance';
 import useAccountStore from '../../store/accountStore';
 import { useToast } from '../toast/use-toast';
 import { Button } from '../ui/button';

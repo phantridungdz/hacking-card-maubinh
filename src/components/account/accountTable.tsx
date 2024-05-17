@@ -22,13 +22,9 @@ import {
 import * as React from 'react';
 
 import { useEffect, useState } from 'react';
-import {
-  checkBalance,
-  generateAccount,
-  readValidAccount,
-} from '../../lib/account';
+import { generateAccount, readValidAccount } from '../../lib/account';
 import { readFile, updateFile } from '../../lib/file';
-import { login } from '../../service/login';
+import { checkBalance } from '../../service/balance';
 import useAccountStore from '../../store/accountStore';
 import AddAccount from '../model/addAccount';
 import AddProxy from '../model/addProxy';
@@ -171,11 +167,7 @@ export const AccountTable: React.FC<any> = ({ accountType }) => {
             row.toggleSelected(!!value);
             var mainBalance = row.original.main_balance;
             if (value) {
-              const data = (await login(row.original)) as any;
-              const cash = Array.isArray(data?.data)
-                ? data?.data[0].main_balance
-                : 0;
-              mainBalance = cash;
+              checkBalance(row.original, accountType, updateAccount);
             }
 
             updateAccount(accountType, row?.original.username, {
@@ -452,6 +444,7 @@ export const AccountTable: React.FC<any> = ({ accountType }) => {
         isDialogDepositOpen={isDialogDepositOpen}
         setDialogDepositOpen={setDialogDepositOpen}
         rowSelected={rowSelected}
+        accountType={accountType}
       />
     </div>
   );

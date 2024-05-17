@@ -62,7 +62,7 @@ export default function useWaiterWebSocket(bot: any, roomID: number) {
   }, [readyState]);
 
   const onConnect = async (bot: any) => {
-    login(bot)
+    login(bot, 'BOT', updateAccount)
       .then(async (data: any) => {
         if (data.code == 200) {
           const user = data?.data[0];

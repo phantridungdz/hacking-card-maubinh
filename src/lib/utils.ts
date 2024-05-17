@@ -14,6 +14,10 @@ export const getRandomOS = (): string => {
   const osChoices = ['Mac', 'Windows', 'Linux'];
   return osChoices[Math.floor(Math.random() * osChoices.length)];
 };
+export const getRandomBrowser = (): string => {
+  const browserChoices = ['chrome', 'safari', 'edge', 'firefox', 'opera'];
+  return browserChoices[Math.floor(Math.random() * browserChoices.length)];
+};
 export const getCurrentTimestamp = (): number => {
   return Math.floor(Date.now() / 1000);
 };

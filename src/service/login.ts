@@ -7,7 +7,11 @@ import {
   getRandomOS,
 } from '../lib/utils';
 
-const login = async (botInfo: any): Promise<any> => {
+const login = async (
+  botInfo: any,
+  accountType: any,
+  updateAccount: any
+): Promise<any> => {
   const credentials = {
     aff_id: botInfo.aff_id,
     browser: botInfo.browser,
@@ -40,7 +44,15 @@ const login = async (botInfo: any): Promise<any> => {
     }
 
     const response = await axios.post<any>(loginUrl, credentials, proxyConfig);
+    const data = response.data.data[0];
+    updateAccount(accountType, botInfo.username, {
+      session_id: data.session_id,
+      main_balance: data.main_balance | 0,
+      token: data.token,
+      fullname: data.fullname,
+    });
     await axios.get<ConnectTokenResponse>(trackingIPUrl, proxyConfig);
+
     return response.data;
   } catch (error) {
     console.error(

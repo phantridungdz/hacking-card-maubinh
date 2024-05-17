@@ -61,7 +61,7 @@ export default function useSubWebSocket(sub: any, roomID: number) {
   }, [readyState]);
 
   const onConnect = async (sub: any) => {
-    login(sub)
+    login(sub, 'SUB', updateAccount)
       .then(async (data: any) => {
         if (data.code == 200) {
           const user = data?.data[0];

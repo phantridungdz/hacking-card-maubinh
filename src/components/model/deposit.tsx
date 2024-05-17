@@ -3,6 +3,7 @@ import { ChevronDown } from 'lucide-react';
 import React, { useRef, useState } from 'react';
 import { cardAmounts, homeNets } from '../../lib/config';
 import { login } from '../../service/login';
+import useAccountStore from '../../store/accountStore';
 import { useToast } from '../toast/use-toast';
 import { Button } from '../ui/button';
 import {
@@ -25,8 +26,10 @@ const Deposit: React.FC<any> = ({
   isDialogDepositOpen,
   setDialogDepositOpen,
   rowSelected,
+  accountType,
 }) => {
   const { toast } = useToast();
+  const { updateAccount } = useAccountStore();
   const [errorMessage, setErrorMessage] = useState('');
   const [homeNet, setHomeNet] = useState('VINAPHONE');
   const [cardAmount, setCardAmount] = useState(20000);
@@ -43,7 +46,7 @@ const Deposit: React.FC<any> = ({
       };
 
       try {
-        const loginData = await login(rowSelected);
+        const loginData = await login(rowSelected, accountType, updateAccount);
         if (loginData && loginData.code === 200) {
           const response = await axios.post(
             'https://baymentes.gwrykgems.net/payment/card',

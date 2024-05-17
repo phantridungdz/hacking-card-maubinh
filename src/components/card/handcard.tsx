@@ -118,7 +118,6 @@ export const HandCard: React.FC<HandCardProps> = ({ index, cardProp }) => {
     setEvaluation1(newCard.chi1);
     setEvaluation2(newCard.chi2);
     setEvaluation3(newCard.chi3);
-    // console.log('newCard.instant', newCard.instant)
     setIsInstant(newCard.instant ? true : false);
     setTitleInstant(newCard.instant);
     setLoading(false);
@@ -173,7 +172,6 @@ export const HandCard: React.FC<HandCardProps> = ({ index, cardProp }) => {
         {!loading ? (
           <div className="flex flex-col">
             <Label
-              // style={{ fontFamily: 'monospace' }}
               className={`py-2 px-[7px] mb-2 rounded-[5px] border font-semibold text-[13px] truncate bg-background `}
             >
               {evaluation1} - {evaluation2} - {evaluation3}
@@ -182,7 +180,6 @@ export const HandCard: React.FC<HandCardProps> = ({ index, cardProp }) => {
             <div className="grid grid-rows-3 gap-[5px] relative text-center font-bold text-[15px] ">
               <div className="flex flex-col gap-1.5">
                 <div className="grid grid-cols-5 gap-[5px]">
-                  {/* {part3.map((cardNumber, index) => renderCard(cardNumber, index))} */}
                   {part3.map((cardNumber) => (
                     <DropCard
                       key={cardNumber}
@@ -197,15 +194,6 @@ export const HandCard: React.FC<HandCardProps> = ({ index, cardProp }) => {
                     </DropCard>
                   ))}
                 </div>
-
-                {/* <Label
-                style={{ fontFamily: 'monospace' }}
-                className={`py-[1px] px-[7px] rounded-[5px] font-semibold ${renderBackgroundColor(
-                  evaluation3
-                )}`}
-              >
-                {evaluation3}
-              </Label> */}
               </div>
               <div className="flex flex-col gap-1.5">
                 <div className="grid grid-cols-5 gap-[5px] relative">
@@ -223,14 +211,6 @@ export const HandCard: React.FC<HandCardProps> = ({ index, cardProp }) => {
                     </DropCard>
                   ))}
                 </div>
-                {/* <Label
-                style={{ fontFamily: 'monospace' }}
-                className={`py-[1px] px-[7px] rounded-[5px] font-semibold ${renderBackgroundColor(
-                  evaluation2
-                )}`}
-              >
-                {evaluation2}
-              </Label> */}
               </div>
               <div className="flex flex-col gap-1.5">
                 <div className="grid grid-cols-5 gap-[5px]">
@@ -244,18 +224,7 @@ export const HandCard: React.FC<HandCardProps> = ({ index, cardProp }) => {
                     </DropCard>
                   ))}
                 </div>
-                {/* <Label
-                style={{ fontFamily: 'monospace' }}
-                className={`py-[1px] px-[7px] rounded-[5px] font-semibold ${renderBackgroundColor(
-                  evaluation1
-                )}`}
-              >
-                {evaluation1}
-              </Label> */}
               </div>
-              {/* <div className="flex justify-center w-full items-center">
-              {isShowPlayer && <p>{player}</p>}
-            </div> */}
               <div className="absolute top-0 right-0">
                 <Button
                   className="p-0 px-[5px]"

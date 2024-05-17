@@ -4,6 +4,7 @@ import { generateAccount } from '../../lib/account';
 import { accountType } from '../../lib/config';
 import { generateRandomHex } from '../../lib/utils';
 import {
+  createAxiosInstanceWithProxy,
   registerAccount,
   updateAccountDisplayName,
 } from '../../service/register';
@@ -38,10 +39,11 @@ const CreateAccount: React.FC<any> = ({
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const inGameNameRef = useRef<HTMLInputElement>(null);
+  const proxyRef = useRef<HTMLInputElement>(null);
 
   const handleAddAccount = async () => {
     if (usernameRef.current && passwordRef.current && inGameNameRef.current) {
-      const newAccount = {
+      const newAccount: any = {
         username: usernameRef.current.value,
         password: passwordRef.current.value,
         fullname: inGameNameRef.current.value,
@@ -58,9 +60,21 @@ const CreateAccount: React.FC<any> = ({
         password: newAccount.password,
         username: newAccount.username,
       };
+      let proxyConfig = {} as any;
+      if (proxyRef.current) {
+        const proxyDetails = proxyRef.current.value.split(':');
+        proxyConfig = {
+          host: proxyDetails[0],
+          port: parseInt(proxyDetails[1], 10),
+          username: proxyDetails[2],
+          password: proxyDetails[3],
+        };
+      }
+
+      const axiosInstance = createAxiosInstanceWithProxy(proxyConfig);
 
       try {
-        const response = await registerAccount(payload);
+        const response = await registerAccount(payload, axiosInstance);
         if (response.data.code === 200) {
           const inGameNamePayload = {
             fullname: newAccount.fullname,
@@ -74,6 +88,11 @@ const CreateAccount: React.FC<any> = ({
               title: 'Create account',
               description: response.data.message,
             });
+            newAccount.session_id = response.data.data[0].session_id;
+            newAccount.proxy = proxyConfig.host;
+            newAccount.port = proxyConfig.port;
+            newAccount.userProxy = proxyConfig.username;
+            newAccount.passProxy = proxyConfig.password;
           } else {
             toast({
               title: 'Error register',
@@ -140,6 +159,14 @@ const CreateAccount: React.FC<any> = ({
           <Input
             ref={inGameNameRef}
             placeholder="In-Game name"
+            className="col-span-3"
+          />
+        </div>
+        <div className="grid grid-cols-4 gap-2 items-center">
+          <Label className="text-center">Proxy</Label>
+          <Input
+            ref={proxyRef}
+            placeholder="Proxy:{IP}:{PORT}:{AUTH}:{PASS}"
             className="col-span-3"
           />
         </div>

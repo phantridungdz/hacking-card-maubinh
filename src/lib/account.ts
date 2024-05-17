@@ -1,7 +1,6 @@
 import { now } from 'lodash';
 import { toast } from '../components/toast/use-toast';
-import { login } from '../service/login';
-import { generateRandomHex } from './utils';
+import { generateRandomHex, getRandomBrowser, getRandomOS } from './utils';
 
 const readValidAccount = (input: string): any => {
   return input
@@ -82,45 +81,29 @@ const addUniqueAccounts = async (
 };
 
 const generateAccount = (account: any) => {
+  const sessionId = account.session_id;
+  const token = account.token;
+  const isSelected = account.isSelected || false;
+
   return {
     username: account.username,
     password: account.password,
-    isSelected: account.isSelected,
+    isSelected: isSelected,
+    session_id: sessionId,
     app_id: 'rik.vip',
-    os: 'Windows',
+    os: getRandomOS(),
     device: 'Computer',
-    browser: 'chrome',
+    browser: getRandomBrowser(),
     fg: generateRandomHex(16),
     proxy: account.proxy,
     port: account.port,
     userProxy: account.userProxy,
     passProxy: account.passProxy,
+    token: token,
     time: now(),
     aff_id: 'hit',
     main_balance: 0,
   };
 };
 
-const checkBalance = async (
-  rowData: any,
-  accountType: string,
-  updateAccount: any
-) => {
-  var mainBalance = rowData.main_balance;
-
-  const data = (await login(rowData)) as any;
-  const cash = Array.isArray(data?.data) ? data?.data[0].main_balance : 0;
-  mainBalance = cash;
-
-  updateAccount(accountType, rowData.username, {
-    main_balance: data.code === 200 ? mainBalance : data.message,
-  });
-};
-
-export {
-  accountExists,
-  addUniqueAccounts,
-  checkBalance,
-  generateAccount,
-  readValidAccount,
-};
+export { accountExists, addUniqueAccounts, generateAccount, readValidAccount };
