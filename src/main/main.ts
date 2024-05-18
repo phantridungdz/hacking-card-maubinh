@@ -68,6 +68,29 @@ const createWindow = async () => {
       mainWindow.show();
     }
   });
+  mainWindow.webContents.on('devtools-opened', () => {
+    if (process.env.NODE_ENV !== 'development') {
+      console.log('DevTools opened');
+      app.quit();
+    }
+  });
+
+  function detectDebugger() {
+    if (mainWindow && mainWindow.webContents.isDevToolsOpened()) {
+      if (process.env.NODE_ENV !== 'development') {
+        console.log('Debugger detected');
+        app.quit();
+      }
+    }
+  }
+
+  setInterval(detectDebugger, 20000);
+
+  // Listen for the 'devtools-closed' event
+  mainWindow.webContents.on('devtools-closed', () => {
+    console.log('DevTools closed');
+    // mainWindow.webContents.send('devtools-status', false);
+  });
 
   mainWindow.on('closed', () => {
     mainWindow = null;
@@ -100,6 +123,10 @@ const extensions = [
     id: 'lmhkpmbekcpmknklioeibfkpmmfibljd', // React DevTools ID
     version: '3.1.6_0',
   },
+  // {
+  //   id: 'fmkadmapgofadopljbjfkapdkoienihi',
+  //   version: '5.2.0_0',
+  // },
 ];
 
 app

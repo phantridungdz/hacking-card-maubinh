@@ -1,8 +1,8 @@
 import { Route, MemoryRouter as Router, Routes } from 'react-router-dom';
 
-import { Active } from '../app/Active';
 import { App as Game } from '../app/App';
-import { Onboard } from '../app/Onboard';
+import { Active } from '../app/pages/Active';
+import { Onboard } from '../app/pages/Onboard';
 import { ThemeProvider } from '../components/provider/theme-provider';
 import { Toaster } from '../components/toast/toaster';
 import { TooltipProvider } from '../components/ui/tooltip';

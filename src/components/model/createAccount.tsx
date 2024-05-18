@@ -57,12 +57,12 @@ const CreateAccount: React.FC<any> = ({
         fg: generateRandomHex(16),
         fullname: newAccount.fullname,
         os: 'Windows',
-        password: newAccount.password,
-        username: newAccount.username,
+        password: newAccount.password.trim().toLowerCase(),
+        username: newAccount.username.trim(),
       };
       let proxyConfig = {} as any;
       if (proxyRef.current) {
-        const proxyDetails = proxyRef.current.value.split(':');
+        const proxyDetails = proxyRef.current.value.trim().split(':');
         proxyConfig = {
           host: proxyDetails[0],
           port: parseInt(proxyDetails[1], 10),

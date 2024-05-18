@@ -18,14 +18,7 @@ import useAccountStore from '../../store/accountStore';
 import useGameStore from '../../store/gameStore';
 
 export const HomePage: React.FC<any> = (cardDeck, setNumberOfCards) => {
-  const [cards, setCards] = useState<number[][]>([
-    // [
-    //   [47, 28, 0, 16, 29, 40, 46, 19, 21, 2, 39, 44, 34],
-    //   [6, 17, 8, 49, 33, 7, 51, 18, 30, 45, 36, 11, 13],
-    //   [22, 26, 15, 14, 48, 23, 24, 41, 32, 38, 35, 42, 4],
-    //   [5, 27, 3, 37, 9, 50, 12, 43, 20, 31, 1, 10, 25],
-    // ],
-  ]);
+  const [cards, setCards] = useState<number[][]>([]);
   const { state } = useContext(AppContext);
   const { crawledCards, isFoundedRoom } = useGameStore();
 
@@ -52,21 +45,6 @@ export const HomePage: React.FC<any> = (cardDeck, setNumberOfCards) => {
   }, [crawledCards]);
 
   const addRandomCards = () => {
-    // const mappedCard = [
-    //   [47, 28, 0, 16, 29, 40, 46, 19, 21, 2, 39, 44, 34],
-    //   [6, 17, 8, 49, 33, 7, 51, 18, 30, 45, 36, 11, 13],
-    //   [22, 26, 15, 14, 48, 23, 24, 41, 32, 38, 35, 42, 4],
-    //   [5, 27, 3, 37, 9, 50, 12, 43, 20, 31, 1, 10, 25],
-    // ];
-    // let boBai: number[] = [];
-    // if (mappedCard.length === 4) {
-    //   for (let i = 0; i < 13; i++) {
-    //     boBai.push(mappedCard[0][i]);
-    //     boBai.push(mappedCard[1][i]);
-    //     boBai.push(mappedCard[2][i]);
-    //     boBai.push(mappedCard[3][i]);
-    //   }
-    // }
     setCards((prevCards) => [...prevCards, getRandomCards()]);
     setCards((prevCards) => [...prevCards, getRandomCards()]);
   };

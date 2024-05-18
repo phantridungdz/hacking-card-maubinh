@@ -1,5 +1,5 @@
 export const addNameTagCommand = (account: any) => {
-  `
+  return `
       let node2 = cc.find("Canvas/MainUIParent/NewLobby/Footder/bottmBar@3x/Public/Layout/dnButtonSmartObjectGroup1@3x").getComponent(cc.Button);
       if (node2) {
           let touchStart = new cc.Touch(0, 0);

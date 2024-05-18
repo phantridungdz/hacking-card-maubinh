@@ -21,8 +21,8 @@ const AddAccount: React.FC<any> = ({
   const handleAddAccount = () => {
     if (usernameRef.current && passwordRef.current) {
       const newAccount = {
-        username: usernameRef.current.value,
-        password: passwordRef.current.value,
+        username: usernameRef.current.value.trim(),
+        password: passwordRef.current.value.trim(),
       };
       addAccount(accountType, generateAccount(newAccount));
       setDialogAddAccountOpen(false);

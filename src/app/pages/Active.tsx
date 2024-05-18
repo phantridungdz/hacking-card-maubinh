@@ -1,12 +1,12 @@
 import { Loader } from 'lucide-react';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import backgound from '../../assets/bg/bg-hepler.png';
-import { useToast } from '../components/toast/use-toast';
-import { Button } from '../components/ui/button';
-import { Input } from '../components/ui/input';
-import { Label } from '../components/ui/label';
-import { handleActive } from '../lib/supabase';
+import backgound from '../../../assets/bg/bg-hepler.png';
+import { useToast } from '../../components/toast/use-toast';
+import { Button } from '../../components/ui/button';
+import { Input } from '../../components/ui/input';
+import { Label } from '../../components/ui/label';
+import { handleActive } from '../../lib/supabase';
 
 export const Active = () => {
   const { toast } = useToast();

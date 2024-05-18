@@ -23,6 +23,13 @@ const login = async (
     time: getCurrentTimestamp(),
     username: botInfo.username,
   };
+
+  let axiosConfig = {
+    method: 'post',
+    url: loginUrl,
+    data: credentials,
+    headers: { 'Content-Type': 'application/json' },
+  };
   try {
     let proxyConfig = {};
     if (

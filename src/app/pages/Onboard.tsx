@@ -1,10 +1,10 @@
 import { Loader } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import backgound from '../../assets/bg/bg-hepler.png';
-import { useToast } from '../components/toast/use-toast';
-import { Label } from '../components/ui/label';
-import { validateLicense } from '../lib/supabase';
+import backgound from '../../../assets/bg/bg-hepler.png';
+import { useToast } from '../../components/toast/use-toast';
+import { Label } from '../../components/ui/label';
+import { validateLicense } from '../../lib/supabase';
 
 export const Onboard = () => {
   const { toast } = useToast();

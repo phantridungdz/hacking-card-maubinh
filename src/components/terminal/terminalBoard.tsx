@@ -90,7 +90,7 @@ export const TerminalBoard: React.FC<any> = ({ main }) => {
           console.log('parsedData Ra vào phòng', parsedData);
           toast({
             title: parsedData[1].p.dn,
-            description: 'Đã vào phòng.',
+            description: parsedData[1].p.dn + ' tới chơi.',
           });
         }
         if (

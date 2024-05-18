@@ -94,8 +94,6 @@ export default function useBotWebSocket(bot: any, roomID: number) {
     try {
       if (lastMessage !== null) {
         const message = JSON.parse(lastMessage.data);
-
-        // console.log(message);
         if (message[0] === 1) {
           if (message[1] === true && message[2] === 0) {
             sendMessage(`[6,"Simms","channelPlugin",{"cmd":310}]`);
@@ -108,11 +106,10 @@ export default function useBotWebSocket(bot: any, roomID: number) {
         //Destroyed room
         if (message[0] === 3) {
           if (message[1] === false && message[2] === 104) {
-            // updateStatus('Not-ready');
             setReadyToFindStatus(false);
             removeBotCard();
           }
-          //not enought money
+          //Not enought money
           if (message[1] === false && message[2] === 150) {
             toast({
               title: `${bot.username}`,
@@ -123,7 +120,6 @@ export default function useBotWebSocket(bot: any, roomID: number) {
         //Outed Room
         if (message[0] === 4) {
           if (message[1] === true && message[2] === 1) {
-            // updateBotStatus(bot.username, 'Outed Room');
             outRoom(bot.username);
             setJoinedRoom(false);
             removeBotCard();
@@ -134,17 +130,6 @@ export default function useBotWebSocket(bot: any, roomID: number) {
           }
         }
         if (message[0] === 5) {
-          //Detect-user-join
-          if (message[1].cmd === 200) {
-            if (!botsValid.includes(message[1].p.dn)) {
-              console.log(`Có chó vào phòng:${message[1].p.dn}`);
-              // updateBotStatus(
-              //   bot.username,
-              //   'Phát hiện người chơi khác vào phòng'
-              // );
-              // sendMessage(`[4,"Simms",${roomID}]`);
-            }
-          }
           //joined-room
           if (message[1].cmd === 202 && message[1].Mu == 4) {
             if (!joinedRoom) {
