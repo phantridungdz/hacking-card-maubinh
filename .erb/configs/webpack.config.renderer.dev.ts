@@ -167,6 +167,7 @@ const configuration: webpack.Configuration = {
     compress: true,
     hot: true,
     headers: { 'Access-Control-Allow-Origin': '*' },
+    allowedHosts: 'all',
     static: {
       publicPath: '/',
     },

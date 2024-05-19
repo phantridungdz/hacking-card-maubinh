@@ -1,4 +1,4 @@
-import { BrowserWindow, app, shell } from 'electron';
+import { BrowserWindow, app, session, shell } from 'electron';
 import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
 import path from 'path';
@@ -41,6 +41,36 @@ export const getAssetPath = (...paths: string[]): string => {
   return path.join(RESOURCES_PATH, ...paths);
 };
 
+function capitalizeHeaderKeys(
+  headers: Record<string, string[]>
+): Record<string, string[]> {
+  const capitalizedHeaders: Record<string, string[]> = {};
+  for (const key in headers) {
+    if (headers.hasOwnProperty(key)) {
+      const capitalizedKey = key.replace(/(^|\s)\S/g, (letter) =>
+        letter.toUpperCase()
+      );
+      capitalizedHeaders[capitalizedKey] = headers[key];
+    }
+  }
+  return capitalizedHeaders;
+}
+
+function capitalizeRequestHeaderKeys(
+  headers: Record<string, string>
+): Record<string, string> {
+  const capitalizedHeaders: Record<string, string> = {};
+  for (const key in headers) {
+    if (headers.hasOwnProperty(key)) {
+      const capitalizedKey = key.replace(/(^|\s)\S/g, (letter) =>
+        letter.toUpperCase()
+      );
+      capitalizedHeaders[capitalizedKey] = headers[key];
+    }
+  }
+  return capitalizedHeaders;
+}
+
 const createWindow = async () => {
   mainWindow = new BrowserWindow({
     show: false,
@@ -55,6 +85,76 @@ const createWindow = async () => {
         : path.join(__dirname, '../../.erb/dll/preload.js'),
     },
   });
+
+  session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
+    const newHeaders = capitalizeHeaderKeys(
+      details.responseHeaders as Record<string, string[]>
+    );
+    newHeaders['Access-Control-Allow-Origin'] = ['https://web.hitclub.win'];
+    newHeaders['Cf-cache-status'] = ['DYNAMIC'];
+    callback({ responseHeaders: newHeaders });
+  });
+
+  session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
+    const newHeaders = capitalizeRequestHeaderKeys(
+      details.requestHeaders as Record<string, string>
+    );
+    newHeaders['Referer'] = 'https://web.hitclub.win/';
+    newHeaders['Origin'] = 'https://web.hitclub.win/';
+    callback({ requestHeaders: newHeaders });
+  });
+
+  // mainWindow.webContents.on('did-finish-load', () => {
+  //   if (mainWindow) {
+  //     mainWindow.webContents.executeJavaScript(`
+  //     (async () => {
+  //       try {
+  //         const response = await fetch("https://bodergatez.dsrcgoms.net/user/login.aspx", {
+  //           method: "POST",
+  //           headers: {
+  //             "Content-Type": "application/json",
+  //             Accept: "*/*",
+  //             "Accept-Language": "en-US,en;q=0.9",
+  //             "Cache-Control": "no-cache",
+  //             DNT: "1",
+  //             Origin: "https://web.hitclub.win",
+  //             Referer: "https://web.hitclub.win/",
+  //             "sec-ch-ua": '"Chromium";v="124", "Microsoft Edge";v="124", "Not-A.Brand";v="99"',
+  //             "sec-ch-ua-mobile": "?0",
+  //             "sec-ch-ua-platform": '"Windows"',
+  //             "Sec-Fetch-Dest": "empty",
+  //             "Sec-Fetch-Mode": "cors",
+  //             "Sec-Fetch-Site": "cross-site",
+  //             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+  //           },
+  //           body: JSON.stringify({
+  //             username: "Elephennt211",
+  //             password: "zxcv123123",
+  //             app_id: "bc114103",
+  //             os: "Windows",
+  //             device: "Computer",
+  //             browser: "chrome",
+  //             fg: "e01e55711ae12a6c5fca6e3f9bc9c903",
+  //             time: 1716099874,
+  //             sign: "3e0975d789ec0f043267374e2594949a",
+  //             csrf: "",
+  //             aff_id: "hit",
+  //           }),
+  //         });
+
+  //         if (!response.ok) {
+  //           throw new Error(\`HTTP error! status: \${response.status}\`);
+  //         }
+
+  //         const data = await response.json();
+  //         console.log(data);
+  //       } catch (error) {
+  //         console.error("Error:", error);
+  //       }
+  //     })();
+  //   `);
+  //   }
+  // });
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));
 

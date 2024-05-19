@@ -37,6 +37,10 @@ const useBotRoomStore = create<any>(
         set(() => ({
           botsReady: [],
         })),
+      clearBots: () =>
+        set(() => ({
+          bots: [],
+        })),
 
       updateBotsInLobby: (count: any) =>
         set(() => ({

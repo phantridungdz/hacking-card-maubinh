@@ -2,15 +2,17 @@ const updateFile = async (accountsUpdate: any, accountType: string) => {
   const accountsText = accountsUpdate
     .map(
       (account: {
-        proxy: any;
-        port: any;
+        proxy: string;
+        port: string;
         isSelected: any;
-        username: any;
-        password: any;
-        passProxy: any;
-        userProxy: any;
+        username: string;
+        password: string;
+        passProxy: string;
+        userProxy: string;
+        isUseProxy: any;
+        targetSite: string;
       }) =>
-        `${account.username}|${account.password}|${account.isSelected}|${account.proxy}|${account.port}|${account.userProxy}|${account.passProxy}|`
+        `${account.username}|${account.password}|${account.isSelected}|${account.proxy}|${account.port}|${account.userProxy}|${account.passProxy}|${account.isUseProxy}|${account.targetSite}|`
     )
     .join('\n');
   window.backend.sendMessage(

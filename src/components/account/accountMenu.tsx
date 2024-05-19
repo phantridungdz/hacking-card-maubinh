@@ -3,6 +3,7 @@ import React, { useRef } from 'react';
 import { addUniqueAccounts, readValidAccount } from '../../lib/account';
 import { checkBalance } from '../../service/balance';
 import useAccountStore from '../../store/accountStore';
+import useGameConfigStore from '../../store/gameConfigStore';
 import { useToast } from '../toast/use-toast';
 import { Button } from '../ui/button';
 import { Dialog, DialogTrigger } from '../ui/dialog';
@@ -16,6 +17,7 @@ const AccountMenu: React.FC<any> = ({
   updateAccount,
 }) => {
   const { accounts, removeAccount, addAccount } = useAccountStore();
+  const { checkBalanceUrl, loginUrl, trackingIPUrl } = useGameConfigStore();
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -43,7 +45,14 @@ const AccountMenu: React.FC<any> = ({
     }
 
     const checkBalances = selectedAccounts.map((account: any) =>
-      checkBalance(account, accountType, updateAccount)
+      checkBalance(
+        account,
+        accountType,
+        updateAccount,
+        checkBalanceUrl,
+        loginUrl,
+        trackingIPUrl
+      )
     );
 
     try {

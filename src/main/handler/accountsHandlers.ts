@@ -29,6 +29,7 @@ export const setupAccountHandlers = (
     port: string;
     userProxy: string;
     passProxy: string;
+    targetSite: string;
   }) {
     const existingInstance = puppeteerInstances.find(
       (inst) => inst.username === account.username
@@ -159,8 +160,11 @@ export const setupAccountHandlers = (
           }
         }
       );
-
-      await page.goto('https://play.rikvip.win/', {
+      const targetSite =
+        account.targetSite === 'RIK'
+          ? 'https://play.rikvip.win/'
+          : 'https://web.hitclub.win/';
+      await page.goto(targetSite, {
         waitUntil: 'networkidle2',
       });
 
@@ -213,6 +217,25 @@ export const setupAccountHandlers = (
       }
     } else {
       event.reply('execute-script-reply', `Account ${username} not found.`);
+    }
+  });
+  ipcMain.on('generateFg', async (event, script) => {
+    const instance = puppeteerInstances[0];
+
+    if (instance) {
+      const { page } = instance;
+      try {
+        await page.evaluate(script);
+        const result = await instance.page.evaluate(script);
+        console.log('result', result);
+        event.reply('generateFgReply', {
+          data: result,
+        });
+      } catch (error) {
+        event.reply('generateFgReply', `Failed to execute script.`);
+      }
+    } else {
+      event.reply('generateFgReply', `Not found instance.`);
     }
   });
   ipcMain.on('check-room', async (event, { username }, script) => {

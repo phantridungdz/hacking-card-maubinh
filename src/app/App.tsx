@@ -10,7 +10,7 @@ import { validateLicense } from '../lib/supabase';
 import { isMatchCards } from '../lib/utils';
 import useGameStore from '../store/gameStore';
 import useSubRoomStore from '../store/subRoomStore';
-import { HomePage } from './pages/home';
+import { HomePage } from './pages/Home';
 
 export function App() {
   const {

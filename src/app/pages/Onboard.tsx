@@ -9,7 +9,6 @@ import { validateLicense } from '../../lib/supabase';
 export const Onboard = () => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
-  const [hardwareInfo, setHardwareInfo] = useState<any>();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -17,7 +16,7 @@ export const Onboard = () => {
       process.env.NODE_ENV != 'development' &&
       localStorage.getItem('license-key')
     ) {
-      setHardwareInfo(validateLicense(setLoading, toast, navigate));
+      validateLicense(setLoading, toast, navigate);
     }
     if (process.env.NODE_ENV == 'development') {
       navigate('/app');

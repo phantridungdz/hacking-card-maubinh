@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import useAccountStore from '../../store/accountStore';
 import useBotRoomStore from '../../store/botRoomStore';
+import useGameConfigStore from '../../store/gameConfigStore';
 import useGameStore from '../../store/gameStore';
 import useSubRoomStore from '../../store/subRoomStore';
 import { BotRoomController } from '../room/botRoomController';
@@ -15,12 +16,11 @@ interface FindRoomSheetProps {
 
 export function FindRoomSheet({ isOpen, setIsOpen }: FindRoomSheetProps) {
   const [roomsReady, setRoomsReady] = useState(0);
-
+  const { currentTargetSite } = useGameConfigStore();
   const { accounts, updateAccount } = useAccountStore();
   const { setReadyToFindStatus, setIsLogining } = useGameStore();
-
-  const { addBot, bots, botRoomStatus } = useBotRoomStore();
-  const { addSub, subs, subRoomStatus } = useSubRoomStore();
+  const { addBot, bots, botRoomStatus, clearBots } = useBotRoomStore();
+  const { addSub, subs, subRoomStatus, clearSubs } = useSubRoomStore();
   useEffect(() => {
     if (bots.length < 4) {
       const botsPerPair = 4;
@@ -28,7 +28,8 @@ export function FindRoomSheet({ isOpen, setIsOpen }: FindRoomSheetProps) {
         (bot: { used: any }) => !bot.used
       );
       availableBots = availableBots.filter(
-        (bot: { isSelected: any }) => bot.isSelected
+        (bot: { isSelected: any; targetSite: string }) =>
+          bot.isSelected && bot.targetSite === currentTargetSite
       );
       availableBots
         .slice(0, botsPerPair)
@@ -41,13 +42,18 @@ export function FindRoomSheet({ isOpen, setIsOpen }: FindRoomSheetProps) {
   }, [accounts['BOT']]);
 
   useEffect(() => {
+    clearBots();
+  }, [currentTargetSite]);
+
+  useEffect(() => {
     if (subs.length < 2) {
       const subsPerPair = 2;
       let availableSubs = accounts['SUB'].filter(
         (sub: { used: any }) => !sub.used
       );
       availableSubs = availableSubs.filter(
-        (sub: { isSelected: any }) => sub.isSelected
+        (sub: { isSelected: any; targetSite: string }) =>
+          sub.isSelected && sub.targetSite === currentTargetSite
       );
       availableSubs
         .slice(0, subsPerPair)
@@ -58,6 +64,10 @@ export function FindRoomSheet({ isOpen, setIsOpen }: FindRoomSheetProps) {
         });
     }
   }, [accounts['SUB']]);
+
+  useEffect(() => {
+    clearSubs();
+  }, [currentTargetSite]);
 
   useEffect(() => {
     var botRoomReadyCount = 0;

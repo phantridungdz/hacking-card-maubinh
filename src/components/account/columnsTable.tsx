@@ -11,7 +11,9 @@ import {
   RemoveFormatting,
   Trash,
 } from 'lucide-react';
+import useGetFgOfGame from '../../hooks/useGetFgOfGame';
 import { checkBalance } from '../../service/balance';
+import useGameConfigStore from '../../store/gameConfigStore';
 import { Button } from '../ui/button';
 import { Checkbox } from '../ui/checkbox';
 import {
@@ -22,49 +24,23 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
-
-const onCheckAll = async (
-  value: any,
-  accounts: any[],
-  accountType: string,
-  updateAccount: any,
-  toast: any
-) => {
-  const checkBalances = accounts.map((account: any) => {
-    updateAccount(accountType, account.username, {
-      isSelected: value,
-    });
-    if (value) {
-      checkBalance(account, accountType, updateAccount);
-    }
-  });
-
-  try {
-    await Promise.all(checkBalances);
-    toast({
-      title: 'Updated',
-      description: `Table was updated`,
-    });
-  } catch (error) {
-    toast({
-      title: 'Error',
-      description: `Failed to this action`,
-    });
-  }
-};
+import { Switch } from '../ui/switch';
 
 export const getAccountTableColumns = (
   accountType: string,
   handleDeleteRow: any,
-  checkBalance: any,
   updateAccount: any,
   removeProxy: any,
   setDialogDepositOpen: any,
   setDialogProxyOpen: any,
   setRowSelected: any,
   accounts: any[],
-  toast: any
+  toast: any,
+  onCheckAll: any
 ): ColumnDef<unknown, any>[] => {
+  const { checkBalanceUrl, loginUrl, trackingIPUrl } = useGameConfigStore();
+  const { getFg } = useGetFgOfGame();
+
   const columns: ColumnDef<unknown, any>[] = [
     {
       id: 'select',
@@ -91,7 +67,14 @@ export const getAccountTableColumns = (
             row.toggleSelected(!!value);
             var mainBalance = row.original.main_balance;
             if (value) {
-              checkBalance(row.original, accountType, updateAccount);
+              checkBalance(
+                row.original,
+                accountType,
+                updateAccount,
+                checkBalanceUrl,
+                loginUrl,
+                trackingIPUrl
+              );
             }
 
             updateAccount(accountType, row?.original.username, {
@@ -153,18 +136,65 @@ export const getAccountTableColumns = (
 
       cell: ({ row }) => {
         const rowData = row.original;
+
         return (
           <div className="lowercase flex flex-row justify-center items-center">
-            {row.getValue('main_balance')}
+            {row.getValue('main_balance') ===
+            'Tài khoản bị khoá vì hành vi lừa đảo, trục lợi cá nhân.'
+              ? 'Đã bị khóa'
+              : row.getValue('main_balance')}
 
             <Button
               type="button"
               variant="ghost"
               size="icon"
-              onClick={() => checkBalance(rowData, accountType, updateAccount)}
+              onClick={() => {
+                checkBalance(
+                  rowData,
+                  accountType,
+                  updateAccount,
+                  checkBalanceUrl,
+                  loginUrl,
+                  trackingIPUrl
+                );
+              }}
             >
               <RefreshCcw className="w-3.5 h-3.5" />
             </Button>
+          </div>
+        );
+      },
+    },
+    {
+      id: 'proxy',
+      enableHiding: false,
+      accessorKey: 'proxy',
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          className="px-0 truncate"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Proxy
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      ),
+      cell: ({ row }) => {
+        const rowData = row.original as any;
+        return (
+          <div className="text-center grid grid-cols-2">
+            {row.getValue('proxy')}
+            <Switch
+              checked={rowData.isUseProxy}
+              onCheckedChange={(e) => {
+                console.log('value', e);
+                if (rowData && rowData?.username) {
+                  updateAccount(accountType, rowData.username, {
+                    isUseProxy: e,
+                  });
+                }
+              }}
+            />
           </div>
         );
       },
@@ -196,7 +226,14 @@ export const getAccountTableColumns = (
               <DropdownMenuItem
                 className="flex flex-row items-center gap-1"
                 onClick={() =>
-                  checkBalance(rowData, accountType, updateAccount)
+                  checkBalance(
+                    rowData,
+                    accountType,
+                    updateAccount,
+                    checkBalanceUrl,
+                    loginUrl,
+                    trackingIPUrl
+                  )
                 }
               >
                 <Check className="w-3.5 h-3.5" />
@@ -236,28 +273,6 @@ export const getAccountTableColumns = (
       },
     },
   ];
-
-  const cashIndex = columns.findIndex(
-    (col: any) => col.accessorKey === 'main_balance'
-  );
-  if (accountType === 'MAIN') {
-    columns.splice(cashIndex + 1, 0, {
-      accessorKey: 'proxy',
-      header: ({ column }) => (
-        <Button
-          variant="ghost"
-          className="px-0 truncate"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Proxy
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      ),
-      cell: ({ row }) => {
-        return <div className="text-center">{row.getValue('proxy')}</div>;
-      },
-    });
-  }
 
   return columns;
 };

@@ -13,6 +13,8 @@ export type AccountDetails = {
   time?: number;
   aff_id?: string;
   isSelected: boolean;
+  isUseProxy: boolean;
+  targetSite: string;
   info?: any;
   main_balance?: any;
 };

@@ -15,6 +15,7 @@ import { generateAccount, readValidAccount } from '../../lib/account';
 import { readFile, updateFile } from '../../lib/file';
 import { checkBalance } from '../../service/balance';
 import useAccountStore from '../../store/accountStore';
+import useGameConfigStore from '../../store/gameConfigStore';
 import AddAccount from '../model/addAccount';
 import AddProxy from '../model/addProxy';
 import Deposit from '../model/deposit';
@@ -42,11 +43,12 @@ export const AccountTable: React.FC<any> = ({ accountType }) => {
   const [isDialogDepositOpen, setDialogDepositOpen] = useState(false);
   const [isDialogProxyOpen, setDialogProxyOpen] = useState(false);
   const [rowSelected, setRowSelected] = useState<any>();
-
   const [readedFile, setReadedFile] = useState(false);
 
   const { accounts, updateAccount, addAccount, removeAccount } =
     useAccountStore();
+  const { loginUrl, checkBalanceUrl, trackingIPUrl, currentTargetSite } =
+    useGameConfigStore();
 
   useEffect(() => {
     const handleReadFile = (data: any, accountTypeReceived: any) => {
@@ -81,32 +83,71 @@ export const AccountTable: React.FC<any> = ({ accountType }) => {
 
   useEffect(() => {
     if (accounts[accountType] && readedFile) {
-      setDataTable(accounts[accountType]);
+      const accountFilter = accounts[accountType].filter((account: any) => {
+        return account.targetSite === currentTargetSite;
+      });
+
+      setDataTable(accountFilter);
       updateFile(accounts[accountType], accountType);
     }
-  }, [accounts]);
+  }, [accounts, currentTargetSite]);
 
   const handleDeleteRow = (rowData: any) => {
     removeAccount(accountType, rowData.username);
   };
 
+  const onCheckAll = async (value: any) => {
+    const selectedAccounts = accounts[accountType];
+
+    const checkBalances = selectedAccounts.map((account: any) => {
+      updateAccount(accountType, account.username, {
+        isSelected: value,
+      });
+      if (value) {
+        checkBalance(
+          account,
+          accountType,
+          updateAccount,
+          checkBalanceUrl,
+          loginUrl,
+          trackingIPUrl
+        );
+      }
+    });
+
+    try {
+      await Promise.all(checkBalances);
+      toast({
+        title: 'Updated',
+        description: `Table was update`,
+      });
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: `Failed to this action`,
+      });
+    }
+  };
+
   const removeProxy = (rowData: any) => {
     updateAccount(accountType, rowData.username, {
       proxy: '',
+      prot: '',
       passProxy: '',
+      userProxy: '',
     });
   };
   const columns = getAccountTableColumns(
     accountType,
     handleDeleteRow,
-    checkBalance,
     updateAccount,
     removeProxy,
     setDialogDepositOpen,
     setDialogProxyOpen,
     setRowSelected,
     accounts,
-    toast
+    toast,
+    onCheckAll
   );
 
   const table = useReactTable({
@@ -170,20 +211,7 @@ export const AccountTable: React.FC<any> = ({ accountType }) => {
             {table.getRowModel().rows?.length ? (
               table
                 .getRowModel()
-                .rows.map((row) => (
-                  <AccountTableRow
-                    key={row.id}
-                    row={row}
-                    handleDeleteRow={handleDeleteRow}
-                    checkBalance={checkBalance}
-                    accountType={accountType}
-                    updateAccount={updateAccount}
-                    removeProxy={removeProxy}
-                    setDialogDepositOpen={setDialogDepositOpen}
-                    setDialogProxyOpen={setDialogProxyOpen}
-                    setRowSelected={setRowSelected}
-                  />
-                ))
+                .rows.map((row) => <AccountTableRow key={row.id} row={row} />)
             ) : (
               <TableRow>
                 <TableCell

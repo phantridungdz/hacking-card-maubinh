@@ -1,78 +1,93 @@
 const express = require('express');
 const http = require('http');
-const socketIo = require('socket.io');
+const WebSocket = require('ws');
 const path = require('path');
-
-const app = express();
-const server = http.createServer(app);
-const io = socketIo(server);
+const { HttpsProxyAgent } = require('https-proxy-agent');
 
 export const setupProxyWebsocketHandler = () => {
+  const app = express();
+  const server = http.createServer(app);
+
+  // Serve static files from the 'public' directory
   app.use(express.static(path.join(__dirname, 'public')));
 
-  const { HttpsProxyAgent } = require('https-proxy-agent');
+  // Create a WebSocket server
+  const wss = new WebSocket.Server({ server });
 
-  io.on('connection', (socket: any) => {
+  wss.on('connection', (ws) => {
     console.log('New client connected');
 
-    socket.on('proxyInfo', (data: any) => {
-      const { proxyUrl } = data;
-      console.log('Proxy URL:', proxyUrl);
-      const agent = new HttpsProxyAgent(proxyUrl);
+    ws.on('message', (data) => {
+      let parsedData;
+      try {
+        parsedData = JSON.parse(data);
+      } catch (e) {
+        console.error('Invalid JSON:', e);
+        return;
+      }
 
-      const targetUrl = 'wss://cardskgw.ryksockesg.net/websocket';
-      const ws = new WebSocket(targetUrl, { agent });
+      if (parsedData.type === 'proxyInfo') {
+        const { proxyUrl } = parsedData;
+        console.log('Proxy URL:', proxyUrl);
 
-      ws.on('open', (message) => {
-        console.log('Connected to target server through proxy');
-        socket.emit('proxyConnected', message);
-      });
+        // Create an HTTPS proxy agent
+        const agent = new HttpsProxyAgent(proxyUrl);
 
-      ws.on('message', (message) => {
-        let messageData;
-        if (Buffer.isBuffer(message)) {
-          messageData = message.toString('utf-8');
-        }
-        console.log('Message from target server:', messageData);
-        socket.emit('proxyMessage', messageData);
-      });
+        // Target WebSocket server URL
+        const targetUrl = 'wss://cardskgw.ryksockesg.net/websocket';
+        const targetWs = new WebSocket(targetUrl, { agent });
 
-      ws.on('lastMessage', (message) => {
-        console.log('Last Message from target server:', message);
-        socket.emit('proxyLastMessage', message);
-      });
+        targetWs.on('open', () => {
+          console.log('Connected to target server through proxy');
+          ws.send(JSON.stringify({ type: 'proxyConnected' }));
+        });
 
-      ws.on('close', () => {
-        console.log('Disconnected from target server');
-        socket.emit('proxyDisconnected');
-      });
+        targetWs.on('message', (message) => {
+          let messageData = Buffer.isBuffer(message)
+            ? message.toString('utf-8')
+            : message;
+          // console.log('Message from target server:', messageData);
+          ws.send(messageData);
+        });
 
-      ws.on('error', (error) => {
-        console.error('Error connecting to target server:', error);
-        socket.emit('proxyError', error);
-      });
+        targetWs.on('close', () => {
+          console.log('Disconnected from target server');
+          ws.send(JSON.stringify({ type: 'proxyDisconnected' }));
+        });
 
-      socket.on('clientMessage', (message) => {
-        if (ws.readyState === WebSocket.OPEN) {
-          //check the ip address of the ws connection
-          console.log(ws._socket);
-          console.log(message);
-          // console.log("Message from client:", message);
-          ws.send('message', message);
-          ws.send(message);
-        }
-      });
+        targetWs.on('error', (error) => {
+          console.error('Error connecting to target server:', error);
+          ws.send(JSON.stringify({ type: 'proxyError', error: error.message }));
+        });
 
-      socket.on('disconnect', () => {
-        console.log('Client disconnected');
-        if (ws.readyState === WebSocket.OPEN) {
-          ws.close();
-        }
-      });
+        ws.on('message', (message) => {
+          let clientMessage;
+          try {
+            clientMessage = JSON.parse(message);
+          } catch (e) {
+            console.error('Invalid JSON:', e);
+            return;
+          }
+
+          if (!clientMessage.type && targetWs.readyState === WebSocket.OPEN) {
+            targetWs.send(JSON.stringify(clientMessage));
+            // targetWs.send(
+            //   `[1,'Simms','','',{agentId: '1',accessToken: '29-beeb0453abc94ee522a6607416e4dd27',reconnect: false}]`
+            // );
+          }
+        });
+
+        ws.on('close', () => {
+          console.log('Client disconnected');
+          if (targetWs.readyState === WebSocket.OPEN) {
+            targetWs.close();
+          }
+        });
+      }
     });
   });
 
-  server.listen(3000, () => {
-    console.log('Server is running on port 3000');
+  server.listen(4500, () => {
+    console.log('Server is running on port 4500');
   });
 };

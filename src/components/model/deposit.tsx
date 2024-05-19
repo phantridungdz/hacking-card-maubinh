@@ -4,6 +4,7 @@ import React, { useRef, useState } from 'react';
 import { cardAmounts, homeNets } from '../../lib/config';
 import { login } from '../../service/login';
 import useAccountStore from '../../store/accountStore';
+import useGameConfigStore from '../../store/gameConfigStore';
 import { useToast } from '../toast/use-toast';
 import { Button } from '../ui/button';
 import {
@@ -30,6 +31,7 @@ const Deposit: React.FC<any> = ({
 }) => {
   const { toast } = useToast();
   const { updateAccount } = useAccountStore();
+  const { loginUrl, trackingIPUrl, depositUrl } = useGameConfigStore();
   const [errorMessage, setErrorMessage] = useState('');
   const [homeNet, setHomeNet] = useState('VINAPHONE');
   const [cardAmount, setCardAmount] = useState(20000);
@@ -46,17 +48,19 @@ const Deposit: React.FC<any> = ({
       };
 
       try {
-        const loginData = await login(rowSelected, accountType, updateAccount);
+        const loginData = await login(
+          rowSelected,
+          accountType,
+          updateAccount,
+          loginUrl,
+          trackingIPUrl
+        );
         if (loginData && loginData.code === 200) {
-          const response = await axios.post(
-            'https://baymentes.gwrykgems.net/payment/card',
-            cardPayload,
-            {
-              headers: {
-                'X-Token': loginData.data[0].session_id,
-              },
-            }
-          );
+          const response = await axios.post(depositUrl, cardPayload, {
+            headers: {
+              'X-Token': loginData.data[0].session_id,
+            },
+          });
           if (response.data.code === 200) {
             toast({
               title: 'Đã gửi lệnh',

@@ -15,12 +15,15 @@ import { Table, TableBody, TableRow } from '../../components/ui/table';
 import { getRandomCards } from '../../lib/card';
 import { AppContext } from '../../renderer/providers/app';
 import useAccountStore from '../../store/accountStore';
+import useGameConfigStore from '../../store/gameConfigStore';
 import useGameStore from '../../store/gameStore';
 
 export const HomePage: React.FC<any> = (cardDeck, setNumberOfCards) => {
   const [cards, setCards] = useState<number[][]>([]);
   const { state } = useContext(AppContext);
   const { crawledCards, isFoundedRoom } = useGameStore();
+  const { accounts } = useAccountStore();
+  const { currentTargetSite } = useGameConfigStore();
 
   useEffect(() => {
     if (isFoundedRoom && crawledCards.length === 0) {
@@ -48,8 +51,6 @@ export const HomePage: React.FC<any> = (cardDeck, setNumberOfCards) => {
     setCards((prevCards) => [...prevCards, getRandomCards()]);
     setCards((prevCards) => [...prevCards, getRandomCards()]);
   };
-
-  const { accounts } = useAccountStore();
 
   return (
     <div className="relative h-screen">
@@ -102,7 +103,10 @@ export const HomePage: React.FC<any> = (cardDeck, setNumberOfCards) => {
             <Card className="w-full flex flex-col gap-4 border-0 ">
               {accounts['MAIN'].map(
                 (main: any, index: any) =>
-                  main.isSelected && <TerminalBoard key={index} main={main} />
+                  main.isSelected &&
+                  main.targetSite === currentTargetSite && (
+                    <TerminalBoard key={index} main={main} />
+                  )
               )}
             </Card>
           </div>

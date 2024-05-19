@@ -2,13 +2,18 @@ import { ChevronDown } from 'lucide-react';
 import React, { useRef, useState } from 'react';
 import { generateAccount } from '../../lib/account';
 import { accountType } from '../../lib/config';
-import { generateRandomHex } from '../../lib/utils';
+import {
+  generateRandomHex,
+  getRandomBrowser,
+  getRandomOS,
+} from '../../lib/utils';
 import {
   createAxiosInstanceWithProxy,
   registerAccount,
   updateAccountDisplayName,
 } from '../../service/register';
 import useAccountStore from '../../store/accountStore';
+import useGameConfigStore from '../../store/gameConfigStore';
 import { useToast } from '../toast/use-toast';
 import { Button } from '../ui/button';
 import {
@@ -33,6 +38,7 @@ const CreateAccount: React.FC<any> = ({
   setIsOpenCreateAccount,
 }) => {
   const { addAccount } = useAccountStore();
+  const { registerUrl, currentTargetSite } = useGameConfigStore();
   const { toast } = useToast();
   const [errorMessage, setErrorMessage] = useState('');
   const [accountTypeS, setAccountTypeS] = useState('BOT');
@@ -50,13 +56,13 @@ const CreateAccount: React.FC<any> = ({
       };
       const payload = {
         aff_id: 'hit',
-        app_id: 'rik.vip',
+        app_id: currentTargetSite === 'RIK' ? 'rik.vip' : 'bc114103',
         avatar: 'Avatar35',
-        browser: 'chrome',
+        browser: getRandomBrowser(),
         device: 'Computer',
         fg: generateRandomHex(16),
         fullname: newAccount.fullname,
-        os: 'Windows',
+        os: getRandomOS(),
         password: newAccount.password.trim().toLowerCase(),
         username: newAccount.username.trim(),
       };
@@ -74,14 +80,19 @@ const CreateAccount: React.FC<any> = ({
       const axiosInstance = createAxiosInstanceWithProxy(proxyConfig);
 
       try {
-        const response = await registerAccount(payload, axiosInstance);
+        const response = await registerAccount(
+          payload,
+          axiosInstance,
+          registerUrl
+        );
         if (response.data.code === 200) {
           const inGameNamePayload = {
             fullname: newAccount.fullname,
           };
           const updateDisplayName = updateAccountDisplayName(
             response.data.data[0].session_id,
-            inGameNamePayload
+            inGameNamePayload,
+            registerUrl
           );
           if ((await updateDisplayName).data.code === 200) {
             toast({
@@ -93,6 +104,7 @@ const CreateAccount: React.FC<any> = ({
             newAccount.port = proxyConfig.port;
             newAccount.userProxy = proxyConfig.username;
             newAccount.passProxy = proxyConfig.password;
+            newAccount.targetSite = currentTargetSite;
           } else {
             toast({
               title: 'Error register',

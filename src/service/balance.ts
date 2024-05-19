@@ -1,20 +1,13 @@
 import axios from 'axios';
 import { login } from './login';
 
-const baseUrl = 'https://bordergw.api-inovated.com/user';
-
-// export const checkBalance = async (payload: any) => {
-//   if (axiosInstance) {
-//     return axiosInstance.post(`${baseUrl}/register.aspx`, payload);
-//   } else {
-//     return axios.post(`${baseUrl}/register.aspx`, payload);
-//   }
-// };
-
 export const checkBalance = async (
   rowData: any,
   accountType: string,
-  updateAccount: any
+  updateAccount: any,
+  checkBalanceUrl: string,
+  loginUrl: string,
+  trackingIPUrl: string
 ) => {
   var mainBalance = rowData.main_balance;
   var xToken = rowData.session_id;
@@ -41,55 +34,31 @@ export const checkBalance = async (
         ...proxyConfig,
       };
 
-      const response = await axios.post(
-        'https://bordergw.api-inovated.com/gwms/v1/safe/load.aspx',
-        {},
-        axiosConfig
-      );
-      mainBalance = response.data.data[0].main_balance;
-      if (response.data.code === 401) {
+      const response = await axios.post(checkBalanceUrl, {}, axiosConfig);
+
+      if (response.data.code === 200) {
+        mainBalance = response.data.data[0].main_balance;
         updateAccount(accountType, rowData.username, {
           main_balance: mainBalance,
-          session_id: null,
         });
       } else {
         updateAccount(accountType, rowData.username, {
           main_balance: mainBalance,
+          session_id: null,
         });
       }
     } catch (error) {
       console.error('Error checking balance:', error);
     }
   } else {
-    const data = (await login(rowData, accountType, updateAccount)) as any;
+    const data = (await login(
+      rowData,
+      accountType,
+      updateAccount,
+      loginUrl,
+      trackingIPUrl
+    )) as any;
     const cash = Array.isArray(data?.data) ? data?.data[0].main_balance : 0;
     mainBalance = cash;
   }
-};
-
-export const updateAccountDisplayName = async (
-  sessionId: any,
-  payload: any
-) => {
-  return axios.post(`${baseUrl}/update.aspx`, payload, {
-    headers: {
-      'X-Token': sessionId,
-    },
-  });
-};
-
-export const createAxiosInstanceWithProxy = (proxyConfig: any) => {
-  if (!proxyConfig) {
-    return;
-  }
-  return axios.create({
-    proxy: {
-      host: proxyConfig.host,
-      port: proxyConfig.port,
-      auth: {
-        username: proxyConfig.username,
-        password: proxyConfig.password,
-      },
-    },
-  });
 };

@@ -62,6 +62,7 @@ const AddProxy: React.FC<any> = ({
         port: portRef.current.value.trim(),
         userProxy: useAuthForProxy ? authUsernameRef.current?.value.trim() : '',
         passProxy: useAuthForProxy ? authPasswordRef.current?.value.trim() : '',
+        isUseProxy: true,
       };
       updateAccount(accountType, row.username, newProxy);
       setDialogProxyOpen(false);

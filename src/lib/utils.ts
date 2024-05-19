@@ -11,11 +11,11 @@ export const generateRandomHex = (size: number): string => {
   return randomBytes.toString(CryptoJS.enc.Hex);
 };
 export const getRandomOS = (): string => {
-  const osChoices = ['Mac', 'Windows', 'Linux'];
+  const osChoices = ['OS X', 'Windows'];
   return osChoices[Math.floor(Math.random() * osChoices.length)];
 };
 export const getRandomBrowser = (): string => {
-  const browserChoices = ['chrome', 'safari', 'edge', 'firefox', 'opera'];
+  const browserChoices = ['chrome'];
   return browserChoices[Math.floor(Math.random() * browserChoices.length)];
 };
 export const getCurrentTimestamp = (): number => {

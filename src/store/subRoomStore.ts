@@ -26,7 +26,10 @@ const useSubRoomStore = create<any>(
         set((state: { subs: any[] }) => ({
           subs: state.subs.filter((sub) => sub.username !== subUsername),
         })),
-
+      clearSubs: () =>
+        set(() => ({
+          subs: [],
+        })),
       updateSubsInLobby: (count: any) =>
         set(() => ({
           subsInLobby: count,

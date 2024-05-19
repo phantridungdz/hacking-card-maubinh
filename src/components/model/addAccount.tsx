@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import { generateAccount } from '../../lib/account';
 import useAccountStore from '../../store/accountStore';
+import useGameConfigStore from '../../store/gameConfigStore';
 import { Button } from '../ui/button';
 import {
   Dialog,
@@ -16,6 +17,7 @@ const AddAccount: React.FC<any> = ({
   accountType,
 }) => {
   const { addAccount } = useAccountStore();
+  const { currentTargetSite } = useGameConfigStore();
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const handleAddAccount = () => {
@@ -23,6 +25,7 @@ const AddAccount: React.FC<any> = ({
       const newAccount = {
         username: usernameRef.current.value.trim(),
         password: passwordRef.current.value.trim(),
+        targetSite: currentTargetSite,
       };
       addAccount(accountType, generateAccount(newAccount));
       setDialogAddAccountOpen(false);

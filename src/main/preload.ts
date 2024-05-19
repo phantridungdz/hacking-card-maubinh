@@ -17,6 +17,8 @@ const validChannels: string[] = [
   'check-room',
   'check-position',
   'check-display-name',
+  'generateFg',
+  'generateFgReply',
 ];
 
 contextBridge.exposeInMainWorld('backend', {

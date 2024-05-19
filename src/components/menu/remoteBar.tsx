@@ -22,6 +22,7 @@ import useBotRoomStore from '../../store/botRoomStore';
 import useGameStore from '../../store/gameStore';
 import useSubRoomStore from '../../store/subRoomStore';
 import CreateAccount from '../model/createAccount';
+import TargetSite from './targetSite';
 
 const RemoteBar: React.FC<any> = ({
   cardDeck,
@@ -40,9 +41,11 @@ const RemoteBar: React.FC<any> = ({
     setMainCard,
     isLogining,
     setIsLogining,
+    setFoundedRoom,
   } = useGameStore();
   const { clearAllStatesBot } = useBotRoomStore();
   const { clearAllStatesSub } = useSubRoomStore();
+
   const [refreshKey, setRefreshKey] = useState(0);
   const [isOpenBotSheet, setIsOpenBotSheet] = useState(false);
   const [isOpenCreateAccount, setIsOpenCreateAccount] = useState(false);
@@ -53,6 +56,7 @@ const RemoteBar: React.FC<any> = ({
   };
 
   const onFindGame = () => {
+    setFoundedRoom(null);
     setMainCard([]);
     setFindingStatus(true);
     setReadyToCreateStatus(true);
@@ -115,6 +119,9 @@ const RemoteBar: React.FC<any> = ({
               </Label>
             </div>
           )}
+
+          <TargetSite />
+
           <HandType cardDeck={cardDeck} setCardDeck={setCardDeck} />
           <RoomType />
         </div>

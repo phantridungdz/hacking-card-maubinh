@@ -4,6 +4,7 @@ import { toast } from '../components/toast/use-toast';
 import { binhLungCard } from '../lib/arrangeCard';
 import { login } from '../service/login';
 import useAccountStore from '../store/accountStore';
+import useGameConfigStore from '../store/gameConfigStore';
 import useGameStore from '../store/gameStore';
 import useSubRoomStore from '../store/subRoomStore';
 
@@ -14,6 +15,7 @@ export default function useSubWebSocket(sub: any, roomID: number) {
   const [joinedRoom, setJoinedRoom] = useState(false);
   const [fullName, setFullName] = useState();
   const [botMoneyChange, setBotMoneyChange] = useState('');
+  const [token, setToken] = useState('');
   const { sendMessage, lastMessage, readyState } = useWebSocket(
     socketUrl,
     {
@@ -43,6 +45,7 @@ export default function useSubWebSocket(sub: any, roomID: number) {
     clearGameState,
   } = useGameStore();
   const { updateAccount } = useAccountStore();
+  const { loginUrl, trackingIPUrl } = useGameConfigStore();
   const connectionStatus = {
     [ReadyState.CONNECTING]: 'Đang kết nối',
     [ReadyState.OPEN]: 'Sẵn sàng',
@@ -61,16 +64,42 @@ export default function useSubWebSocket(sub: any, roomID: number) {
   }, [readyState]);
 
   const onConnect = async (sub: any) => {
-    login(sub, 'SUB', updateAccount)
+    login(sub, 'SUB', updateAccount, loginUrl, trackingIPUrl)
       .then(async (data: any) => {
         if (data.code == 200) {
           const user = data?.data[0];
-          const connectURL = 'wss://cardskgw.ryksockesg.net/websocket';
+          let connectURL;
+          if (
+            sub.proxy &&
+            sub.port &&
+            sub.userProxy &&
+            sub.passProxy &&
+            sub.isUseProxy
+          ) {
+            connectURL = 'ws://localhost:4500';
+            await sendMessage(
+              JSON.stringify({
+                type: 'proxyInfo',
+                proxyUrl:
+                  'http://' +
+                  sub.userProxy +
+                  ':' +
+                  sub.passProxy +
+                  '@' +
+                  sub.proxy +
+                  ':' +
+                  sub.port,
+              })
+            );
+            setToken(user.token);
+          } else {
+            connectURL = 'wss://cardskgw.ryksockesg.net/websocket';
+            await sendMessage(
+              `[1,"Simms","","",{"agentId":"1","accessToken":"${user.token}","reconnect":false}]`
+            );
+          }
           await setSocketUrl(connectURL);
           await setShouldConnect(true);
-          await sendMessage(
-            `[1,"Simms","","",{"agentId":"1","accessToken":"${user.token}","reconnect":false}]`
-          );
           addSubValid(user.fullname);
           setFullName(user.fullname);
         } else {
@@ -92,7 +121,11 @@ export default function useSubWebSocket(sub: any, roomID: number) {
     try {
       if (lastMessage !== null) {
         const message = JSON.parse(lastMessage.data);
-
+        if (message.type === 'proxyConnected' && token) {
+          sendMessage(
+            `[1,"Simms","","",{"agentId":"1","accessToken":"${token}","reconnect":false}]`
+          );
+        }
         // console.log(message);
         if (message[0] === 1) {
           if (message[1] === true && message[2] === 0) {

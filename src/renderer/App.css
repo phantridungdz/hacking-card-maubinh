@@ -75,6 +75,37 @@ body,
 
     --ring: 217.2 32.6% 17.5%;
   }
+
+  .blue {
+    --background: 217 100% 90%; /* Softer yellow */
+    --foreground: 217 100% 20%;
+
+    --muted: 217 100% 90%;
+    --muted-foreground: 217 100% 30%;
+
+    --popover: 217 100% 91%;
+    --popover-foreground: 217 100% 20%;
+
+    --card: 217 100% 91%;
+    --card-foreground: 217 100% 20%;
+
+    --border: 217 100% 80%;
+    --input: 217 100% 80%;
+
+    --primary: 217 100% 50%;
+    --primary-foreground: 217 100% 10%;
+
+    --secondary: 217 100% 70%;
+    --secondary-foreground: 217 100% 30%;
+
+    --accent: 217 100% 60%;
+    --accent-foreground: 217 100% 20%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --ring: 217 100% 40%;
+  }
 }
 
 @layer base {

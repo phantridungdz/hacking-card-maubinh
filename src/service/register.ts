@@ -1,20 +1,23 @@
 import axios from 'axios';
 
-const baseUrl = 'https://bordergw.api-inovated.com/user';
-
-export const registerAccount = async (payload: any, axiosInstance: any) => {
+export const registerAccount = async (
+  payload: any,
+  axiosInstance: any,
+  registerUrl: string
+) => {
   if (axiosInstance) {
-    return axiosInstance.post(`${baseUrl}/register.aspx`, payload);
+    return axiosInstance.post(`${registerUrl}/register.aspx`, payload);
   } else {
-    return axios.post(`${baseUrl}/register.aspx`, payload);
+    return axios.post(`${registerUrl}/register.aspx`, payload);
   }
 };
 
 export const updateAccountDisplayName = async (
   sessionId: any,
-  payload: any
+  payload: any,
+  registerUrl: string
 ) => {
-  return axios.post(`${baseUrl}/update.aspx`, payload, {
+  return axios.post(`${registerUrl}/update.aspx`, payload, {
     headers: {
       'X-Token': sessionId,
     },

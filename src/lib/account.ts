@@ -1,6 +1,11 @@
 import { now } from 'lodash';
 import { toast } from '../components/toast/use-toast';
-import { generateRandomHex, getRandomBrowser, getRandomOS } from './utils';
+import {
+  generateRandomFg,
+  generateRandomHex,
+  getRandomBrowser,
+  getRandomOS,
+} from './utils';
 
 const readValidAccount = (input: string): any => {
   return input
@@ -16,21 +21,25 @@ const readValidAccount = (input: string): any => {
           port,
           userProxy,
           passProxy,
+          isUseProxy,
+          targetSite,
         ] = line.trim().split('|');
         return {
           username,
-          password: password || '',
-          app_id: 'rik.vip',
-          os: 'Windows',
+          password,
+          app_id: targetSite === 'RIK' ? 'rik.vip' : 'bc114103',
+          os: getRandomOS(),
           device: 'Computer',
-          browser: 'chrome',
+          browser: getRandomBrowser(),
           proxy: proxy,
           port: port,
           passProxy: passProxy,
           userProxy: userProxy,
-          fg: 'fea47ac6e0fd72cd768e977d51f3dc45',
+          fg: generateRandomFg(),
           time: now(),
           aff_id: 'hit',
+          targetSite: targetSite,
+          isUseProxy: isUseProxy === 'true',
           isSelected: IsSelected === 'true',
         };
       } else {
@@ -84,13 +93,15 @@ const generateAccount = (account: any) => {
   const sessionId = account.session_id;
   const token = account.token;
   const isSelected = account.isSelected || false;
+  const isUseProxy = account.isUseProxy || false;
+  const targetSite = account.targetSite || false;
 
   return {
     username: account.username,
     password: account.password,
     isSelected: isSelected,
     session_id: sessionId,
-    app_id: 'rik.vip',
+    app_id: targetSite === 'RIK' ? 'rik.vip' : 'bc114103',
     os: getRandomOS(),
     device: 'Computer',
     browser: getRandomBrowser(),
@@ -103,6 +114,8 @@ const generateAccount = (account: any) => {
     time: now(),
     aff_id: 'hit',
     main_balance: 0,
+    isUseProxy: isUseProxy,
+    targetSite: targetSite,
   };
 };
 
