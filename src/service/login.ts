@@ -1,14 +1,11 @@
 import axios from 'axios';
 import { now } from 'lodash';
-import { ProxyAgent } from 'proxy-agent';
 import { toast } from '../components/toast/use-toast';
 import { generateRandomHex, getRandomOS } from '../lib/utils';
 
-const getFg = (username: string) => {
+const getFg = (botInfo: any) => {
   return new Promise((resolve) => {
     const handleGetFG = (data: any) => {
-      console.log('event', data);
-
       resolve(data);
     };
     window.backend.on('generateFgReply', handleGetFG);
@@ -16,6 +13,7 @@ const getFg = (username: string) => {
     window.backend.sendMessage(
       'generateFg',
       `
+      __require('PopupDangNhap').default.prototype.requestLogin('someValue', '${botInfo.username}', '${botInfo.password}', 'someToken', null, null, null);
       function convertUTCDateToLocalDate(t) {
         var e = new Date(t.getTime() + 6e4 * t.getTimezoneOffset()),
           i = e.getHours();
@@ -23,7 +21,7 @@ const getFg = (username: string) => {
       }
 
       var y = Math.floor(convertUTCDateToLocalDate(new Date()).getTime() / 1e3);
-      var sign = __require('PopupDangNhap').default.prototype.checkSign(y, '${username}')
+      var sign = __require('PopupDangNhap').default.prototype.checkSign(y, '${botInfo.username}')
       var fg = __require('GamePlayManager').default.getInstance().fingerprint
       var result = {fg: fg, time: y, sign:  sign}
       result
@@ -41,7 +39,7 @@ const login = async (
 ) => {
   let fgAndTime;
   if (botInfo.targetSite === 'HIT') {
-    fgAndTime = (await getFg(botInfo.username)) as any;
+    fgAndTime = (await getFg(botInfo)) as any;
     console.log('fgAndTime', fgAndTime);
     if (!fgAndTime.data) {
       fgAndTime = null;
@@ -50,37 +48,46 @@ const login = async (
   }
 
   const credentials = {
-    app_id: botInfo.targetSite === 'RIK' ? 'rik.vip' : 'bc114103',
-    aff_id: botInfo.aff_id,
-    browser: botInfo.browser,
-    csrf: botInfo.targetSite === 'RIK' ? null : '',
-    device: botInfo.device,
-    fg: fgAndTime?.data ? fgAndTime.data.fg : generateRandomHex(16),
-    os: getRandomOS(),
-    password: botInfo.password,
-    sign: fgAndTime?.data ? fgAndTime.data.sign : generateRandomHex(16),
-    time: fgAndTime?.data ? fgAndTime.data.time : now(),
     username: botInfo.username,
+    password: botInfo.password,
+    app_id: botInfo.targetSite === 'RIK' ? 'rik.vip' : 'bc114103',
+    os: getRandomOS(),
+    device: botInfo.device,
+    browser: botInfo.browser,
+    aff_id: botInfo.aff_id,
+    csrf: botInfo.targetSite === 'RIK' ? null : '',
+    fg: fgAndTime?.data ? fgAndTime.data.fg : generateRandomHex(16),
+    time: fgAndTime?.data ? fgAndTime.data.time : now(),
+    sign: fgAndTime?.data ? fgAndTime.data.sign : generateRandomHex(16),
+    r_token: fgAndTime?.data ? fgAndTime.data.body : null,
   };
 
   try {
-    let axiosConfig = {};
+    let proxyConfig = {};
     if (
       botInfo.proxy &&
       botInfo.passProxy &&
       botInfo.userProxy &&
       botInfo.passProxy
     ) {
-      const proxyUrl = `http://${botInfo.userProxy}:${botInfo.passProxy}@${botInfo.proxy}:${botInfo.port}`;
-      const agent = new ProxyAgent(proxyUrl);
-
-      axiosConfig = {
-        httpAgent: agent,
-        httpsAgent: agent,
+      proxyConfig = {
+        proxy: {
+          host: botInfo.proxy,
+          port: Number(botInfo.port),
+          auth: {
+            username: botInfo.userProxy,
+            password: botInfo.passProxy,
+          },
+        },
       };
     }
 
-    const response = await axios.post(loginUrl, credentials, axiosConfig);
+    const response = await axios.post(loginUrl, JSON.stringify(credentials), {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      ...proxyConfig,
+    });
 
     if (response.data.code === 200) {
       const data = response.data.data[0];
@@ -95,7 +102,7 @@ const login = async (
         main_balance: response.data.message,
       });
     }
-    await axios.get(trackingIPUrl, axiosConfig);
+    await axios.get(trackingIPUrl, proxyConfig);
 
     return response.data;
   } catch (error) {

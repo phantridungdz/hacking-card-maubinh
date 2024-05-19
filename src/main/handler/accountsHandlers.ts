@@ -226,10 +226,23 @@ export const setupAccountHandlers = (
       const { page } = instance;
       try {
         await page.evaluate(script);
-        const result = await instance.page.evaluate(script);
-        console.log('result', result);
-        event.reply('generateFgReply', {
-          data: result,
+        let result = await instance.page.evaluate(script);
+        page.on('response', async (response: any) => {
+          const requestUrl = response.url();
+
+          if (
+            requestUrl.includes(
+              'https://www.google.com/recaptcha/enterprise/reload?k=6LcRfskaAAAAAPLbAdyH3WCygmXJ4KWietpBc_UA'
+            )
+          ) {
+            // Replace 'specific-endpoint' with your condition
+            const responseBody = await response.text();
+            const parsedBody = JSON.parse(responseBody.replace(`)]}'`, ''));
+            result.body = parsedBody[1];
+            event.reply('generateFgReply', {
+              data: result,
+            });
+          }
         });
       } catch (error) {
         event.reply('generateFgReply', `Failed to execute script.`);
