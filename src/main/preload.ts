@@ -19,6 +19,7 @@ const validChannels: string[] = [
   'check-display-name',
   'generateFg',
   'generateFgReply',
+  'login-hit',
 ];
 
 contextBridge.exposeInMainWorld('backend', {

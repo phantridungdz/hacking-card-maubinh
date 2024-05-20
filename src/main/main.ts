@@ -6,6 +6,7 @@ import { loadExtensions } from './extension/installer';
 import { setupAccountHandlers } from './handler/accountsHandlers';
 import { setupArrangeCardHandlers } from './handler/arrangeCardHandlers';
 import { setupFileHandlers } from './handler/fileHandlers';
+import { setupLoginHitHandlers } from './handler/loginHitPupHandler';
 import { setupProxyWebsocketHandler } from './handler/proxyWebsocketHandler';
 import { setupReadHardwareHandlers } from './handler/readHardwareHandler';
 import MenuBuilder from './menu';
@@ -101,60 +102,19 @@ const createWindow = async () => {
     );
     newHeaders['Referer'] = 'https://web.hitclub.win/';
     newHeaders['Origin'] = 'https://web.hitclub.win/';
+    newHeaders['Accept'] = '*/*';
+    newHeaders['Accept-encoding'] = 'gzip, deflate, br, zstd';
+    newHeaders['Accept-language'] = 'en-US,en;q=0.9';
+    newHeaders['Content-Type'] = 'text/plain;charset=UTF-8';
+    newHeaders['Dnt'] = '1';
+    newHeaders['Priority'] = 'u=1, i';
+    newHeaders['User-agent'] =
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0';
+    newHeaders[
+      'Sec-ch-ua'
+    ] = `"Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"`;
     callback({ requestHeaders: newHeaders });
   });
-
-  // mainWindow.webContents.on('did-finish-load', () => {
-  //   if (mainWindow) {
-  //     mainWindow.webContents.executeJavaScript(`
-  //     (async () => {
-  //       try {
-  //         const response = await fetch("https://bodergatez.dsrcgoms.net/user/login.aspx", {
-  //           method: "POST",
-  //           headers: {
-  //             "Content-Type": "application/json",
-  //             Accept: "*/*",
-  //             "Accept-Language": "en-US,en;q=0.9",
-  //             "Cache-Control": "no-cache",
-  //             DNT: "1",
-  //             Origin: "https://web.hitclub.win",
-  //             Referer: "https://web.hitclub.win/",
-  //             "sec-ch-ua": '"Chromium";v="124", "Microsoft Edge";v="124", "Not-A.Brand";v="99"',
-  //             "sec-ch-ua-mobile": "?0",
-  //             "sec-ch-ua-platform": '"Windows"',
-  //             "Sec-Fetch-Dest": "empty",
-  //             "Sec-Fetch-Mode": "cors",
-  //             "Sec-Fetch-Site": "cross-site",
-  //             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-  //           },
-  //           body: JSON.stringify({
-  //             username: "Elephennt211",
-  //             password: "zxcv123123",
-  //             app_id: "bc114103",
-  //             os: "Windows",
-  //             device: "Computer",
-  //             browser: "chrome",
-  //             fg: "e01e55711ae12a6c5fca6e3f9bc9c903",
-  //             time: 1716099874,
-  //             sign: "3e0975d789ec0f043267374e2594949a",
-  //             csrf: "",
-  //             aff_id: "hit",
-  //           }),
-  //         });
-
-  //         if (!response.ok) {
-  //           throw new Error(\`HTTP error! status: \${response.status}\`);
-  //         }
-
-  //         const data = await response.json();
-  //         console.log(data);
-  //       } catch (error) {
-  //         console.error("Error:", error);
-  //       }
-  //     })();
-  //   `);
-  //   }
-  // });
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));
 
@@ -208,6 +168,7 @@ const createWindow = async () => {
   setupAccountHandlers(mainWindow);
   setupArrangeCardHandlers();
   setupProxyWebsocketHandler();
+  setupLoginHitHandlers();
 
   new AppUpdater();
 };

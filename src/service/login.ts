@@ -30,6 +30,17 @@ const getFg = (botInfo: any) => {
   });
 };
 
+const loginHit = (botInfo: any) => {
+  return new Promise((resolve) => {
+    const handleGetFG = (data: any) => {
+      resolve(data);
+    };
+    window.backend.on('login-hit', handleGetFG);
+
+    window.backend.sendMessage('login-hit', botInfo);
+  });
+};
+
 const login = async (
   botInfo: any,
   accountType: string,
