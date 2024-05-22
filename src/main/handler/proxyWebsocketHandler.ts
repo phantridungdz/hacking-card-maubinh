@@ -34,7 +34,7 @@ export const setupProxyWebsocketHandler = () => {
         const agent = new HttpsProxyAgent(proxyUrl);
 
         // Target WebSocket server URL
-        const targetUrl = 'wss://cardskgw.ryksockesg.net/websocket';
+        const targetUrl = wsTargetUrl;
         const targetWs = new WebSocket(targetUrl, { agent });
 
         targetWs.on('open', () => {

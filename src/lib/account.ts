@@ -23,6 +23,8 @@ const readValidAccount = (input: string): any => {
           passProxy,
           isUseProxy,
           targetSite,
+          session_id,
+          token,
         ] = line.trim().split('|');
         return {
           username,
@@ -41,6 +43,8 @@ const readValidAccount = (input: string): any => {
           targetSite: targetSite,
           isUseProxy: isUseProxy === 'true',
           isSelected: IsSelected === 'true',
+          session_id: session_id,
+          token: token,
         };
       } else {
         return;

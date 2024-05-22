@@ -1,6 +1,5 @@
 import { Gamepad, Home } from 'lucide-react';
 import { useEffect } from 'react';
-import useGameStore from '../../store/gameStore';
 import useSubRoomStore from '../../store/subRoomStore';
 import { HostSubController } from './hostSubController';
 import { SubController } from './subController';
@@ -8,7 +7,6 @@ import { SubController } from './subController';
 export const SubRoomController: React.FC<any> = ({}) => {
   const { subs, subsInLobby, subsInRoom, subRoomStatus, roomID, updateStatus } =
     useSubRoomStore();
-  const { isFoundedRoom } = useGameStore();
   useEffect(() => {
     if (subsInLobby.length == 2) {
       updateStatus('Ready');

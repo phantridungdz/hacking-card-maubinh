@@ -41,10 +41,13 @@ const Deposit: React.FC<any> = ({
   const handleAddAccount = async () => {
     if (codeRef.current && seriRef.current) {
       const cardPayload = {
+        browser: 'chrome',
         card_amount: cardAmount,
         card_code: codeRef.current.value,
         card_serial: seriRef.current.value,
         card_provider: homeNet,
+        device: 'Computer',
+        os: 'Windows',
       };
 
       try {

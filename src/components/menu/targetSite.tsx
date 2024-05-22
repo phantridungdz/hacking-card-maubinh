@@ -16,8 +16,9 @@ import { Label } from '../ui/label';
 const TargetSite: React.FC<any> = () => {
   const { roomType, setRoomType } = useGameStore();
   const { currentTargetSite, setTargetSite } = useGameConfigStore();
-  const handleTargetSiteChange = (money: number) => {
-    setTargetSite(money);
+  const handleTargetSiteChange = (target: number) => {
+    setTargetSite(target);
+    window.backend.sendMessage('update-header', target);
   };
   return (
     <DropdownMenu>

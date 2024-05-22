@@ -127,7 +127,13 @@ export const setupAccountHandlers = (
       client.on(
         'Network.webSocketCreated',
         ({ requestId, url }: WebSocketCreatedData) => {
-          if (url.includes('wss://cardskgw.ryksockesg.net/websocket')) {
+          if (
+            url.includes(
+              account.targetSite === 'RIK'
+                ? 'wss://cardskgw.ryksockesg.net/websocket'
+                : 'wss://carkgwaiz.hytsocesk.com/websocket'
+            )
+          ) {
             specificWebSocketRequestId = requestId;
           }
         }
@@ -177,6 +183,79 @@ export const setupAccountHandlers = (
     }
   }
 
+  async function startBrowserHit() {
+    try {
+      const browser = await puppeteer.launch({
+        headless: false,
+        defaultViewport: null,
+        ignoreHTTPSErrors: true,
+        acceptInsecureCerts: true,
+        args: [
+          '--no-sandbox',
+          '--disable-setuid-sandbox',
+          '--disable-infobars',
+          '--window-position=0,0',
+          '--ignore-certifcate-errors',
+          '--ignore-certifcate-errors-spki-list',
+          '--proxy-server=146.19.196.191:40272',
+          '--disable-features=NetworkService',
+          '--disable-features=CookiesWithoutSameSiteMustBeSecure',
+          '--disable-features=SameSiteByDefaultCookies',
+        ],
+      });
+      const pages = await browser.pages();
+
+      const page = pages[0];
+      await page.setUserAgent(
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+      );
+
+      await page.authenticate({
+        username: '4D9pU0aqqp',
+        password: 'yuL8t3I7fA',
+      });
+
+      // await page.setRequestInterception(true);
+      // page.on('request', (request) => {
+      //   const url = request.url();
+      //   if (url.includes('google')) {
+      //     console.log('url', url);
+      //   }
+
+      //   if (url.includes('jserrorlogging')) {
+      //     console.log('url', url);
+      //     request.abort();
+      //   } else {
+      //     request.continue();
+      //   }
+      // });
+      const client = await page.target().createCDPSession();
+      await client.send('Network.enable');
+      await client.send('Page.enable');
+      await client.send('Emulation.setPageScaleFactor', { pageScaleFactor: 0 });
+
+      puppeteerInstances.push({
+        username: 'hit',
+        browser: browser,
+        page: page,
+        client: client,
+      });
+
+      browser.on('disconnected', () => {
+        puppeteerInstances = puppeteerInstances.filter(
+          (instance) => instance.browser !== browser
+        );
+      });
+
+      const targetSite = 'https://web.hitclub.win/';
+      await page.goto(targetSite, {
+        waitUntil: 'networkidle2',
+      });
+    } catch (error) {
+      console.log('eee', error);
+    }
+  }
+
   ipcMain.on('open-accounts', async (event, account) => {
     await startPuppeteerForAccount(account);
     event.reply('open-accounts-reply', 'All accounts have been opened.');
@@ -220,12 +299,13 @@ export const setupAccountHandlers = (
     }
   });
   ipcMain.on('generateFg', async (event, script) => {
-    const instance = puppeteerInstances[0];
+    const instance = puppeteerInstances.find(
+      (instance) => instance.username === 'hit'
+    );
 
     if (instance) {
       const { page } = instance;
       try {
-        await page.evaluate(script);
         let result = await instance.page.evaluate(script);
         page.on('response', async (response: any) => {
           const requestUrl = response.url();
@@ -321,6 +401,76 @@ export const setupAccountHandlers = (
       }
     } else {
       event.reply('execute-script-reply', `Account ${username} not found.`);
+    }
+  });
+  ipcMain.on('update-header', async (event, targetSites) => {
+    if (targetSites === 'HIT') {
+      const existingInstance = puppeteerInstances.find(
+        (inst) => inst.username === 'hit'
+      );
+
+      if (existingInstance) {
+        return;
+      }
+      await startBrowserHit();
+    } else {
+      const index = puppeteerInstances.findIndex(
+        (instance) => instance.username === 'hit'
+      );
+
+      if (index !== -1) {
+        const { browser } = puppeteerInstances[index];
+        try {
+          await browser.close();
+          puppeteerInstances.splice(index, 1);
+          event.reply(
+            'update-header-reply',
+            `Browser for 'hit' has been closed.`
+          );
+        } catch (error) {
+          event.reply(
+            'update-header-reply',
+            `Failed to close browser for 'hit': ${error.message}`
+          );
+        }
+      } else {
+        event.reply('update-header-reply', `'hit' instance not found.`);
+      }
+    }
+  });
+  ipcMain.on('reopen-hit', async (event, targetSites) => {
+    if (targetSites === 'HIT') {
+      const existingInstance = puppeteerInstances.find(
+        (inst) => inst.username === 'hit'
+      );
+
+      if (existingInstance) {
+        return;
+      }
+      await startBrowserHit();
+    } else {
+      const index = puppeteerInstances.findIndex(
+        (instance) => instance.username === 'hit'
+      );
+
+      if (index !== -1) {
+        const { browser } = puppeteerInstances[index];
+        try {
+          await browser.close();
+          puppeteerInstances.splice(index, 1);
+          event.reply(
+            'update-header-reply',
+            `Browser for 'hit' has been closed.`
+          );
+        } catch (error) {
+          event.reply(
+            'update-header-reply',
+            `Failed to close browser for 'hit': ${error.message}`
+          );
+        }
+      } else {
+        event.reply('update-header-reply', `'hit' instance not found.`);
+      }
     }
   });
 };

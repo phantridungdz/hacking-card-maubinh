@@ -30,6 +30,10 @@ const useSubRoomStore = create<any>(
         set(() => ({
           subs: [],
         })),
+      setSubs: (subs: any) =>
+        set(() => ({
+          subs: subs,
+        })),
       updateSubsInLobby: (count: any) =>
         set(() => ({
           subsInLobby: count,

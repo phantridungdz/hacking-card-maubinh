@@ -1,4 +1,4 @@
-import { BrowserWindow, app, session, shell } from 'electron';
+import { BrowserWindow, app, shell } from 'electron';
 import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
 import path from 'path';
@@ -6,6 +6,7 @@ import { loadExtensions } from './extension/installer';
 import { setupAccountHandlers } from './handler/accountsHandlers';
 import { setupArrangeCardHandlers } from './handler/arrangeCardHandlers';
 import { setupFileHandlers } from './handler/fileHandlers';
+import { setupHeaderHandlers } from './handler/headerHandlers';
 import { setupLoginHitHandlers } from './handler/loginHitPupHandler';
 import { setupProxyWebsocketHandler } from './handler/proxyWebsocketHandler';
 import { setupReadHardwareHandlers } from './handler/readHardwareHandler';
@@ -42,36 +43,6 @@ export const getAssetPath = (...paths: string[]): string => {
   return path.join(RESOURCES_PATH, ...paths);
 };
 
-function capitalizeHeaderKeys(
-  headers: Record<string, string[]>
-): Record<string, string[]> {
-  const capitalizedHeaders: Record<string, string[]> = {};
-  for (const key in headers) {
-    if (headers.hasOwnProperty(key)) {
-      const capitalizedKey = key.replace(/(^|\s)\S/g, (letter) =>
-        letter.toUpperCase()
-      );
-      capitalizedHeaders[capitalizedKey] = headers[key];
-    }
-  }
-  return capitalizedHeaders;
-}
-
-function capitalizeRequestHeaderKeys(
-  headers: Record<string, string>
-): Record<string, string> {
-  const capitalizedHeaders: Record<string, string> = {};
-  for (const key in headers) {
-    if (headers.hasOwnProperty(key)) {
-      const capitalizedKey = key.replace(/(^|\s)\S/g, (letter) =>
-        letter.toUpperCase()
-      );
-      capitalizedHeaders[capitalizedKey] = headers[key];
-    }
-  }
-  return capitalizedHeaders;
-}
-
 const createWindow = async () => {
   mainWindow = new BrowserWindow({
     show: false,
@@ -85,35 +56,6 @@ const createWindow = async () => {
         ? path.join(__dirname, 'preload.js')
         : path.join(__dirname, '../../.erb/dll/preload.js'),
     },
-  });
-
-  session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
-    const newHeaders = capitalizeHeaderKeys(
-      details.responseHeaders as Record<string, string[]>
-    );
-    newHeaders['Access-Control-Allow-Origin'] = ['https://web.hitclub.win'];
-    newHeaders['Cf-cache-status'] = ['DYNAMIC'];
-    callback({ responseHeaders: newHeaders });
-  });
-
-  session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
-    const newHeaders = capitalizeRequestHeaderKeys(
-      details.requestHeaders as Record<string, string>
-    );
-    newHeaders['Referer'] = 'https://web.hitclub.win/';
-    newHeaders['Origin'] = 'https://web.hitclub.win/';
-    newHeaders['Accept'] = '*/*';
-    newHeaders['Accept-encoding'] = 'gzip, deflate, br, zstd';
-    newHeaders['Accept-language'] = 'en-US,en;q=0.9';
-    newHeaders['Content-Type'] = 'text/plain;charset=UTF-8';
-    newHeaders['Dnt'] = '1';
-    newHeaders['Priority'] = 'u=1, i';
-    newHeaders['User-agent'] =
-      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0';
-    newHeaders[
-      'Sec-ch-ua'
-    ] = `"Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"`;
-    callback({ requestHeaders: newHeaders });
   });
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));
@@ -168,6 +110,7 @@ const createWindow = async () => {
   setupAccountHandlers(mainWindow);
   setupArrangeCardHandlers();
   setupProxyWebsocketHandler();
+  setupHeaderHandlers();
   setupLoginHitHandlers();
 
   new AppUpdater();

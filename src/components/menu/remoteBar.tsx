@@ -108,6 +108,7 @@ const RemoteBar: React.FC<any> = ({
           <FindRoomSheet
             setIsOpen={setIsOpenBotSheet}
             isOpen={isOpenBotSheet}
+            onRefreshBot={onRefreshBot}
           />
         </div>
 

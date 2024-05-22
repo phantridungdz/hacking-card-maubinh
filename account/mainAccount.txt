@@ -1,4 +1,4 @@
-mallldkdjs12345|Maiiuemfk112..|true|146.19.196.191|40272|4D9pU0aqqp|yuL8t3I7fA|true|RIK|
-mkdll32990|4567745674|false|undefined|undefined|undefined|undefined|false|RIK|
-Elephennt211|thamdu|true|undefined|undefined|undefined|undefined|false|HIT|
-tacahihhi1|codobon58|false|103.172.116.134|40010|LKFMDpdktv|Rp4LcFWYs5|false|HIT|
+mallldkdjs12345|Maiiuemfk112..|true|146.19.196.191|40272|4D9pU0aqqp|yuL8t3I7fA|true|RIK|null|null|
+mkdll32990|4567745674|true|undefined|undefined|undefined|undefined|false|RIK|null|null|
+mongdungkhoaacc3549|handl73848|true|undefined|undefined|undefined|undefined|false|false|null|null|
+namhoaimsm|34645fdsf|false||NaN|undefined|undefined|false|HIT|f91047509cf0c70083c3333a953f2b8b|undefined|

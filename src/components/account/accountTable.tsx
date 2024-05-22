@@ -100,18 +100,20 @@ export const AccountTable: React.FC<any> = ({ accountType }) => {
     const selectedAccounts = accounts[accountType];
 
     const checkBalances = selectedAccounts.map((account: any) => {
-      updateAccount(accountType, account.username, {
-        isSelected: value,
-      });
-      if (value) {
-        checkBalance(
-          account,
-          accountType,
-          updateAccount,
-          checkBalanceUrl,
-          loginUrl,
-          trackingIPUrl
-        );
+      if (account.targetSite === currentTargetSite) {
+        updateAccount(accountType, account.username, {
+          isSelected: value,
+        });
+        if (value) {
+          checkBalance(
+            account,
+            accountType,
+            updateAccount,
+            checkBalanceUrl,
+            loginUrl,
+            trackingIPUrl
+          );
+        }
       }
     });
 

@@ -11,8 +11,10 @@ const updateFile = async (accountsUpdate: any, accountType: string) => {
         userProxy: string;
         isUseProxy: any;
         targetSite: string;
+        session_id: string;
+        token: string;
       }) =>
-        `${account.username}|${account.password}|${account.isSelected}|${account.proxy}|${account.port}|${account.userProxy}|${account.passProxy}|${account.isUseProxy}|${account.targetSite}|`
+        `${account.username}|${account.password}|${account.isSelected}|${account.proxy}|${account.port}|${account.userProxy}|${account.passProxy}|${account.isUseProxy}|${account.targetSite}|${account.session_id}|${account.token}|`
     )
     .join('\n');
   window.backend.sendMessage(

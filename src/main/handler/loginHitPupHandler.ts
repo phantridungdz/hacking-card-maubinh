@@ -1,7 +1,5 @@
 const { ipcMain } = require('electron');
-const os = require('os');
 const puppeteer = require('puppeteer');
-import path from 'path';
 export const setupLoginHitHandlers = () => {
   let puppeteerInstances: any[] = [];
 
@@ -15,34 +13,9 @@ export const setupLoginHitHandlers = () => {
     targetSite: string;
   }) {
     try {
-      let userProfilePath;
-      const usernamePc = os.userInfo().username;
-      if (os.platform() === 'win32') {
-        userProfilePath = path.join(
-          'C:/Users',
-          usernamePc,
-          'puppeteerProfile',
-          account.username
-        );
-      } else if (os.platform() === 'darwin') {
-        userProfilePath = path.join(
-          '/Users',
-          usernamePc,
-          'puppeteerProfile',
-          account.username
-        );
-      } else {
-        userProfilePath = path.join(
-          '/home',
-          usernamePc,
-          'puppeteerProfile',
-          account.username
-        );
-      }
       const browser = await puppeteer.launch({
         headless: false,
         defaultViewport: null,
-        userDataDir: userProfilePath,
         ignoreHTTPSErrors: true,
         acceptInsecureCerts: true,
         args: [
@@ -98,25 +71,41 @@ export const setupLoginHitHandlers = () => {
         );
       });
 
-      const targetSite = 'https://web.hitclub.win/login/dangnhap.html';
+      const targetSite = 'https://web.hitclub.win/';
       await page.goto(targetSite, {
         waitUntil: 'networkidle2',
       });
 
-      await page.type('#username', account.username);
-      await page.type('#pwd', account.password);
+      let result = await page.evaluate(`
+      grecaptcha.enterprise.execute('6LcRfskaAAAAAPLbAdyH3WCygmXJ4KWietpBc_UA', { action: 'g8login' })
+      function convertUTCDateToLocalDate(t) {
+        var e = new Date(t.getTime() + 6e4 * t.getTimezoneOffset()),
+          i = e.getHours();
+        return e.setHours(i - -7), e;
+      }
+
+      var y = Math.floor(convertUTCDateToLocalDate(new Date()).getTime() / 1e3);
+      var sign = __require('PopupDangNhap').default.prototype.checkSign(y, '${account.username}')
+      var fg = __require('GamePlayManager').default.getInstance().fingerprint
+      var result = {fg: fg, time: y, sign:  sign}
+      result`);
+
       page.on('response', async (response: any) => {
         const requestUrl = response.url();
-
         if (
-          requestUrl.includes('https://bodergatez.dsrcgoms.net/user/login.aspx')
+          requestUrl.includes(
+            'reload?k=6LcRfskaAAAAAPLbAdyH3WCygmXJ4KWietpBc_UA'
+          )
         ) {
+          // Replace 'specific-endpoint' with your condition
           const responseBody = await response.text();
-          const parsedBody = JSON.parse(responseBody);
-          return parsedBody;
+          const parsedBody = JSON.parse(responseBody.replace(`)]}'`, ''));
+          result.body = parsedBody[1];
+          // await page.close();
+          console.log('parsedBody', parsedBody[1]);
         }
       });
-      await page.evaluate('onSubmit()');
+      return result;
     } catch (error) {
       console.log('eee', error);
       return false;
@@ -125,6 +114,50 @@ export const setupLoginHitHandlers = () => {
 
   ipcMain.on('login-hit', async (event, account) => {
     const res = await startLoginHit(account);
-    if (res) event.reply('login-hit', res);
+    console.log('res', res);
+    const instance = puppeteerInstances.find(
+      (instance) => instance.username === account.username
+    );
+
+    if (instance) {
+      const { page } = instance;
+      try {
+        let result = await instance.page.evaluate(`
+        grecaptcha.enterprise.execute('6LcRfskaAAAAAPLbAdyH3WCygmXJ4KWietpBc_UA', { action: 'g8login' })
+        function convertUTCDateToLocalDate(t) {
+          var e = new Date(t.getTime() + 6e4 * t.getTimezoneOffset()),
+            i = e.getHours();
+          return e.setHours(i - -7), e;
+        }
+
+        var y = Math.floor(convertUTCDateToLocalDate(new Date()).getTime() / 1e3);
+        var sign = __require('PopupDangNhap').default.prototype.checkSign(y, '${account.username}')
+        var fg = __require('GamePlayManager').default.getInstance().fingerprint
+        var result = {fg: fg, time: y, sign:  sign}
+        result`);
+        page.on('response', async (response: any) => {
+          const requestUrl = response.url();
+
+          if (
+            requestUrl.includes(
+              'https://www.google.com/recaptcha/enterprise/reload?k=6LcRfskaAAAAAPLbAdyH3WCygmXJ4KWietpBc_UA'
+            )
+          ) {
+            // Replace 'specific-endpoint' with your condition
+            const responseBody = await response.text();
+            const parsedBody = JSON.parse(responseBody.replace(`)]}'`, ''));
+            result.body = parsedBody[1];
+            event.reply('login-hit', {
+              data: result,
+            });
+            page.close();
+          }
+        });
+      } catch (error) {
+        event.reply('generateFgReply', `Failed to execute script.`);
+      }
+    } else {
+      event.reply('generateFgReply', `Not found instance.`);
+    }
   });
 };

@@ -11,12 +11,14 @@ const useGameConfigStore = create<any>(
       trackingIPUrl: 'https://apirvp4.traskiprik.info/sw/collect',
       registerUrl: 'https://bordergw.api-inovated.com/user',
       depositUrl: 'https://baymentes.gwrykgems.net/payment/card',
+      wsTargetUrl: 'wss://cardskgw.ryksockesg.net/websocket',
       setTargetSite: (site: any) => {
         let newCheckBalanceUrl;
         let newLoginUrl;
         let newTrackingIPUrl;
         let newRegisterUrl;
         let newDepositUrl;
+        let newWsTargetUrl;
         switch (site) {
           case 'RIK':
             newCheckBalanceUrl =
@@ -25,6 +27,7 @@ const useGameConfigStore = create<any>(
             newTrackingIPUrl = 'https://apirvp4.traskiprik.info/sw/collect';
             newRegisterUrl = 'https://bordergw.api-inovated.com/user';
             newDepositUrl = 'https://baymentes.gwrykgems.net/payment/card';
+            newWsTargetUrl = 'wss://cardskgw.ryksockesg.net/websocket';
             break;
           case 'HIT':
             newCheckBalanceUrl =
@@ -33,15 +36,16 @@ const useGameConfigStore = create<any>(
             newTrackingIPUrl = 'https://bodergatez.dsrcgoms.net/sw/collect';
             newRegisterUrl = 'https://bodergatez.dsrcgoms.net/user';
             newDepositUrl = 'https://pmbodergw.dsrcgoms.net/payment/card/hit';
+            newWsTargetUrl = 'wss://carkgwaiz.hytsocesk.com/websocket';
             break;
           default:
             newCheckBalanceUrl =
               'https://default.api-inovated.com/gwms/v1/safe/load.aspx';
-            newLoginUrl =
-              'https://default.api-inovated.com/gwms/v1/safe/load.aspx';
+            newLoginUrl = 'https://bordergw.api-inovated.com/user/login.aspx';
             newTrackingIPUrl = 'https://apirvp4.traskiprik.info/sw/collect';
             newRegisterUrl = 'https://bordergw.api-inovated.com/user';
             newDepositUrl = 'https://baymentes.gwrykgems.net/payment/card';
+            newWsTargetUrl = 'wss://cardskgw.ryksockesg.net/websocket';
         }
         set({
           currentTargetSite: site,
@@ -49,6 +53,8 @@ const useGameConfigStore = create<any>(
           loginUrl: newLoginUrl,
           trackingIPUrl: newTrackingIPUrl,
           registerUrl: newRegisterUrl,
+          depositUrl: newDepositUrl,
+          wsTargetUrl: newWsTargetUrl,
         });
       },
     }),

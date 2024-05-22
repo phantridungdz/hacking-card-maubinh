@@ -45,7 +45,17 @@ export const checkBalance = async (
         updateAccount(accountType, rowData.username, {
           main_balance: mainBalance,
           session_id: null,
+          token: null,
         });
+        const data = (await login(
+          rowData,
+          accountType,
+          updateAccount,
+          loginUrl,
+          trackingIPUrl
+        )) as any;
+        const cash = Array.isArray(data?.data) ? data?.data[0].main_balance : 0;
+        mainBalance = cash;
       }
     } catch (error) {
       console.error('Error checking balance:', error);

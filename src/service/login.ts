@@ -13,7 +13,7 @@ const getFg = (botInfo: any) => {
     window.backend.sendMessage(
       'generateFg',
       `
-      __require('PopupDangNhap').default.prototype.requestLogin('someValue', '${botInfo.username}', '${botInfo.password}', 'someToken', null, null, null);
+      grecaptcha.enterprise.execute('6LcRfskaAAAAAPLbAdyH3WCygmXJ4KWietpBc_UA', { action: 'g8login' })
       function convertUTCDateToLocalDate(t) {
         var e = new Date(t.getTime() + 6e4 * t.getTimezoneOffset()),
           i = e.getHours();
@@ -50,28 +50,42 @@ const login = async (
 ) => {
   let fgAndTime;
   if (botInfo.targetSite === 'HIT') {
-    fgAndTime = (await getFg(botInfo)) as any;
-    console.log('fgAndTime', fgAndTime);
+    fgAndTime = (await loginHit(botInfo)) as any;
     if (!fgAndTime.data) {
       fgAndTime = null;
       toast({ title: 'Error', description: 'Vui lòng bật HIT lên.' });
     }
   }
 
-  const credentials = {
-    username: botInfo.username,
-    password: botInfo.password,
-    app_id: botInfo.targetSite === 'RIK' ? 'rik.vip' : 'bc114103',
-    os: getRandomOS(),
-    device: botInfo.device,
-    browser: botInfo.browser,
-    aff_id: botInfo.aff_id,
-    csrf: botInfo.targetSite === 'RIK' ? null : '',
-    fg: fgAndTime?.data ? fgAndTime.data.fg : generateRandomHex(16),
-    time: fgAndTime?.data ? fgAndTime.data.time : now(),
-    sign: fgAndTime?.data ? fgAndTime.data.sign : generateRandomHex(16),
-    r_token: fgAndTime?.data ? fgAndTime.data.body : null,
-  };
+  const credentials =
+    botInfo.targetSite === 'HIT'
+      ? {
+          username: botInfo.username,
+          password: botInfo.password,
+          app_id: 'bc114103',
+          os: getRandomOS(),
+          device: botInfo.device,
+          browser: botInfo.browser,
+          aff_id: botInfo.aff_id,
+          csrf: botInfo.targetSite === 'RIK' ? null : '',
+          fg: fgAndTime?.data ? fgAndTime.data.fg : generateRandomHex(16),
+          time: fgAndTime?.data ? fgAndTime.data.time : now(),
+          sign: fgAndTime?.data ? fgAndTime.data.sign : generateRandomHex(16),
+          r_token: fgAndTime?.data ? fgAndTime.data.body : null,
+        }
+      : {
+          username: botInfo.username,
+          password: botInfo.password,
+          app_id: 'rik.vip',
+          os: getRandomOS(),
+          device: botInfo.device,
+          browser: botInfo.browser,
+          aff_id: botInfo.aff_id,
+          fg: fgAndTime?.data ? fgAndTime.data.fg : generateRandomHex(16),
+          time: fgAndTime?.data ? fgAndTime.data.time : now(),
+          sign: fgAndTime?.data ? fgAndTime.data.sign : generateRandomHex(16),
+          r_token: '',
+        };
 
   try {
     let proxyConfig = {};

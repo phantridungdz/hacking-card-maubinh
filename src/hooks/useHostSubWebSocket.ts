@@ -51,7 +51,7 @@ export default function useHostWebSocket(sub: any, roomID: number) {
   } = useGameStore();
   const { isBotStart } = useBotRoomStore();
   const { updateAccount } = useAccountStore();
-  const { loginUrl, trackingIPUrl } = useGameConfigStore();
+  const { loginUrl, trackingIPUrl, wsTargetUrl } = useGameConfigStore();
   const connectionStatus = {
     [ReadyState.CONNECTING]: 'Đang kết nối',
     [ReadyState.OPEN]: 'Sẵn sàng',
@@ -70,58 +70,69 @@ export default function useHostWebSocket(sub: any, roomID: number) {
   }, [readyState]);
 
   const onConnect = async (sub: any) => {
-    login(sub, 'SUB', updateAccount, loginUrl, trackingIPUrl)
-      .then(async (data: any) => {
-        if (data.code == 200) {
-          const user = data?.data[0];
-          let connectURL;
-          if (
-            sub.proxy &&
-            sub.port &&
-            sub.userProxy &&
-            sub.passProxy &&
-            sub.isUseProxy
-          ) {
-            connectURL = 'ws://localhost:4500';
-            await sendMessage(
-              JSON.stringify({
-                type: 'proxyInfo',
-                proxyUrl:
-                  'http://' +
-                  sub.userProxy +
-                  ':' +
-                  sub.passProxy +
-                  '@' +
-                  sub.proxy +
-                  ':' +
-                  sub.port,
-              })
-            );
-            setToken(user.token);
-          } else {
-            connectURL = 'wss://cardskgw.ryksockesg.net/websocket';
+    if (!sub.token) {
+      login(sub, 'SUB', updateAccount, loginUrl, trackingIPUrl)
+        .then(async (data: any) => {
+          if (data.code == 200) {
+            const user = data?.data[0];
+            let connectURL;
+            if (
+              sub.proxy &&
+              sub.port &&
+              sub.userProxy &&
+              sub.passProxy &&
+              sub.isUseProxy
+            ) {
+              connectURL = 'ws://localhost:4500';
+              await sendMessage(
+                JSON.stringify({
+                  type: 'proxyInfo',
+                  proxyUrl:
+                    'http://' +
+                    sub.userProxy +
+                    ':' +
+                    sub.passProxy +
+                    '@' +
+                    sub.proxy +
+                    ':' +
+                    sub.port,
+                })
+              );
+              setToken(user.token);
+            } else {
+              connectURL = wsTargetUrl;
 
-            await sendMessage(
-              `[1,"Simms","","",{"agentId":"1","accessToken":"${user.token}","reconnect":false}]`
-            );
+              await sendMessage(
+                `[1,"Simms","","",{"agentId":"1","accessToken":"${user.token}","reconnect":false}]`
+              );
+            }
+            await setSocketUrl(connectURL);
+            await setShouldConnect(true);
+            addSubValid(user.fullname);
+            setFullName(user.fullname);
+          } else {
+            toast({ title: 'Error', description: data?.message });
+            setSocketUrl('');
+            setShouldConnect(false);
+            clearGameState();
           }
-          await setSocketUrl(connectURL);
-          await setShouldConnect(true);
-          addSubValid(user.fullname);
-          setFullName(user.fullname);
-        } else {
-          toast({ title: 'Error', description: data?.message });
+        })
+        .catch((err: Error) => {
+          console.error('Error when calling login function:', err);
           setSocketUrl('');
           setShouldConnect(false);
           clearGameState();
-        }
-      })
-      .catch((err: Error) => {
-        console.error('Error when calling login function:', err);
-        setSocketUrl('');
-        setShouldConnect(false);
-        clearGameState();
-      });
+        });
+    } else {
+      let connectURL = wsTargetUrl;
+      await sendMessage(
+        `[1,"Simms","","",{"agentId":"1","accessToken":"${sub.token}","reconnect":false}]`
+      );
+      await setSocketUrl(connectURL);
+      await setShouldConnect(true);
+      addSubValid(sub.fullname);
+      setFullName(sub.fullname);
+    }
   };
 
   useEffect(() => {
@@ -175,7 +186,7 @@ export default function useHostWebSocket(sub: any, roomID: number) {
               //   sub.username,
               //   'Phát hiện người chơi khác vào phòng'
               // );
-              sendMessage(`[4,"Simms",${roomID}]`);
+              // sendMessage(`[4,"Simms",${roomID}]`);
             }
           }
 

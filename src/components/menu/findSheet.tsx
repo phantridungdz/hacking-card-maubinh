@@ -1,3 +1,4 @@
+import { RefreshCcw } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import useAccountStore from '../../store/accountStore';
 import useBotRoomStore from '../../store/botRoomStore';
@@ -6,15 +7,21 @@ import useGameStore from '../../store/gameStore';
 import useSubRoomStore from '../../store/subRoomStore';
 import { BotRoomController } from '../room/botRoomController';
 import { SubRoomController } from '../room/subRoomController';
+import { Button } from '../ui/button';
 import { ScrollArea } from '../ui/scroll-area';
 import BotSetting from './botSheet';
 
 interface FindRoomSheetProps {
   isOpen: boolean;
   setIsOpen: any;
+  onRefreshBot: any;
 }
 
-export function FindRoomSheet({ isOpen, setIsOpen }: FindRoomSheetProps) {
+export function FindRoomSheet({
+  isOpen,
+  setIsOpen,
+  onRefreshBot,
+}: FindRoomSheetProps) {
   const [roomsReady, setRoomsReady] = useState(0);
   const { currentTargetSite } = useGameConfigStore();
   const { accounts, updateAccount } = useAccountStore();
@@ -24,50 +31,41 @@ export function FindRoomSheet({ isOpen, setIsOpen }: FindRoomSheetProps) {
   useEffect(() => {
     if (bots.length < 4) {
       const botsPerPair = 4;
-      let availableBots = accounts['BOT'].filter(
-        (bot: { used: any }) => !bot.used
-      );
-      availableBots = availableBots.filter(
+      const availableBots = accounts['BOT'].filter(
         (bot: { isSelected: any; targetSite: string }) =>
           bot.isSelected && bot.targetSite === currentTargetSite
       );
+
       availableBots
         .slice(0, botsPerPair)
         .forEach((bot: { username: any; role: any }, index: number) => {
           const role = index === 0 ? 'host' : index > 1 ? 'waiter' : 'guest';
-          updateAccount('BOT', bot.username, { used: true, role: role });
           addBot(bot, role);
         });
     }
-  }, [accounts['BOT']]);
-
-  useEffect(() => {
-    clearBots();
-  }, [currentTargetSite]);
+  }, [accounts['BOT'], currentTargetSite, bots]);
 
   useEffect(() => {
     if (subs.length < 2) {
       const subsPerPair = 2;
-      let availableSubs = accounts['SUB'].filter(
-        (sub: { used: any }) => !sub.used
-      );
-      availableSubs = availableSubs.filter(
+      const availableSubs = accounts['SUB'].filter(
         (sub: { isSelected: any; targetSite: string }) =>
           sub.isSelected && sub.targetSite === currentTargetSite
       );
+
       availableSubs
         .slice(0, subsPerPair)
         .forEach((sub: { username: any; role: any }, index: number) => {
           const role = index === 0 ? 'host' : index > 1 ? 'waiter' : 'guest';
-          updateAccount('SUB', sub.username, { used: true, role: role });
           addSub(sub, role);
         });
     }
-  }, [accounts['SUB']]);
+  }, [accounts['SUB'], currentTargetSite, subs]);
 
   useEffect(() => {
+    clearBots();
     clearSubs();
-  }, [currentTargetSite]);
+  }, [currentTargetSite, accounts]);
 
   useEffect(() => {
     var botRoomReadyCount = 0;
@@ -103,6 +101,9 @@ export function FindRoomSheet({ isOpen, setIsOpen }: FindRoomSheetProps) {
             {roomsReady}/2
           </span>
         </p>
+        <Button onClick={onRefreshBot}>
+          <RefreshCcw className="w-3.5 h-3.5" />
+        </Button>
       </div>
       <ScrollArea className="h-full rounded-md flex flex-col">
         <div className="flex flex-col  text-white space-y-4 flex-1 w-full">
