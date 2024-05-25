@@ -8,6 +8,12 @@ const badgeVariants = cva(
   {
     variants: {
       variant: {
+        rik: 'border-white bg-[#6D00C0] text-white hover:bg-primary/80',
+        debet:
+          'border-white border-transparent bg-[#D12027] text-white hover:bg-primary/80',
+        hit: 'border-white border-transparent bg-[#FFFC00] text-black hover:bg-primary/80',
+        lucky88:
+          'border-white border-transparent bg-[#53A7B6] text-white hover:bg-primary/80',
         default:
           'border-transparent bg-primary text-primary-foreground hover:bg-primary/80',
         secondary:

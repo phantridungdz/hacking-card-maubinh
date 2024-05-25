@@ -4,7 +4,7 @@ const puppeteer = require('puppeteer');
 // const StealthPlugin = require('puppeteer-extra-plugin-stealth');
 // puppeteer.use(StealthPlugin());
 import path from 'path';
-import { addNameTagCommand } from '../command/command';
+import { loginHitCommand, loginRikCommand } from '../command/command';
 
 interface WebSocketCreatedData {
   requestId: string;
@@ -22,15 +22,7 @@ export const setupAccountHandlers = (
 ) => {
   let puppeteerInstances: any[] = [];
 
-  async function startPuppeteerForAccount(account: {
-    username: string;
-    password: string;
-    proxy: string;
-    port: string;
-    userProxy: string;
-    passProxy: string;
-    targetSite: string;
-  }) {
+  async function startPuppeteerForAccount(account: any) {
     const existingInstance = puppeteerInstances.find(
       (inst) => inst.username === account.username
     );
@@ -166,93 +158,43 @@ export const setupAccountHandlers = (
           }
         }
       );
-      const targetSite =
-        account.targetSite === 'RIK'
-          ? 'https://play.rikvip.win/'
-          : 'https://web.hitclub.win/';
+      let targetSite;
+      switch (account.fromSite) {
+        case 'RIK':
+          targetSite = 'https://play.rikvip.win/';
+          break;
+        case 'HIT':
+          targetSite = 'https://web.hitclub.win/';
+          break;
+        case 'LUCKY88':
+          targetSite =
+            'https://games.gnightfast.net/?brand=lucky&token=' +
+            account.token +
+            '&gameid=vgcg_4&ru=';
+          break;
+        case 'DEBET':
+          targetSite =
+            'https://games.prorichvip.com/?brand=debet&token=' +
+            account.token +
+            '&gameid=vgcg_4&ru=https%3A%2F%2Fdebet.net';
+          break;
+        default:
+          throw new Error(`Unsupported target site: ${account.fromSite}`);
+      }
       await page.goto(targetSite, {
         waitUntil: 'networkidle2',
       });
 
-      await page.evaluate(addNameTagCommand(account));
+      await page.evaluate(
+        account.targetSite === 'RIK'
+          ? loginRikCommand(account)
+          : loginHitCommand(account)
+      );
 
       return { browser, page };
     } catch (error) {
     } finally {
       return true;
-    }
-  }
-
-  async function startBrowserHit() {
-    try {
-      const browser = await puppeteer.launch({
-        headless: false,
-        defaultViewport: null,
-        ignoreHTTPSErrors: true,
-        acceptInsecureCerts: true,
-        args: [
-          '--no-sandbox',
-          '--disable-setuid-sandbox',
-          '--disable-infobars',
-          '--window-position=0,0',
-          '--ignore-certifcate-errors',
-          '--ignore-certifcate-errors-spki-list',
-          '--proxy-server=146.19.196.191:40272',
-          '--disable-features=NetworkService',
-          '--disable-features=CookiesWithoutSameSiteMustBeSecure',
-          '--disable-features=SameSiteByDefaultCookies',
-        ],
-      });
-      const pages = await browser.pages();
-
-      const page = pages[0];
-      await page.setUserAgent(
-        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-      );
-
-      await page.authenticate({
-        username: '4D9pU0aqqp',
-        password: 'yuL8t3I7fA',
-      });
-
-      // await page.setRequestInterception(true);
-      // page.on('request', (request) => {
-      //   const url = request.url();
-      //   if (url.includes('google')) {
-      //     console.log('url', url);
-      //   }
-
-      //   if (url.includes('jserrorlogging')) {
-      //     console.log('url', url);
-      //     request.abort();
-      //   } else {
-      //     request.continue();
-      //   }
-      // });
-      const client = await page.target().createCDPSession();
-      await client.send('Network.enable');
-      await client.send('Page.enable');
-      await client.send('Emulation.setPageScaleFactor', { pageScaleFactor: 0 });
-
-      puppeteerInstances.push({
-        username: 'hit',
-        browser: browser,
-        page: page,
-        client: client,
-      });
-
-      browser.on('disconnected', () => {
-        puppeteerInstances = puppeteerInstances.filter(
-          (instance) => instance.browser !== browser
-        );
-      });
-
-      const targetSite = 'https://web.hitclub.win/';
-      await page.goto(targetSite, {
-        waitUntil: 'networkidle2',
-      });
-    } catch (error) {
-      console.log('eee', error);
     }
   }
 
@@ -299,10 +241,10 @@ export const setupAccountHandlers = (
     }
   });
   ipcMain.on('generateFg', async (event, script) => {
-    const instance = puppeteerInstances.find(
-      (instance) => instance.username === 'hit'
-    );
-
+    // const instance = puppeteerInstances.find(
+    //   (instance) => instance.username === 'hit'
+    // );
+    const instance = puppeteerInstances[0];
     if (instance) {
       const { page } = instance;
       try {
@@ -401,76 +343,6 @@ export const setupAccountHandlers = (
       }
     } else {
       event.reply('execute-script-reply', `Account ${username} not found.`);
-    }
-  });
-  ipcMain.on('update-header', async (event, targetSites) => {
-    if (targetSites === 'HIT') {
-      const existingInstance = puppeteerInstances.find(
-        (inst) => inst.username === 'hit'
-      );
-
-      if (existingInstance) {
-        return;
-      }
-      await startBrowserHit();
-    } else {
-      const index = puppeteerInstances.findIndex(
-        (instance) => instance.username === 'hit'
-      );
-
-      if (index !== -1) {
-        const { browser } = puppeteerInstances[index];
-        try {
-          await browser.close();
-          puppeteerInstances.splice(index, 1);
-          event.reply(
-            'update-header-reply',
-            `Browser for 'hit' has been closed.`
-          );
-        } catch (error) {
-          event.reply(
-            'update-header-reply',
-            `Failed to close browser for 'hit': ${error.message}`
-          );
-        }
-      } else {
-        event.reply('update-header-reply', `'hit' instance not found.`);
-      }
-    }
-  });
-  ipcMain.on('reopen-hit', async (event, targetSites) => {
-    if (targetSites === 'HIT') {
-      const existingInstance = puppeteerInstances.find(
-        (inst) => inst.username === 'hit'
-      );
-
-      if (existingInstance) {
-        return;
-      }
-      await startBrowserHit();
-    } else {
-      const index = puppeteerInstances.findIndex(
-        (instance) => instance.username === 'hit'
-      );
-
-      if (index !== -1) {
-        const { browser } = puppeteerInstances[index];
-        try {
-          await browser.close();
-          puppeteerInstances.splice(index, 1);
-          event.reply(
-            'update-header-reply',
-            `Browser for 'hit' has been closed.`
-          );
-        } catch (error) {
-          event.reply(
-            'update-header-reply',
-            `Failed to close browser for 'hit': ${error.message}`
-          );
-        }
-      } else {
-        event.reply('update-header-reply', `'hit' instance not found.`);
-      }
     }
   });
 };

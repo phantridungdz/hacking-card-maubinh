@@ -8,7 +8,6 @@ import {
   SquareMousePointer,
 } from 'lucide-react';
 import React, { useState } from 'react';
-import { FindRoomSheet } from '../../components/menu/findSheet';
 import HandType from '../../components/menu/handType';
 import RoomType from '../../components/menu/roomType';
 import { Button } from '../../components/ui/button';
@@ -22,6 +21,7 @@ import useBotRoomStore from '../../store/botRoomStore';
 import useGameStore from '../../store/gameStore';
 import useSubRoomStore from '../../store/subRoomStore';
 import CreateAccount from '../model/createAccount';
+import { FindRoomSheet } from '../sheet/findSheet';
 import TargetSite from './targetSite';
 
 const RemoteBar: React.FC<any> = ({

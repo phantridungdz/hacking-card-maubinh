@@ -38,14 +38,16 @@ const useGameConfigStore = create<any>(
             newDepositUrl = 'https://pmbodergw.dsrcgoms.net/payment/card/hit';
             newWsTargetUrl = 'wss://carkgwaiz.hytsocesk.com/websocket';
             break;
-          default:
+          case 'LUCKY88':
             newCheckBalanceUrl =
-              'https://default.api-inovated.com/gwms/v1/safe/load.aspx';
-            newLoginUrl = 'https://bordergw.api-inovated.com/user/login.aspx';
-            newTrackingIPUrl = 'https://apirvp4.traskiprik.info/sw/collect';
-            newRegisterUrl = 'https://bordergw.api-inovated.com/user';
-            newDepositUrl = 'https://baymentes.gwrykgems.net/payment/card';
-            newWsTargetUrl = 'wss://cardskgw.ryksockesg.net/websocket';
+              'https://bodergatez.dsrcgoms.net/gwms/v1/safe/load.aspx';
+            newLoginUrl = 'https://lucky88.vip/api/v1/login';
+            newTrackingIPUrl = 'https://bodergatez.dsrcgoms.net/sw/collect';
+            newRegisterUrl = 'https://bodergatez.dsrcgoms.net/user';
+            newDepositUrl = 'https://pmbodergw.dsrcgoms.net/payment/card/hit';
+            newWsTargetUrl = 'wss://carkgwaiz.hytsocesk.com/websocket';
+            break;
+          default:
         }
         set({
           currentTargetSite: site,

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import { toast } from '../components/toast/use-toast';
 import { binhLungCard } from '../lib/arrangeCard';
-import { login } from '../service/login';
+import { fetchToken, login } from '../service/login';
 import useAccountStore from '../store/accountStore';
 import useBotRoomStore from '../store/botRoomStore';
 import useGameConfigStore from '../store/gameConfigStore';
@@ -13,7 +13,7 @@ export default function useBotWebSocket(bot: any, roomID: number) {
   const [shouldConnect, setShouldConnect] = useState(false);
   const [joinedLobby, setJoinedLobby] = useState(false);
   const [joinedRoom, setJoinedRoom] = useState(false);
-  const [fullName, setFullName] = useState();
+  const [fullName, setFullName] = useState('');
   const [botMoneyChange, setBotMoneyChange] = useState('');
   const [token, setToken] = useState('');
   const { sendMessage, lastMessage, readyState } = useWebSocket(
@@ -46,8 +46,7 @@ export default function useBotWebSocket(bot: any, roomID: number) {
     clearGameState,
   } = useGameStore();
   const { updateAccount } = useAccountStore();
-  const { loginUrl, trackingIPUrl, wsTargetUrl, currentTargetSite } =
-    useGameConfigStore();
+  const { loginUrl, wsTargetUrl, currentTargetSite } = useGameConfigStore();
   const connectionStatus = {
     [ReadyState.CONNECTING]: 'Đang kết nối',
     [ReadyState.OPEN]: 'Sẵn sàng',
@@ -65,70 +64,47 @@ export default function useBotWebSocket(bot: any, roomID: number) {
     }
   }, [readyState]);
 
+  const startSocketOn = async (token: string, fullName: string) => {
+    await sendMessage(
+      `[1,"Simms","","",{"agentId":"1","accessToken":"${token}","reconnect":true}]`
+    );
+    await setSocketUrl(wsTargetUrl);
+    await setShouldConnect(true);
+    addBotValid(fullName);
+    setFullName(fullName);
+  };
+
   const onConnect = async (bot: any) => {
     if (!bot.token) {
-      login(bot, 'BOT', updateAccount, loginUrl, trackingIPUrl)
-        .then(async (data: any) => {
-          if (data.code == 200) {
-            const user = data?.data[0];
-
-            let connectURL;
-            if (
-              bot.proxy &&
-              bot.port &&
-              bot.userProxy &&
-              bot.passProxy &&
-              bot.isUseProxy
-            ) {
-              connectURL = 'ws://localhost:4500';
-
-              await sendMessage(
-                JSON.stringify({
-                  type: 'proxyInfo',
-                  proxyUrl:
-                    'http://' +
-                    bot.userProxy +
-                    ':' +
-                    bot.passProxy +
-                    '@' +
-                    bot.proxy +
-                    ':' +
-                    bot.port,
-                })
-              );
-              setToken(user.token);
-            } else {
-              connectURL = wsTargetUrl;
-              await sendMessage(
-                `[1,"Simms","","",{"agentId":"1","accessToken":"${user.token}","reconnect":false}]`
-              );
-            }
-            await setSocketUrl(connectURL);
-            await setShouldConnect(true);
-            addBotValid(user.fullname);
-            setFullName(user.fullname);
-          } else {
-            toast({ title: 'Error', description: data?.message });
-            setSocketUrl('');
-            setShouldConnect(false);
-            clearGameState();
-          }
-        })
-        .catch((err: Error) => {
-          console.error('Error when calling login function:', err);
-          setSocketUrl('');
-          setShouldConnect(false);
-          clearGameState();
-        });
+      const res = await login(bot, 'BOT', updateAccount);
+      if ((res.code = 200)) {
+        const user = res?.data[0];
+        setToken(user.token);
+        startSocketOn(user.token, user.fullname);
+      } else {
+        toast({ title: 'Error', description: res.message });
+        setSocketUrl('');
+        setShouldConnect(false);
+        clearGameState();
+      }
     } else {
-      let connectURL = wsTargetUrl;
-      await sendMessage(
-        `[1,"Simms","","",{"agentId":"1","accessToken":"${bot.token}","reconnect":false}]`
-      );
-      await setSocketUrl(connectURL);
-      await setShouldConnect(true);
-      addBotValid(bot.fullname);
-      setFullName(bot.fullname);
+      if (!bot.username) {
+        const resToken = await fetchToken(bot);
+        if (resToken?.data) {
+          startSocketOn(bot.token, resToken.data.displayName);
+        } else {
+          toast({
+            title: 'Error',
+            description: 'Token hết hạn, mời đăng nhập lại trước khi bắt đầu',
+          });
+          updateAccount('BOT', bot.username, {
+            session_id: null,
+            token: null,
+          });
+        }
+      } else {
+        startSocketOn(bot.token, bot.fullname);
+      }
     }
   };
 
@@ -138,7 +114,7 @@ export default function useBotWebSocket(bot: any, roomID: number) {
         const message = JSON.parse(lastMessage.data);
         if (message.type === 'proxyConnected' && token) {
           sendMessage(
-            `[1,"Simms","","",{"agentId":"1","accessToken":"${token}","reconnect":false}]`
+            `[1,"Simms","","",{"agentId":"1","accessToken":"${token}","reconnect":true}]`
           );
         }
         if (message[0] === 1) {
@@ -185,6 +161,7 @@ export default function useBotWebSocket(bot: any, roomID: number) {
             }
             // updateBotStatus(bot.username, 'Joined Room');
           }
+          console.log('fullName', fullName);
           if (message[1].cmd === 5 && message[1].dn === fullName) {
             console.log('message[1].dn', message[1].dn);
             console.log('fullName', fullName);
@@ -195,11 +172,7 @@ export default function useBotWebSocket(bot: any, roomID: number) {
             }
           }
           //send-Ready
-          if (
-            message[1].cmd === 204 ||
-            message[1].cmd === 607 ||
-            message[1].cmd === 5
-          ) {
+          if (message[1].cmd === 204 || message[1].cmd === 203) {
             // updateBotStatus(bot.username, 'Sent ready');
             sendMessage(`[5,"Simms",${roomID},{"cmd":5}]`);
             // if (!botsReady.includes(bot.userName)) {
@@ -221,6 +194,11 @@ export default function useBotWebSocket(bot: any, roomID: number) {
           // }
           //Ping-join-lobby
           if (message[1].cmd === 310 && message[1].As) {
+            if (message[1].As.gold) {
+              updateAccount('BOT', bot.username, {
+                main_balance: message[1].As.gold,
+              });
+            }
             sendMessage(
               `[6,"Simms","channelPlugin",{"cmd":"306","subi":false}]`
             );
@@ -300,8 +278,8 @@ export default function useBotWebSocket(bot: any, roomID: number) {
 
   useEffect(() => {
     if (isReadyToJoin) {
-      if (currentTargetSite === 'HIT') {
-        sendMessage(`[8,"Simms",${roomID},"",4]`);
+      if (currentTargetSite !== 'RIK') {
+        sendMessage(`[8,"Simms",${roomID},"123123",4]`);
       } else {
         sendMessage(`[3,"Simms",${roomID},"",true]`);
       }

@@ -10,14 +10,16 @@ import {
   TrashIcon,
   UserPlus,
 } from 'lucide-react';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Button } from '../../components/ui/button';
 import { Label } from '../../components/ui/label';
 import { ScrollArea } from '../../components/ui/scroll-area';
 import { highlightSyntax } from '../../lib/terminal';
-import { AppContext } from '../../renderer/providers/app';
+import useAccountStore from '../../store/accountStore';
+import useGameConfigStore from '../../store/gameConfigStore';
 import useGameStore from '../../store/gameStore';
 import { useToast } from '../toast/use-toast';
+import { Badge } from '../ui/badge';
 import { Toggle } from '../ui/toggle';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 import { getAddNameTagCommand } from './commandTerminal';
@@ -38,14 +40,17 @@ import {
 export const TerminalBoard: React.FC<any> = ({ main }) => {
   const { toast } = useToast();
   const [data, setData] = useState<unknown[]>([]);
-  const { state, setState } = useContext(AppContext);
   const [isLogin, setIsLogin] = useState(false);
   const [currentSit, setCurrentSit] = useState('');
   const [autoInvite, setAutoInvite] = useState(false);
   const [autoStart, setAutoStart] = useState(false);
+  const [currentRoom, setCurrentRoom] = useState(false);
+
   const autoStartRef = useRef(autoStart);
   const { mainRoomID, isStartGame, setMainJoinStatus, setMainCard } =
     useGameStore();
+  const { currentTargetSite } = useGameConfigStore();
+  const { updateAccount } = useAccountStore();
 
   const parseData = (dataString: string) => {
     try {
@@ -62,16 +67,21 @@ export const TerminalBoard: React.FC<any> = ({ main }) => {
       setIsLogin(true);
 
       const parsedData = parseData(data);
+      if (parsedData[1].cmd === 310 && parsedData[1].As) {
+        if (parsedData[1].As.gold) {
+          updateAccount('MAIN', main.username, {
+            main_balance: parsedData[1].As.gold,
+          });
+        }
+      }
       if (parsedData[0] == 5 && parsedData[1].cmd === 317) {
       }
       if (parsedData[0] == 3 && parsedData[1] === true) {
-        setState((pre) => ({
-          ...pre,
-          initialRoom: {
-            ...pre.initialRoom,
-            isSubJoin: true,
-          },
-        }));
+        setCurrentRoom(parsedData[3].toString());
+        toast({
+          title: 'Đã vào phòng',
+          description: 'ID Room:  ' + parsedData[3].toString(),
+        });
       }
       if (parsedData[0] == 5) {
         if (
@@ -87,7 +97,6 @@ export const TerminalBoard: React.FC<any> = ({ main }) => {
         if (parsedData[1].cmd === 205) {
         }
         if (parsedData[1].p) {
-          console.log('parsedData Ra vào phòng', parsedData);
           toast({
             title: parsedData[1].p.dn,
             description: parsedData[1].p.dn + ' tới chơi.',
@@ -199,18 +208,34 @@ export const TerminalBoard: React.FC<any> = ({ main }) => {
 
   useEffect(() => {
     if (mainRoomID) {
-      window.backend.sendMessage(
-        'execute-script',
-        main,
-        `__require('GamePlayManager').default.getInstance().joinRoom(${mainRoomID},0,'',true);`
-      );
+      if (currentTargetSite === 'RIK') {
+        window.backend.sendMessage(
+          'execute-script',
+          main,
+          `__require('GamePlayManager').default.getInstance().joinRoom(${mainRoomID},0,'',true);`
+        );
+      } else {
+        if (main.fromSite === 'LUCKY88') {
+          window.backend.sendMessage(
+            'execute-script',
+            main,
+            `__require('GamePlayManager').default.getInstance().joinRoomWithGameID(${mainRoomID},'',4);`
+          );
+        } else {
+          window.backend.sendMessage(
+            'execute-script',
+            main,
+            `__require('GamePlayManager').default.getInstance().joinRoomWithGameID(${mainRoomID},0,'',4);`
+          );
+        }
+        setMainJoinStatus(true);
+      }
     }
   }, [mainRoomID]);
 
   useEffect(() => {
     if (isStartGame) {
       openAccounts(main);
-      setMainJoinStatus(true);
     }
   }, [isStartGame]);
 
@@ -228,7 +253,10 @@ export const TerminalBoard: React.FC<any> = ({ main }) => {
 
   return (
     <fieldset className=" rounded-lg border p-4">
-      <legend className="-ml-1 px-1 text-sm font-medium">
+      <legend className="-ml-1 px-1 text-sm font-medium flex items-center gap-2">
+        <Badge className=" uppercase" variant={main.fromSite.toLowerCase()}>
+          {main.fromSite}
+        </Badge>
         {main.username}
       </legend>
       <div className="flex flex-col gap-4">
@@ -238,7 +266,7 @@ export const TerminalBoard: React.FC<any> = ({ main }) => {
               style={{ fontFamily: 'monospace' }}
               className="flex items-center bg-background border p-[5px]  flex-grow justify-start font-bold rounded-sm"
             >
-              Room: {state.targetAt ?? ''}
+              Room: {currentRoom ?? ''}
             </Label>
 
             <div>
@@ -263,7 +291,7 @@ export const TerminalBoard: React.FC<any> = ({ main }) => {
                 </div>
               </TooltipTrigger>
               <TooltipContent>
-                <p>Open Profile</p>
+                <p>Open Browser</p>
               </TooltipContent>
             </Tooltip>
             <Tooltip>
@@ -297,7 +325,10 @@ export const TerminalBoard: React.FC<any> = ({ main }) => {
             <Tooltip>
               <TooltipTrigger>
                 <div
-                  onClick={() => joinRoom(main, mainRoomID)}
+                  onClick={() => {
+                    joinRoom(main, mainRoomID, currentTargetSite);
+                    setMainJoinStatus(true);
+                  }}
                   style={{ fontFamily: 'monospace' }}
                   className="rounded-[5px] px-[5px] py-[0px] h-full bg-white flex items-center hover:bg-slate-400 justify-center cursor-pointer hover:opacity-70"
                 >
@@ -311,7 +342,9 @@ export const TerminalBoard: React.FC<any> = ({ main }) => {
             <Tooltip>
               <TooltipTrigger>
                 <div
-                  onClick={() => outRoom(main)}
+                  onClick={() => {
+                    outRoom(main), setMainJoinStatus(false);
+                  }}
                   style={{ fontFamily: 'monospace' }}
                   className="rounded-[5px] px-[5px] py-[0px] h-full bg-white flex items-center hover:bg-slate-400 justify-center cursor-pointer hover:opacity-70"
                 >

@@ -7,14 +7,23 @@ const updateFile = async (accountsUpdate: any, accountType: string) => {
         isSelected: any;
         username: string;
         password: string;
+        fullname: string;
         passProxy: string;
         userProxy: string;
         isUseProxy: any;
         targetSite: string;
         session_id: string;
         token: string;
+        fromSite: string;
+        main_balance: any;
       }) =>
-        `${account.username}|${account.password}|${account.isSelected}|${account.proxy}|${account.port}|${account.userProxy}|${account.passProxy}|${account.isUseProxy}|${account.targetSite}|${account.session_id}|${account.token}|`
+        `${account.username}|${account.password}|${account.fullname}|${
+          account.main_balance ? account.main_balance.toString() : 'undefined'
+        }|${account.isSelected}|${account.proxy}|${account.port}|${
+          account.userProxy
+        }|${account.passProxy}|${account.isUseProxy}|${account.targetSite}|${
+          account.session_id
+        }|${account.token}|${account.fromSite}|`
     )
     .join('\n');
   window.backend.sendMessage(

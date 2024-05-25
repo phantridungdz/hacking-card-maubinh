@@ -7,10 +7,11 @@ const useAccountStore = create<any>(
     (set) => ({
       isLoadedAccount: false,
       accounts: { MAIN: [], SUB: [], BOT: [] },
-      addAccount: (type: string, account: any) =>
+      addAccount: (type: string, account: any, targetSite: string) =>
         set((state: { accounts: { [x: string]: any[] } }) => {
           const existingAccountIndex = state.accounts[type].findIndex(
-            (acc) => acc.username === account.username
+            (acc) =>
+              acc.username === account.username && acc.targetSite === targetSite
           );
 
           if (existingAccountIndex !== -1) {

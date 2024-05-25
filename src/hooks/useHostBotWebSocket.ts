@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import { useToast } from '../components/toast/use-toast';
 import { binhLungCard } from '../lib/arrangeCard';
-import { login } from '../service/login';
+import { fetchToken, login } from '../service/login';
 import useAccountStore from '../store/accountStore';
 import useBotRoomStore from '../store/botRoomStore';
 import useGameConfigStore from '../store/gameConfigStore';
@@ -11,23 +11,12 @@ import useSubRoomStore from '../store/subRoomStore';
 
 export default function useHostWebSocket(bot: any, roomID: number) {
   const { toast } = useToast();
-  //http://AH0BP35KJc:cbxPHb8M6J@146.19.196.50:40276
-  const proxyUrl =
-    'http://' +
-    bot.userProxy +
-    ':' +
-    bot.passProxy +
-    '@' +
-    bot.proxy +
-    ':' +
-    bot.port;
-  // const agent = new HttpProxyAgent(proxyUrl);
   const [socketUrl, setSocketUrl] = useState('');
   const [shouldConnect, setShouldConnect] = useState(false);
   const [joinedLobby, setJoinedLobby] = useState(false);
   const [createdRoom, setCreatedRoom] = useState(false);
   const [isFirstFounded, setIsFirstFounded] = useState(false);
-  const [fullName, setFullName] = useState();
+  const [fullName, setFullName] = useState('');
   const [botMoneyChange, setBotMoneyChange] = useState('');
   const [token, setToken] = useState('');
   const { sendMessage, lastMessage, readyState } = useWebSocket(
@@ -36,8 +25,6 @@ export default function useHostWebSocket(bot: any, roomID: number) {
       shouldReconnect: () => true,
       reconnectInterval: 3000,
       reconnectAttempts: 10,
-      // agent: agent,
-      // queryParams: {agent}
     },
     shouldConnect
   );
@@ -69,7 +56,7 @@ export default function useHostWebSocket(bot: any, roomID: number) {
   } = useGameStore();
   const { updateAccount } = useAccountStore();
   const { isSubStart } = useSubRoomStore();
-  const { loginUrl, trackingIPUrl, wsTargetUrl } = useGameConfigStore();
+  const { currentTargetSite, wsTargetUrl } = useGameConfigStore();
   const connectionStatus = {
     [ReadyState.CONNECTING]: 'Đang kết nối',
     [ReadyState.OPEN]: 'Sẵn sàng',
@@ -112,71 +99,47 @@ export default function useHostWebSocket(bot: any, roomID: number) {
     });
   }
 
+  const startSocketOn = async (token: string, fullName: string) => {
+    await sendMessage(
+      `[1,"Simms","","",{"agentId":"1","accessToken":"${token}","reconnect":true}]`
+    );
+    await setSocketUrl(wsTargetUrl);
+    await setShouldConnect(true);
+    addBotValid(fullName);
+    setFullName(fullName);
+  };
+
   const onConnect = async (bot: any) => {
-    console.log('bot', bot);
     if (!bot.token) {
-      login(bot, 'BOT', updateAccount, loginUrl, trackingIPUrl)
-        .then(async (data: any) => {
-          if (data.code == 200) {
-            const user = data?.data[0];
-
-            let connectURL;
-            if (
-              bot.proxy &&
-              bot.port &&
-              bot.userProxy &&
-              bot.passProxy &&
-              bot.isUseProxy
-            ) {
-              connectURL = 'ws://localhost:4500';
-
-              await sendMessage(
-                JSON.stringify({
-                  type: 'proxyInfo',
-                  proxyUrl:
-                    'http://' +
-                    bot.userProxy +
-                    ':' +
-                    bot.passProxy +
-                    '@' +
-                    bot.proxy +
-                    ':' +
-                    bot.port,
-                })
-              );
-              setToken(user.token);
-            } else {
-              connectURL = wsTargetUrl;
-              await sendMessage(
-                `[1,"Simms","","",{"agentId":"1","accessToken":"${user.token}","reconnect":false}]`
-              );
-            }
-            await setSocketUrl(connectURL);
-            await setShouldConnect(true);
-            addBotValid(user.fullname);
-            setFullName(user.fullname);
-          } else {
-            toast({ title: 'Error', description: data?.message });
-            setSocketUrl('');
-            setShouldConnect(false);
-            clearGameState();
-          }
-        })
-        .catch((err: Error) => {
-          console.error('Error when calling login function:', err);
-          setSocketUrl('');
-          setShouldConnect(false);
-          clearGameState();
-        });
+      const res = await login(bot, 'BOT', updateAccount);
+      if ((res.code = 200)) {
+        const user = res?.data[0];
+        setToken(user.token);
+        startSocketOn(user.token, user.fullname);
+      } else {
+        toast({ title: 'Error', description: res.message });
+        setSocketUrl('');
+        setShouldConnect(false);
+        clearGameState();
+      }
     } else {
-      let connectURL = wsTargetUrl;
-      await sendMessage(
-        `[1,"Simms","","",{"agentId":"1","accessToken":"${bot.token}","reconnect":false}]`
-      );
-      await setSocketUrl(connectURL);
-      await setShouldConnect(true);
-      addBotValid(bot.fullname);
-      setFullName(bot.fullname);
+      if (!bot.username) {
+        const resToken = await fetchToken(bot);
+        if (resToken?.data) {
+          startSocketOn(bot.token, resToken.data.displayName);
+        } else {
+          toast({
+            title: 'Error',
+            description: 'Token hết hạn, mời đăng nhập lại trước khi bắt đầu',
+          });
+          updateAccount('BOT', bot.username, {
+            session_id: null,
+            token: null,
+          });
+        }
+      } else {
+        startSocketOn(bot.token, bot.fullname);
+      }
     }
   };
 
@@ -186,7 +149,7 @@ export default function useHostWebSocket(bot: any, roomID: number) {
         const message = JSON.parse(lastMessage.data);
         if (message.type === 'proxyConnected' && token) {
           sendMessage(
-            `[1,"Simms","","",{"agentId":"1","accessToken":"${token}","reconnect":false}]`
+            `[1,"Simms","","",{"agentId":"1","accessToken":"${token}","reconnect":true}]`
           );
         }
         // console.log(message);
@@ -290,10 +253,19 @@ export default function useHostWebSocket(bot: any, roomID: number) {
               setBotStart(false);
             }
             setReadyToJoinStatus(true);
-            sendMessage(`[3,"Simms",${message[1].ri.rid},""]`);
+            if (currentTargetSite === 'HIT') {
+              sendMessage(`[3,"Simms",${message[1].ri.rid},"123123"]`);
+            } else {
+              sendMessage(`[3,"Simms",${message[1].ri.rid},""]`);
+            }
           }
           //Ping-join-room
           if (message[1].cmd === 310 && message[1].As) {
+            if (message[1].As.gold) {
+              updateAccount('BOT', bot.username, {
+                main_balance: message[1].As.gold,
+              });
+            }
             sendMessage(
               `[6,"Simms","channelPlugin",{"cmd":"306","subi":false}]`
             );
@@ -395,9 +367,16 @@ export default function useHostWebSocket(bot: any, roomID: number) {
       (isReadyToFind && isReadyToCreate && !createdRoom) ||
       (isSubStart && !createdRoom)
     ) {
-      sendMessage(
-        '[6,"Simms","channelPlugin",{"cmd":308,"aid":1,"gid":4,"b":100,"Mu":4,"iJ":true,"inc":false,"pwd":""}]'
-      );
+      if (currentTargetSite === 'HIT') {
+        sendMessage(
+          '[6,"Simms","channelPlugin",{"cmd":308,"aid":1,"gid":4,"b":100,"Mu":4,"iJ":true,"inc":false,"pwd":"123123"}]'
+        );
+      } else {
+        sendMessage(
+          '[6,"Simms","channelPlugin",{"cmd":308,"aid":1,"gid":4,"b":100,"Mu":4,"iJ":true,"inc":false,"pwd":""}]'
+        );
+      }
+
       updateBotStatus(bot.username, 'Create Room');
       updateStatus('Create Room');
       setCreatedRoom(true);

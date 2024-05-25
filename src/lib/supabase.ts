@@ -23,7 +23,7 @@ export const handleActive = async (
 
   try {
     if (!hardwareInfo) {
-      toast({ title: 'Error', description: 'Failed to fetch hardware info.' });
+      toast({ title: 'Error', description: 'Error while active license key.' });
       setLoading(false);
       return;
     }
@@ -34,9 +34,9 @@ export const handleActive = async (
       .eq('license_key', key)
       .single();
 
-    if (error) throw new Error('Wrong key or key not exist');
+    if (error) throw new Error('Error while active license key.');
 
-    if (data) {
+    if (data.length === 1) {
       if (
         !data.uuid &&
         !data.pc_name &&
@@ -58,7 +58,10 @@ export const handleActive = async (
         if (updateError) throw new Error('Could not activate key');
 
         localStorage.setItem('license-key', key);
-        toast({ title: 'Success', description: 'Key has been activated.' });
+        toast({
+          title: 'Success',
+          description: 'Key has been activated.',
+        });
         navigate('/app');
       } else {
         if (
@@ -176,22 +179,24 @@ export const validateLicense = async (
       .single();
 
     if (error || !data) {
-      toast({ title: 'Error', description: 'License key validation failed.' });
+      toast({
+        title: 'Error',
+        description: 'An error occurred during validation.',
+      });
       setLoading(false);
       return hardwareInfo;
     }
-
     if (
-      _.isEqual(data.uuid, hardwareInfo.system.uuid) &&
-      _.isEqual(data.pc_name, hardwareInfo.hostname) &&
-      _.isEqual(data.cpu, hardwareInfo.cpu) &&
-      _.isEqual(data.system, hardwareInfo.system)
+      _.isEqual(data[0].uuid, hardwareInfo.system.uuid) &&
+      _.isEqual(data[0].pc_name, hardwareInfo.hostname) &&
+      _.isEqual(data[0].cpu, hardwareInfo.cpu) &&
+      _.isEqual(data[0].system, hardwareInfo.system)
     ) {
       navigate('/app');
     } else {
       toast({
         title: 'Error',
-        description: 'License key does not match the device.',
+        description: 'An error occurred during validation.',
       });
     }
   } catch (error) {

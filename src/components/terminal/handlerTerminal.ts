@@ -27,13 +27,33 @@ export const sendStart = (account: any): void => {
     `__require('CardGameCommonRequest').default.getInstance().sendStart(698)`
   );
 };
-export const joinRoom = (account: any, mainRoomID: any): void => {
+export const joinRoom = (
+  account: any,
+  mainRoomID: any,
+  targetSite: string
+): void => {
   if (mainRoomID) {
-    window.backend.sendMessage(
-      'execute-script',
-      account,
-      `__require('GamePlayManager').default.getInstance().joinRoom(${mainRoomID},0,'',true);`
-    );
+    if (targetSite === 'RIK') {
+      window.backend.sendMessage(
+        'execute-script',
+        account,
+        `__require('GamePlayManager').default.getInstance().joinRoom(${mainRoomID},0,'',true);`
+      );
+    } else {
+      if (account.fromSite === 'LUCKY88') {
+        window.backend.sendMessage(
+          'execute-script',
+          account,
+          `__require('GamePlayManager').default.getInstance().joinRoomWithGameID(${mainRoomID},'',4);`
+        );
+      } else {
+        window.backend.sendMessage(
+          'execute-script',
+          account,
+          `__require('GamePlayManager').default.getInstance().joinRoomWithGameID(${mainRoomID},0,'',4);`
+        );
+      }
+    }
   }
 };
 export const checkPosition = (account: any): void => {
@@ -53,11 +73,27 @@ export const outInRoom = async (
   if (mainRoomID) {
     await outRoom(account);
     await new Promise((resolve) => setTimeout(resolve, 500));
-    window.backend.sendMessage(
-      'execute-script',
-      account,
-      `__require('GamePlayManager').default.getInstance().joinRoom(${mainRoomID},0,'',true);`
-    );
+    if (account.targetSite === 'RIK') {
+      window.backend.sendMessage(
+        'execute-script',
+        account,
+        `__require('GamePlayManager').default.getInstance().joinRoom(${mainRoomID},0,'',true);`
+      );
+    } else {
+      if (account.fromSite === 'LUCKY88') {
+        window.backend.sendMessage(
+          'execute-script',
+          account,
+          `__require('GamePlayManager').default.getInstance().joinRoomWithGameID(${mainRoomID},'',4);`
+        );
+      } else {
+        window.backend.sendMessage(
+          'execute-script',
+          account,
+          `__require('GamePlayManager').default.getInstance().joinRoomWithGameID(${mainRoomID},0,'',4);`
+        );
+      }
+    }
   }
 };
 export const joinLobby = (account: any): void => {
@@ -72,7 +108,18 @@ export const invitePlayer = async (account: any): Promise<void> => {
   await window.backend.sendMessage('execute-script', account, inviteCommand);
 };
 export const openAccounts = async (account: any) => {
-  await window.backend.sendMessage('open-accounts', account);
+  if (
+    account.fromSite === 'HIT' ||
+    account.fromSite === 'RIK' ||
+    (account.token && account.token != 'undefined')
+  ) {
+    await window.backend.sendMessage('open-accounts', account);
+  } else {
+    toast({
+      title: account.username + ' not login',
+      description: 'Vui lòng đăng nhập main trước khi mở.',
+    });
+  }
 };
 export const arrangeCards = async (account: any) => {
   await window.backend.sendMessage(

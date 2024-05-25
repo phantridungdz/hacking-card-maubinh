@@ -17,7 +17,8 @@ const AccountMenu: React.FC<any> = ({
   updateAccount,
 }) => {
   const { accounts, removeAccount, addAccount } = useAccountStore();
-  const { checkBalanceUrl, loginUrl, trackingIPUrl } = useGameConfigStore();
+  const { checkBalanceUrl, loginUrl, trackingIPUrl, currentTargetSite } =
+    useGameConfigStore();
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -45,14 +46,7 @@ const AccountMenu: React.FC<any> = ({
     }
 
     const checkBalances = selectedAccounts.map((account: any) =>
-      checkBalance(
-        account,
-        accountType,
-        updateAccount,
-        checkBalanceUrl,
-        loginUrl,
-        trackingIPUrl
-      )
+      checkBalance(account, accountType, updateAccount, checkBalanceUrl)
     );
 
     try {
@@ -77,7 +71,15 @@ const AccountMenu: React.FC<any> = ({
     reader.onload = async (e: any) => {
       const text = e.target.result;
       const newAccounts = readValidAccount(text);
-      addUniqueAccounts(newAccounts, accounts, accountType, addAccount);
+      console.log('text', text);
+      console.log('newAccounts', newAccounts);
+      addUniqueAccounts(
+        newAccounts,
+        accounts,
+        accountType,
+        addAccount,
+        currentTargetSite
+      );
     };
     reader.onerror = () => {
       toast({

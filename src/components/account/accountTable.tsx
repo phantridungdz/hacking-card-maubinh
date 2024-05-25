@@ -13,7 +13,6 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { generateAccount, readValidAccount } from '../../lib/account';
 import { readFile, updateFile } from '../../lib/file';
-import { checkBalance } from '../../service/balance';
 import useAccountStore from '../../store/accountStore';
 import useGameConfigStore from '../../store/gameConfigStore';
 import AddAccount from '../model/addAccount';
@@ -47,18 +46,22 @@ export const AccountTable: React.FC<any> = ({ accountType }) => {
 
   const { accounts, updateAccount, addAccount, removeAccount } =
     useAccountStore();
-  const { loginUrl, checkBalanceUrl, trackingIPUrl, currentTargetSite } =
-    useGameConfigStore();
+  const { currentTargetSite } = useGameConfigStore();
 
   useEffect(() => {
     const handleReadFile = (data: any, accountTypeReceived: any) => {
       if (accountTypeReceived == accountType) {
         const newAccounts = readValidAccount(data);
+        console.log('newAccounts', newAccounts);
         if (newAccounts.length > 0) {
           newAccounts.map(async (account: any) => {
             if (account?.username) {
               try {
-                addAccount(accountType, generateAccount(account));
+                addAccount(
+                  accountType,
+                  generateAccount(account),
+                  currentTargetSite
+                );
               } catch (err) {
                 console.error('Setup bot failed:', err);
               }
@@ -104,16 +107,6 @@ export const AccountTable: React.FC<any> = ({ accountType }) => {
         updateAccount(accountType, account.username, {
           isSelected: value,
         });
-        if (value) {
-          checkBalance(
-            account,
-            accountType,
-            updateAccount,
-            checkBalanceUrl,
-            loginUrl,
-            trackingIPUrl
-          );
-        }
       }
     });
 

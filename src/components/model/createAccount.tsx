@@ -112,7 +112,11 @@ const CreateAccount: React.FC<any> = ({
             });
             setErrorMessage(response.data.message);
           }
-          addAccount(accountTypeS, generateAccount(newAccount));
+          addAccount(
+            accountTypeS,
+            generateAccount(newAccount),
+            currentTargetSite
+          );
           setIsOpenCreateAccount(false);
         } else {
           toast({

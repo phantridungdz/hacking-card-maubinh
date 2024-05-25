@@ -51,13 +51,7 @@ const Deposit: React.FC<any> = ({
       };
 
       try {
-        const loginData = await login(
-          rowSelected,
-          accountType,
-          updateAccount,
-          loginUrl,
-          trackingIPUrl
-        );
+        const loginData = await login(rowSelected, accountType, updateAccount);
         if (loginData && loginData.code === 200) {
           const response = await axios.post(depositUrl, cardPayload, {
             headers: {

@@ -1,5 +1,5 @@
 import { ChevronDown, GlobeLock } from 'lucide-react';
-import React from 'react';
+import React, { useState } from 'react';
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -8,18 +8,19 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '../../components/ui/dropdown-menu';
-import { targetSites } from '../../lib/config';
+import { fromHitSites, fromRikSites } from '../../lib/config';
 import useGameConfigStore from '../../store/gameConfigStore';
 import useGameStore from '../../store/gameStore';
 import { Label } from '../ui/label';
 
-const TargetSite: React.FC<any> = () => {
+const FromSite: React.FC<any> = () => {
   const { roomType, setRoomType } = useGameStore();
-  const { currentTargetSite, setTargetSite } = useGameConfigStore();
-  const handleTargetSiteChange = (target: number) => {
-    setTargetSite(target);
-    window.backend.sendMessage('update-header', target);
+  const { currentFromSite } = useGameConfigStore();
+  const [fromSite, setFromSite] = useState(currentFromSite);
+  const handleFromSiteChange = (target: number) => {
+    setFromSite(target);
   };
+  const fromSites = currentFromSite === 'RIK' ? fromRikSites : fromHitSites;
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -27,25 +28,23 @@ const TargetSite: React.FC<any> = () => {
           <Label className="flex flex-row gap-2">
             <GlobeLock className="w-3.5 h-3.5" />
             Site:{' '}
-            <span className={`text-${currentTargetSite.toLowerCase()}`}>
-              {currentTargetSite}
-            </span>
+            <span className={`text-${roomType.toLowerCase()}`}>{roomType}</span>
             <ChevronDown className="h-3.5 w-3.5" />
           </Label>
         </div>
       </DropdownMenuTrigger>
 
       <DropdownMenuContent align="end">
-        <DropdownMenuLabel>Target Site</DropdownMenuLabel>
+        <DropdownMenuLabel>From Site</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        {targetSites.map((targetSite: any) => (
+        {fromSites.map((fromSite: any) => (
           <DropdownMenuCheckboxItem
-            key={targetSite}
-            checked={roomType}
-            className={`text-${currentTargetSite.toLowerCase()}`}
-            onSelect={() => handleTargetSiteChange(targetSite)}
+            key={fromSite}
+            className={`text-${roomType.toLowerCase()}-500`}
+            checked={fromSite}
+            onSelect={() => handleFromSiteChange(fromSite)}
           >
-            {targetSite}
+            {fromSite}
           </DropdownMenuCheckboxItem>
         ))}
       </DropdownMenuContent>
@@ -53,4 +52,4 @@ const TargetSite: React.FC<any> = () => {
   );
 };
 
-export default TargetSite;
+export default FromSite;

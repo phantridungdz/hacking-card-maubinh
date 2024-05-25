@@ -5,9 +5,7 @@ export const checkBalance = async (
   rowData: any,
   accountType: string,
   updateAccount: any,
-  checkBalanceUrl: string,
-  loginUrl: string,
-  trackingIPUrl: string
+  checkBalanceUrl: string
 ) => {
   var mainBalance = rowData.main_balance;
   var xToken = rowData.session_id;
@@ -47,13 +45,7 @@ export const checkBalance = async (
           session_id: null,
           token: null,
         });
-        const data = (await login(
-          rowData,
-          accountType,
-          updateAccount,
-          loginUrl,
-          trackingIPUrl
-        )) as any;
+        const data = (await login(rowData, accountType, updateAccount)) as any;
         const cash = Array.isArray(data?.data) ? data?.data[0].main_balance : 0;
         mainBalance = cash;
       }
@@ -61,13 +53,7 @@ export const checkBalance = async (
       console.error('Error checking balance:', error);
     }
   } else {
-    const data = (await login(
-      rowData,
-      accountType,
-      updateAccount,
-      loginUrl,
-      trackingIPUrl
-    )) as any;
+    const data = (await login(rowData, accountType, updateAccount)) as any;
     const cash = Array.isArray(data?.data) ? data?.data[0].main_balance : 0;
     mainBalance = cash;
   }

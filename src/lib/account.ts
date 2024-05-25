@@ -16,6 +16,8 @@ const readValidAccount = (input: string): any => {
         const [
           username,
           password,
+          fullname,
+          main_balance,
           IsSelected,
           proxy,
           port,
@@ -25,10 +27,14 @@ const readValidAccount = (input: string): any => {
           targetSite,
           session_id,
           token,
+          fromSite,
         ] = line.trim().split('|');
+
+        console.log('targetSite', targetSite);
         return {
           username,
           password,
+          fullname,
           app_id: targetSite === 'RIK' ? 'rik.vip' : 'bc114103',
           os: getRandomOS(),
           device: 'Computer',
@@ -43,8 +49,10 @@ const readValidAccount = (input: string): any => {
           targetSite: targetSite,
           isUseProxy: isUseProxy === 'true',
           isSelected: IsSelected === 'true',
-          session_id: session_id,
-          token: token,
+          session_id,
+          token,
+          fromSite,
+          main_balance: parseInt(main_balance),
         };
       } else {
         return;
@@ -66,11 +74,12 @@ const addUniqueAccounts = async (
   newAccounts: any[],
   accounts: any,
   accountType: string,
-  addAccount: any
+  addAccount: any,
+  currentTargetSite: string
 ) => {
   const addAccountPromises = newAccounts.map(async (account) => {
     if (!accountExists(account, accounts, accountType)) {
-      await addAccount(accountType, account);
+      await addAccount(accountType, account, currentTargetSite);
       return { account, added: true };
     } else {
       toast({
@@ -99,6 +108,7 @@ const generateAccount = (account: any) => {
   const isSelected = account.isSelected || false;
   const isUseProxy = account.isUseProxy || false;
   const targetSite = account.targetSite || false;
+  const fromSite = account.fromSite || false;
 
   return {
     username: account.username,
@@ -117,9 +127,11 @@ const generateAccount = (account: any) => {
     token: token,
     time: now(),
     aff_id: 'hit',
-    main_balance: 0,
+    main_balance: account.main_balance,
     isUseProxy: isUseProxy,
     targetSite: targetSite,
+    fullname: account.fullname,
+    fromSite: fromSite,
   };
 };
 

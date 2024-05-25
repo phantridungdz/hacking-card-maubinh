@@ -11,9 +11,9 @@ import {
   RemoveFormatting,
   Trash,
 } from 'lucide-react';
-import useGetFgOfGame from '../../hooks/useGetFgOfGame';
 import { checkBalance } from '../../service/balance';
 import useGameConfigStore from '../../store/gameConfigStore';
+import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import { Checkbox } from '../ui/checkbox';
 import {
@@ -39,7 +39,6 @@ export const getAccountTableColumns = (
   onCheckAll: any
 ): ColumnDef<unknown, any>[] => {
   const { checkBalanceUrl, loginUrl, trackingIPUrl } = useGameConfigStore();
-  const { getFg } = useGetFgOfGame();
 
   const columns: ColumnDef<unknown, any>[] = [
     {
@@ -65,21 +64,8 @@ export const getAccountTableColumns = (
           checked={row?.original.isSelected || row.getIsSelected()}
           onCheckedChange={async (value) => {
             row.toggleSelected(!!value);
-            var mainBalance = row.original.main_balance;
-            if (value) {
-              checkBalance(
-                row.original,
-                accountType,
-                updateAccount,
-                checkBalanceUrl,
-                loginUrl,
-                trackingIPUrl
-              );
-            }
-
             updateAccount(accountType, row?.original.username, {
               isSelected: value,
-              main_balance: mainBalance,
             });
           }}
           aria-label="Select row"
@@ -102,9 +88,27 @@ export const getAccountTableColumns = (
           </Button>
         );
       },
-      cell: ({ row }) => (
-        <div className="lowercase">{row.getValue('username')}</div>
-      ),
+      cell: ({ row }) => {
+        const rowData = row.original as any;
+        return (
+          <div className="lowercase truncate flex items-center gap-1">
+            <span
+              className={`flex h-2 w-2 rounded-full ${
+                rowData.token && rowData.token != 'undefined'
+                  ? 'bg-green-600'
+                  : 'bg-red-600'
+              } `}
+            ></span>
+            <Badge
+              className=" uppercase"
+              variant={rowData.fromSite.toLowerCase()}
+            >
+              {rowData.fromSite}
+            </Badge>
+            {row.getValue('username')}
+          </div>
+        );
+      },
     },
     {
       accessorKey: 'password',
@@ -138,7 +142,7 @@ export const getAccountTableColumns = (
         const rowData = row.original;
 
         return (
-          <div className="lowercase flex flex-row justify-center items-center">
+          <div className="flex flex-row justify-center items-center">
             {row.getValue('main_balance') ===
             'Tài khoản bị khoá vì hành vi lừa đảo, trục lợi cá nhân.'
               ? 'Đã bị khóa'
@@ -153,9 +157,7 @@ export const getAccountTableColumns = (
                   rowData,
                   accountType,
                   updateAccount,
-                  checkBalanceUrl,
-                  loginUrl,
-                  trackingIPUrl
+                  checkBalanceUrl
                 );
               }}
             >
@@ -182,20 +184,23 @@ export const getAccountTableColumns = (
       cell: ({ row }) => {
         const rowData = row.original as any;
         return (
-          <div className="text-center grid grid-cols-2">
-            {row.getValue('proxy')}
-            <Switch
-              checked={rowData.isUseProxy}
-              onCheckedChange={(e) => {
-                console.log('value', e);
-                if (rowData && rowData?.username) {
-                  updateAccount(accountType, rowData.username, {
-                    isUseProxy: e,
-                  });
-                }
-              }}
-            />
-          </div>
+          rowData.proxy &&
+          rowData.proxy !== 'undefined' && (
+            <div className="text-center grid grid-cols-2">
+              {row.getValue('proxy')}
+              <Switch
+                checked={rowData.isUseProxy}
+                onCheckedChange={(e) => {
+                  console.log('value', e);
+                  if (rowData && rowData?.username) {
+                    updateAccount(accountType, rowData.username, {
+                      isUseProxy: e,
+                    });
+                  }
+                }}
+              />
+            </div>
+          )
         );
       },
     },
@@ -230,9 +235,7 @@ export const getAccountTableColumns = (
                     rowData,
                     accountType,
                     updateAccount,
-                    checkBalanceUrl,
-                    loginUrl,
-                    trackingIPUrl
+                    checkBalanceUrl
                   )
                 }
               >

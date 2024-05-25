@@ -14,7 +14,7 @@ export const setupLoginHitHandlers = () => {
   }) {
     try {
       const browser = await puppeteer.launch({
-        headless: false,
+        // headless: false,
         defaultViewport: null,
         ignoreHTTPSErrors: true,
         acceptInsecureCerts: true,

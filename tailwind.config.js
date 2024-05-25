@@ -17,6 +17,26 @@ module.exports = {
     },
     extend: {
       colors: {
+        rik: {
+          light: '#3A8DFF',
+          DEFAULT: '#6D00C0',
+          dark: '#6D00C0',
+        },
+        debet: {
+          light: '#3A8DFF',
+          DEFAULT: '#D12027',
+          dark: '#D12027',
+        },
+        hit: {
+          light: '#3A8DFF',
+          DEFAULT: '#FFFC00',
+          dark: '#FFFC00',
+        },
+        lucky88: {
+          light: '#3A8DFF',
+          DEFAULT: '#53A7B6',
+          dark: '#53A7B6',
+        },
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
