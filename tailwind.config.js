@@ -42,6 +42,11 @@ module.exports = {
           DEFAULT: '#FA360D',
           dark: '#FA360D',
         },
+        sv88: {
+          light: '#3A8DFF',
+          DEFAULT: '#F68323',
+          dark: '#F68323',
+        },
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',

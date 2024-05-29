@@ -91,7 +91,6 @@ const setHeaderForHit = () => {
     callback({ requestHeaders: newHeaders });
   });
 };
-
 const setHeaderForDebet = () => {
   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
     const newHeaders = capitalizeHeaderKeys(
@@ -125,16 +124,31 @@ const setHeaderForDebet = () => {
     callback({ requestHeaders: newHeaders });
   });
 };
-const setHeaderForMay88 = () => {
-  session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
-    const newHeaders = capitalizeHeaderKeys(
-      details.responseHeaders as Record<string, string[]>
+const setHeaderForFive88 = () => {
+  session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
+    const newHeaders = capitalizeRequestHeaderKeys(
+      details.requestHeaders as Record<string, string>
     );
-    newHeaders['Access-control-allow-origin'] = ['https://debet.net'];
-    newHeaders['Cf-cache-status'] = ['DYNAMIC'];
-    callback({ responseHeaders: newHeaders });
+    newHeaders['Referer'] = 'https://five88.vin';
+    newHeaders['Origin'] = 'https://five88.vin';
+    newHeaders['Accept'] = 'application/json, text/javascript, */*; q=0.01';
+    newHeaders['Accept-encoding'] = 'gzip, deflate, br, zstd';
+    newHeaders['Accept-language'] = 'en-US,en;q=0.9';
+    newHeaders['Content-Type'] =
+      'application/x-www-form-urlencoded; charset=UTF-8';
+    newHeaders['Dnt'] = '1';
+    newHeaders['Cookie'] =
+      'PHPSESSID=5fce472f3e07e13f1673ddb99de973d7; _gcl_au=1.1.631577307.1716999653; _ga_V2TKQNQHHX=GS1.1.1716999652.1.0.1716999652.60.0.0; _gid=GA1.2.1444793540.1716999653; _gat_UA-238184817-1=1; _gat_UA-156072496-1=1; _stoken=f050d05650fd76c373aa9a79f854573c; _ga=GA1.2.802994207.1716999653; __utma=63665976.802994207.1716999653.1716999657.1716999657.1; __utmc=63665976; __utmz=63665976.1716999657.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); _ga_D2M74VZWV7=GS1.1.1716999652.1.0.1716999658.0.0.0; __utmb=63665976.3.9.1716999664228; _ga_5QSLVWX8N6=GS1.2.1716999653.1.1.1716999664.0.0.0';
+    newHeaders['Priority'] = 'u=1, i';
+    newHeaders['User-agent'] =
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0';
+    newHeaders[
+      'Sec-ch-ua'
+    ] = `"Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"`;
+    callback({ requestHeaders: newHeaders });
   });
-
+};
+const setHeaderForMay88 = () => {
   session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
     const newHeaders = capitalizeRequestHeaderKeys(
       details.requestHeaders as Record<string, string>
@@ -146,8 +160,77 @@ const setHeaderForMay88 = () => {
     newHeaders['Accept-language'] = 'en-US,en;q=0.9';
     newHeaders['Content-Type'] = 'application/json;charset=UTF-8';
     newHeaders['Dnt'] = '1';
-    newHeaders['Cookie'] = `
-    device=desktop; _gcl_au=1.1.732562051.1716726234; _ga_171YF2R0MV=GS1.1.1716726234.1.0.1716726234.0.0.0; _ga=GA1.2.314653449.1716726234; _gid=GA1.2.245976383.1716726234; _gat_UA-185855122-1=1; _ga_LNECPR22W8=GS1.2.1716726234.1.0.1716726234.60.0.0`;
+    newHeaders['Cookie'] =
+      'device=desktop; _gcl_au=1.1.732562051.1716726234; _ga_171YF2R0MV=GS1.1.1716726234.1.0.1716726234.0.0.0; _ga=GA1.2.314653449.1716726234; _gid=GA1.2.245976383.1716726234; _gat_UA-185855122-1=1; _ga_LNECPR22W8=GS1.2.1716726234.1.0.1716726234.60.0.0';
+    newHeaders['Priority'] = 'u=1, i';
+    newHeaders['User-agent'] =
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0';
+    newHeaders[
+      'Sec-ch-ua'
+    ] = `"Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"`;
+    callback({ requestHeaders: newHeaders });
+  });
+};
+const setHeaderForSv88 = () => {
+  session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
+    const newHeaders = capitalizeRequestHeaderKeys(
+      details.requestHeaders as Record<string, string>
+    );
+    newHeaders['Referer'] = 'https://sv88.top/game-bai';
+    newHeaders['Origin'] = 'https://sv88.top';
+    newHeaders['Accept'] = 'application/json, text/plain, */*';
+    newHeaders['Accept-encoding'] = 'gzip, deflate, br, zstd';
+    newHeaders['Accept-language'] = 'en-US,en;q=0.9';
+    newHeaders['Content-Type'] = 'application/json';
+    newHeaders['Dnt'] = '1';
+    newHeaders['Cookie'] =
+      'device=desktop; domain=https%3A%2F%2Fsv88.top; host=sv88.top; showed=Wed%20May%2029%202024%2023%3A14%3A33%20GMT+0700%20%28Indochina%20Time%29';
+    newHeaders['Priority'] = 'u=1, i';
+    newHeaders['User-agent'] =
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0';
+    newHeaders[
+      'Sec-ch-ua'
+    ] = `"Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"`;
+    callback({ requestHeaders: newHeaders });
+  });
+};
+const setHeaderFor11BET = () => {
+  session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
+    const newHeaders = capitalizeRequestHeaderKeys(
+      details.requestHeaders as Record<string, string>
+    );
+    newHeaders['Referer'] = 'https://11bet.uk';
+    newHeaders['Origin'] = 'https://11bet.uk';
+    newHeaders['Accept'] = 'application/json';
+    newHeaders['Accept-encoding'] = 'gzip, deflate, br, zstd';
+    newHeaders['Accept-language'] = 'en-US,en;q=0.9';
+    newHeaders['Content-Type'] = 'application/json';
+    newHeaders['Dnt'] = '1';
+    newHeaders['Cookie'] =
+      'device=desktop; os=desktop; source=11bet.uk; saleAdvised=null; aff_id=null; utm_source=null; utm_medium=null; utm_campaign=null; utm_term=null; utm_content=null; mien-bac=1717067700000; mien-trung=1717064100000; mien-nam=1717060500000; whitelist=true; hideTooltipScheduleHome=true';
+    newHeaders['Priority'] = 'u=1, i';
+    newHeaders['User-agent'] =
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0';
+    newHeaders[
+      'Sec-ch-ua'
+    ] = `"Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"`;
+    callback({ requestHeaders: newHeaders });
+  });
+};
+const setHeaderForUk88 = () => {
+  session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
+    const newHeaders = capitalizeRequestHeaderKeys(
+      details.requestHeaders as Record<string, string>
+    );
+    newHeaders['Referer'] = 'https://uk88.com';
+    newHeaders['Origin'] = 'https://uk88.com';
+    newHeaders['Accept'] = 'application/json';
+    newHeaders['Accept-encoding'] = 'gzip, deflate, br, zstd';
+    newHeaders['Accept-language'] = 'en-US,en;q=0.9';
+    newHeaders['Content-Type'] = 'application/json';
+    newHeaders['Dnt'] = '1';
+    newHeaders['Cookie'] =
+      'device=desktop; os=desktop; source=uk88.com; saleAdvised=null; aff_id=null; utm_source=null; utm_medium=null; utm_campaign=null; utm_term=null; utm_content=null';
     newHeaders['Priority'] = 'u=1, i';
     newHeaders['User-agent'] =
       'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0';
@@ -189,7 +272,6 @@ const setHeaderForLucky88 = () => {
     callback({ requestHeaders: newHeaders });
   });
 };
-
 const setContentTypeJson = () => {
   session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
     const newHeaders = capitalizeRequestHeaderKeys(
@@ -199,7 +281,7 @@ const setContentTypeJson = () => {
     callback({ requestHeaders: newHeaders });
   });
 };
-const etContentTypeTextPlain = () => {
+const setContentTypeTextPlain = () => {
   session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
     const newHeaders = capitalizeRequestHeaderKeys(
       details.requestHeaders as Record<string, string>
@@ -228,11 +310,23 @@ export const setupHeaderHandlers = () => {
       case 'MAY88':
         setHeaderForMay88();
         break;
+      case 'SV88':
+        setHeaderForSv88();
+        break;
+      case 'FIVE88':
+        setHeaderForFive88();
+        break;
+      case 'UK88':
+        setHeaderForUk88();
+        break;
+      case '11BET':
+        setHeaderFor11BET();
+        break;
       case 'JSON':
         setContentTypeJson();
         break;
       case 'TEXTPLAINT':
-        etContentTypeTextPlain();
+        setContentTypeTextPlain();
         break;
       default:
         throw new Error(`Unsupported target site: ${target}`);

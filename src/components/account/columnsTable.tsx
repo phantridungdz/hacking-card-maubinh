@@ -191,6 +191,7 @@ export const getAccountTableColumns = (
               variant="ghost"
               size="icon"
               onClick={() => {
+                console.log('123123123', rowData);
                 checkBalance(
                   rowData,
                   accountType,

@@ -200,9 +200,61 @@ export const setupAccountHandlers = (
               '&gameid=vgcg_4&brand=may88&ru=https://may88.game/games';
           } else {
             targetSite =
-              'https://games.prorichvip.com/?brand=may88&ru=https%3A%2F%2Fmay88.game%2Fgames%23card&token' +
+              'https://games.prorichvip.com/?brand=may88&ru=https%3A%2F%2Fmay88.game%2Fgames%23card&token=' +
               account.token +
               '&gameid=vgcg_4';
+          }
+          break;
+        case 'SV88':
+          if (account.targetSite === 'HIT') {
+            targetSite =
+              'https://games.gnightfast.net/?brand=sv88&token=' +
+              account.token +
+              '&gameid=vgcg_4&ru=https%3A%2F%2Fsv88.top';
+          } else {
+            targetSite =
+              'https://games.prorichvip.com/?brand=sv88&token=' +
+              account.token +
+              '&gameid=vgcg_4&ru=https%3A%2F%2Fsv88.top%2Fgame-bai';
+          }
+          break;
+        case 'UK88':
+          if (account.targetSite === 'HIT') {
+            targetSite =
+              'https://games.gnightfast.net/?brand=uk88&token=' +
+              account.token +
+              '&gameid=vgcg_4&ru=https%3A%2F%2Fuk88.com%2Fgame-bai';
+          } else {
+            targetSite =
+              'https://games.prorichvip.com/?brand=uk88&token=' +
+              account.token +
+              '&gameid=vgcg_4&ru=https%3A%2F%2Fuk88.com%2Fgame-bai';
+          }
+          break;
+        case '11BET':
+          if (account.targetSite === 'HIT') {
+            targetSite =
+              'https://games.gnightfast.net/?brand=11bet&token=' +
+              account.token +
+              '&gameid=vgcg_4&ru=https%3A%2F%2F11bet.uk%2Fgame-bai';
+          } else {
+            targetSite =
+              'https://games.prorichvip.com/?brand=11bet&token=' +
+              account.token +
+              '&gameid=vgcg_4&ru=https%3A%2F%211bet.uk%2Fgame-bai';
+          }
+          break;
+        case 'FIVE88':
+          if (account.targetSite === 'HIT') {
+            targetSite =
+              'https://games.gnightfast.net/?brand=sv88&token=' +
+              account.token +
+              '&gameid=vgcg_4&ru=https%3A%2F%2Fsv88.top';
+          } else {
+            targetSite =
+              'https://games.prorichvip.com/?brand=sv88&token=' +
+              account.token +
+              '&gameid=vgcg_4&ru=https%3A%2F%2Fsv88.top%2Fgame-bai';
           }
           break;
         default:

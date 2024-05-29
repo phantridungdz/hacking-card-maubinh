@@ -297,6 +297,58 @@ const loginDebet = async (
     return null;
   }
 };
+const loginFive88 = async (
+  botInfo: any,
+  accountType: string,
+  updateAccount: any,
+  loginUrl: string
+) => {
+  // Serialize credentials into a URL-encoded form string
+  const credentials = `username=${encodeURIComponent(
+    botInfo.username
+  )}&password=${encodeURIComponent(botInfo.password)}`;
+
+  const headers = {
+    Accept: 'application/json, text/javascript, */*; q=0.01',
+    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+    'Sec-ch-ua': `"Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"`,
+    'User-agent':
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0',
+    Origin: 'https://five88.vin',
+    Referer: 'https://five88.vin',
+    Cookie:
+      'PHPSESSID=5fce472f3e07e13f1673ddb99de973d7; _gcl_au=1.1.631577307.1716999653; _ga_V2TKQNQHHX=GS1.1.1716999652.1.0.1716999652.60.0.0; _gid=GA1.2.1444793540.1716999653; _gat_UA-238184817-1=1; _gat_UA-156072496-1=1; _stoken=f050d05650fd76c373aa9a79f854573c; _ga=GA1.2.802994207.1716999653; __utma=63665976.802994207.1716999653.1716999657.1716999657.1; __utmc=63665976; __utmz=63665976.1716999657.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); _ga_D2M74VZWV7=GS1.1.1716999652.1.0.1716999658.0.0.0; __utmb=63665976.3.9.1716999664228; _ga_5QSLVWX8N6=GS1.2.1716999653.1.1.1716999664.0.0.0', // Use actual cookie value
+  };
+
+  try {
+    let response;
+    if (botInfo.isUseProxy) {
+      response = await fetchViaProxy(credentials, botInfo, headers, loginUrl);
+    } else {
+      response = await axios.post(loginUrl, credentials, { headers: headers });
+    }
+    if (response.data.code === 200) {
+      const data = response.data.data[0];
+      updateAccount(accountType, botInfo.username, {
+        main_balance: response.data.message,
+        token: data.tp_token,
+        fullname: data.fullname,
+      });
+    } else {
+      updateAccount(accountType, botInfo.username, {
+        main_balance: response.data.message,
+      });
+    }
+    return response.data;
+  } catch (error) {
+    console.error(
+      'Login failed:',
+      axios.isAxiosError(error) ? error.response?.data : error
+    );
+    return null;
+  }
+};
+
 const loginMay88 = async (
   botInfo: any,
   accountType: string,
@@ -327,6 +379,157 @@ const loginMay88 = async (
     }
     if (response.data.code === 200) {
       const data = response.data.data[0];
+      console.log('data', data);
+      updateAccount(accountType, botInfo.username, {
+        main_balance: response.data.message,
+        token: data.token_play,
+        fullname: data.fullname,
+      });
+    } else {
+      updateAccount(accountType, botInfo.username, {
+        main_balance: response.data.message,
+      });
+    }
+    return response.data;
+  } catch (error) {
+    console.error(
+      'Login failed:',
+      axios.isAxiosError(error) ? error.response?.data : error
+    );
+    return null;
+  }
+};
+const loginSv88 = async (
+  botInfo: any,
+  accountType: string,
+  updateAccount: any,
+  loginUrl: string
+) => {
+  const credentials = {
+    username: botInfo.username,
+    password: botInfo.password,
+  };
+  const headers = {
+    Accept: '*/*',
+    'Content-Type': 'application/json',
+    'Sec-ch-ua': `"Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"`,
+    'User-agent':
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0',
+    Origin: 'https://sv88.top',
+    Referer: 'https://sv88.top/game-bai',
+    Cookie:
+      'device=desktop; domain=https%3A%2F%2Fsv88.top; host=sv88.top; showed=Wed%20May%2029%202024%2023%3A14%3A33%20GMT+0700%20%28Indochina%20Time%29',
+  };
+  try {
+    let response;
+    if (botInfo.isUseProxy) {
+      response = await fetchViaProxy(credentials, botInfo, headers, loginUrl);
+    } else {
+      response = await axios.post(loginUrl, credentials);
+    }
+    if (response.data.code === 200) {
+      const data = response.data.data[0];
+      console.log('data', data);
+      updateAccount(accountType, botInfo.username, {
+        main_balance: response.data.message,
+        token: data.tp_token,
+        fullname: data.fullname,
+      });
+    } else {
+      updateAccount(accountType, botInfo.username, {
+        main_balance: response.data.message,
+      });
+    }
+    return response.data;
+  } catch (error) {
+    console.error(
+      'Login failed:',
+      axios.isAxiosError(error) ? error.response?.data : error
+    );
+    return null;
+  }
+};
+const loginUk88 = async (
+  botInfo: any,
+  accountType: string,
+  updateAccount: any,
+  loginUrl: string
+) => {
+  const credentials = {
+    username: botInfo.username,
+    password: botInfo.password,
+  };
+  const headers = {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'Sec-ch-ua': `"Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"`,
+    'User-agent':
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0',
+    Origin: 'https://uk88.com',
+    Referer: 'https://uk88.com',
+    Cookie:
+      'device=desktop; os=desktop; source=uk88.com; saleAdvised=null; aff_id=null; utm_source=null; utm_medium=null; utm_campaign=null; utm_term=null; utm_content=null',
+  };
+  try {
+    let response;
+    if (botInfo.isUseProxy) {
+      response = await fetchViaProxy(credentials, botInfo, headers, loginUrl);
+    } else {
+      response = await axios.post(loginUrl, credentials);
+    }
+    if (response.data.code === 200) {
+      const data = response.data.data[0];
+      console.log('data', data);
+      updateAccount(accountType, botInfo.username, {
+        main_balance: response.data.message,
+        token: data.tp_token,
+        fullname: data.fullname,
+      });
+    } else {
+      updateAccount(accountType, botInfo.username, {
+        main_balance: response.data.message,
+      });
+    }
+    return response.data;
+  } catch (error) {
+    console.error(
+      'Login failed:',
+      axios.isAxiosError(error) ? error.response?.data : error
+    );
+    return null;
+  }
+};
+const login11bet = async (
+  botInfo: any,
+  accountType: string,
+  updateAccount: any,
+  loginUrl: string
+) => {
+  const credentials = {
+    username: botInfo.username,
+    password: botInfo.password,
+  };
+  const headers = {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'Sec-ch-ua': `"Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"`,
+    'User-agent':
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0',
+    Origin: 'https://11bet.uk',
+    Referer: 'https://11bet.uk',
+    Cookie:
+      'device=desktop; os=desktop; source=11bet.uk; saleAdvised=null; aff_id=null; utm_source=null; utm_medium=null; utm_campaign=null; utm_term=null; utm_content=null; mien-bac=1717067700000; mien-trung=1717064100000; mien-nam=1717060500000; whitelist=true; hideTooltipScheduleHome=true',
+  };
+  try {
+    let response;
+    if (botInfo.isUseProxy) {
+      response = await fetchViaProxy(credentials, botInfo, headers, loginUrl);
+    } else {
+      response = await axios.post(loginUrl, credentials);
+    }
+    if (response.data.code === 200) {
+      const data = response.data.data[0];
+      console.log('data', data);
       updateAccount(accountType, botInfo.username, {
         main_balance: response.data.message,
         token: data.tp_token,
@@ -421,6 +624,34 @@ const login = async (bot: any, accountType: string, updateAccount: any) => {
         accountType,
         updateAccount,
         'https://may88.game/api/v1/login'
+      );
+    case 'SV88':
+      return await loginSv88(
+        bot,
+        accountType,
+        updateAccount,
+        'https://sv88.top/api/v1/login'
+      );
+    case 'FIVE88':
+      return await loginFive88(
+        bot,
+        accountType,
+        updateAccount,
+        'https://five88.vin/login.aspx'
+      );
+    case 'UK88':
+      return await loginUk88(
+        bot,
+        accountType,
+        updateAccount,
+        'https://uk88.com/api/v1/login'
+      );
+    case '11BET':
+      return await login11bet(
+        bot,
+        accountType,
+        updateAccount,
+        'https://11bet.uk/api/v1/login'
       );
     default:
       throw new Error(`Unsupported target site: ${bot.targetSite}`);

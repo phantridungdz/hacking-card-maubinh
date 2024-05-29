@@ -46,7 +46,11 @@ export const joinRoom = (
       if (
         account.fromSite === 'LUCKY88' ||
         account.fromSite === 'DEBET' ||
-        account.fromSite === 'MAY88'
+        account.fromSite === 'MAY88' ||
+        account.fromSite === 'SV88' ||
+        account.fromSite === 'FIVE88' ||
+        account.fromSite === 'UK88' ||
+        account.fromSite === '11BET'
       ) {
         window.backend.sendMessage(
           'execute-script',
@@ -94,7 +98,10 @@ export const outInRoom = async (
       if (
         account.fromSite === 'LUCKY88' ||
         account.fromSite === 'DEBET' ||
-        account.fromSite === 'MAY88'
+        account.fromSite === 'MAY88' ||
+        account.fromSite === 'SV88' ||
+        account.fromSite === 'UK88' ||
+        account.fromSite === '11BET'
       ) {
         window.backend.sendMessage(
           'execute-script',

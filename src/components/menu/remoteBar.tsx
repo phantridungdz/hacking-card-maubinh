@@ -1,6 +1,5 @@
 import {
   Bot,
-  CirclePlus,
   Loader2,
   LogIn,
   Moon,
@@ -101,14 +100,14 @@ const RemoteBar: React.FC<any> = ({
           >
             <Bot />
           </Button>
-          <Button
+          {/* <Button
             onClick={() => setIsOpenCreateAccount(true)}
             size="sm"
             className="h-8 gap-1"
           >
             <CirclePlus className="w-3.5 h-3.5" />
             Create Account
-          </Button>
+          </Button> */}
         </div>
         <div key={refreshKey}>
           <FindRoomSheet

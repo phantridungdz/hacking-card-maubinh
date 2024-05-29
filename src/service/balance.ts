@@ -23,8 +23,8 @@ export const checkBalance = async (
     };
   }
 
-  if (xToken) {
-    try {
+  try {
+    if (xToken && xToken != 'undefined') {
       const axiosConfig = {
         headers: {
           'X-Token': xToken,
@@ -49,12 +49,12 @@ export const checkBalance = async (
         const cash = Array.isArray(data?.data) ? data?.data[0].main_balance : 0;
         mainBalance = cash;
       }
-    } catch (error) {
-      console.error('Error checking balance:', error);
+    } else {
+      const data = (await login(rowData, accountType, updateAccount)) as any;
+      const cash = Array.isArray(data?.data) ? data?.data[0].main_balance : 0;
+      mainBalance = cash;
     }
-  } else {
-    const data = (await login(rowData, accountType, updateAccount)) as any;
-    const cash = Array.isArray(data?.data) ? data?.data[0].main_balance : 0;
-    mainBalance = cash;
+  } catch (error) {
+    console.log('targetSites', error);
   }
 };

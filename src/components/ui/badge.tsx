@@ -16,6 +16,10 @@ const badgeVariants = cva(
           'border-white border-transparent bg-[#53A7B6] text-white hover:bg-primary/80',
         may88:
           'border-white border-transparent bg-[#FA360D] text-white hover:bg-primary/80',
+        sv88: 'border-white border-transparent bg-[#F68323] text-white hover:bg-primary/80',
+        uk88: 'border-white border-transparent bg-[#3CDCA1] text-white hover:bg-primary/80',
+        five88:
+          'border-white border-transparent bg-[#53A7B6] text-white hover:bg-primary/80',
         default:
           'border-transparent bg-primary text-primary-foreground hover:bg-primary/80',
         secondary:

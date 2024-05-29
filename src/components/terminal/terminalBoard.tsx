@@ -220,7 +220,11 @@ export const TerminalBoard: React.FC<any> = ({ main }) => {
         if (
           main.fromSite === 'LUCKY88' ||
           main.fromSite === 'DEBET' ||
-          main.fromSite === 'MAY88'
+          main.fromSite === 'MAY88' ||
+          main.fromSite === 'SV88' ||
+          main.fromSite === 'FIVE88' ||
+          main.fromSite === 'UK88' ||
+          main.fromSite === '11BET'
         ) {
           window.backend.sendMessage(
             'execute-script',
