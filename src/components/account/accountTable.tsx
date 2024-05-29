@@ -52,7 +52,6 @@ export const AccountTable: React.FC<any> = ({ accountType }) => {
     const handleReadFile = (data: any, accountTypeReceived: any) => {
       if (accountTypeReceived == accountType) {
         const newAccounts = readValidAccount(data);
-        console.log('newAccounts', newAccounts);
         if (newAccounts.length > 0) {
           newAccounts.map(async (account: any) => {
             if (account?.username) {

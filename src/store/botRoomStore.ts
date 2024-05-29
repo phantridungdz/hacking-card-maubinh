@@ -1,9 +1,10 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
+import useAccountStore from '../store/accountStore';
 
 const useBotRoomStore = create<any>(
   devtools(
-    (set) => ({
+    (set, get) => ({
       bots: [],
       botsInLobby: [],
       botsInRoom: [],
@@ -37,10 +38,14 @@ const useBotRoomStore = create<any>(
         set(() => ({
           botsReady: [],
         })),
-      clearBots: () =>
-        set(() => ({
-          bots: [],
-        })),
+      clearBots: () => {
+        const { bots } = get();
+        const updateAccount = useAccountStore.getState().updateAccount;
+        bots.forEach((bot: any) => {
+          updateAccount('BOT', bot.username, { role: null });
+        });
+        set({ bots: [] });
+      },
       setBots: (bots: any) =>
         set(() => ({
           bots: bots,

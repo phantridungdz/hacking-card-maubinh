@@ -11,6 +11,11 @@ import {
   CardTitle,
 } from '../../components/ui/card';
 import { Label } from '../../components/ui/label';
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from '../../components/ui/resizablePanelGroup';
 import { Table, TableBody, TableRow } from '../../components/ui/table';
 import { getRandomCards } from '../../lib/card';
 import { AppContext } from '../../renderer/providers/app';
@@ -53,10 +58,13 @@ export const HomePage: React.FC<any> = (cardDeck, setNumberOfCards) => {
   };
 
   return (
-    <div className="relative h-screen">
-      <main className="grid flex-1 gap-4 py-4 tablet:grid-cols-3 relative mt-[90px]">
+    <ResizablePanelGroup
+      direction="horizontal"
+      className="mt-[90px] relative h-screen !overflow-visible"
+    >
+      <ResizablePanel defaultSize={75}>
         <Card
-          className="tablet:col-span-2 text-center border"
+          className="tablet:col-span-2 text-center border relative"
           x-chunk="dashboard-03-chunk-0"
         >
           <CardHeader>
@@ -98,20 +106,21 @@ export const HomePage: React.FC<any> = (cardDeck, setNumberOfCards) => {
             </CardFooter>
           )}
         </Card>
-        <div>
-          <div className=" sticky top-[90px]">
-            <Card className="w-full flex flex-col gap-4 border-0 ">
-              {accounts['MAIN'].map(
-                (main: any, index: any) =>
-                  main.isSelected &&
-                  main.targetSite === currentTargetSite && (
-                    <TerminalBoard key={index} main={main} />
-                  )
-              )}
-            </Card>
-          </div>
+      </ResizablePanel>
+      <ResizableHandle className="mx-2" />
+      <ResizablePanel className="!overflow-visible" defaultSize={25}>
+        <div className=" sticky top-[90px]">
+          <Card className="w-full flex flex-col gap-4 border-0 ">
+            {accounts['MAIN'].map(
+              (main: any, index: any) =>
+                main.isSelected &&
+                main.targetSite === currentTargetSite && (
+                  <TerminalBoard key={index} main={main} />
+                )
+            )}
+          </Card>
         </div>
-      </main>
-    </div>
+      </ResizablePanel>
+    </ResizablePanelGroup>
   );
 };

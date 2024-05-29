@@ -8,6 +8,7 @@ import { setupArrangeCardHandlers } from './handler/arrangeCardHandlers';
 import { setupFileHandlers } from './handler/fileHandlers';
 import { setupHeaderHandlers } from './handler/headerHandlers';
 import { setupLoginHitHandlers } from './handler/loginHitPupHandler';
+import { setupProxyHandler } from './handler/proxyHandler';
 import { setupProxyWebsocketHandler } from './handler/proxyWebsocketHandler';
 import { setupReadHardwareHandlers } from './handler/readHardwareHandler';
 import MenuBuilder from './menu';
@@ -29,7 +30,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const isDebug =
-  process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
+  process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'false';
 
 if (isDebug) {
   require('electron-debug')();
@@ -105,6 +106,7 @@ const createWindow = async () => {
     shell.openExternal(edata.url);
     return { action: 'deny' };
   });
+
   setupReadHardwareHandlers();
   setupFileHandlers();
   setupAccountHandlers(mainWindow);
@@ -112,6 +114,7 @@ const createWindow = async () => {
   setupProxyWebsocketHandler();
   setupHeaderHandlers();
   setupLoginHitHandlers();
+  setupProxyHandler();
 
   new AppUpdater();
 };

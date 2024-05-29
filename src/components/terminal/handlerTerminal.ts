@@ -33,6 +33,9 @@ export const joinRoom = (
   targetSite: string
 ): void => {
   if (mainRoomID) {
+    console.log('account.username', account.username);
+    console.log('targetSite', targetSite);
+    console.log('fromSite', account.fromSite);
     if (targetSite === 'RIK') {
       window.backend.sendMessage(
         'execute-script',
@@ -40,7 +43,11 @@ export const joinRoom = (
         `__require('GamePlayManager').default.getInstance().joinRoom(${mainRoomID},0,'',true);`
       );
     } else {
-      if (account.fromSite === 'LUCKY88') {
+      if (
+        account.fromSite === 'LUCKY88' ||
+        account.fromSite === 'DEBET' ||
+        account.fromSite === 'MAY88'
+      ) {
         window.backend.sendMessage(
           'execute-script',
           account,
@@ -59,9 +66,13 @@ export const joinRoom = (
 export const checkPosition = (account: any): void => {
   window.backend.sendMessage('check-position', account, checkPositionCommand);
 };
-export const moneyChange = async (key: string | null, money: number) => {
+export const moneyChange = async (
+  key: string | null,
+  money: number,
+  navigate: any
+) => {
   if (money && key) {
-    addMoney(key, money);
+    addMoney(key, money, navigate);
   } else {
     toast({ title: 'Error', description: 'Not have money to change.' });
   }
@@ -80,7 +91,11 @@ export const outInRoom = async (
         `__require('GamePlayManager').default.getInstance().joinRoom(${mainRoomID},0,'',true);`
       );
     } else {
-      if (account.fromSite === 'LUCKY88') {
+      if (
+        account.fromSite === 'LUCKY88' ||
+        account.fromSite === 'DEBET' ||
+        account.fromSite === 'MAY88'
+      ) {
         window.backend.sendMessage(
           'execute-script',
           account,

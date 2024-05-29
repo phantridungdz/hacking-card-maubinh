@@ -13,21 +13,33 @@ const HandType: React.FC<any> = ({ cardDeck, setCardDeck }) => {
       className="flex flex-row border py-[4px] px-[7px] rounded-[5px] items-center"
     >
       <Hand className="w-3.5 h-3.5" />
-      <div className="flex items-center space-x-2">
-        <div className="border p-0 px-[4px] rounded-full">
-          <RadioGroupItem value="2" id="option-two" className=" border-white" />
+      <div className="flex items-center space-x-2 ">
+        <div className="border p-0 rounded-full ">
+          <RadioGroupItem
+            value="2"
+            id="option-two"
+            className=" px-[4px] cursor-pointer"
+          />
         </div>
         <Label>2</Label>
       </div>
-      <div className="flex items-center space-x-2">
-        <div className="border p-0 px-[4px] rounded-full">
-          <RadioGroupItem value="3" id="option-three" />
+      <div className="flex items-center space-x-2 ">
+        <div className="border p-0  rounded-full">
+          <RadioGroupItem
+            value="3"
+            id="option-three"
+            className="px-[4px]  cursor-pointer"
+          />
         </div>
         <Label>3</Label>
       </div>
-      <div className="flex items-center space-x-2">
-        <div className="border p-0 px-[4px] rounded-full">
-          <RadioGroupItem value="4" id="option-four" />
+      <div className="flex items-center space-x-2 ">
+        <div className="border p-0  rounded-full">
+          <RadioGroupItem
+            value="4"
+            id="option-four"
+            className="px-[4px] cursor-pointer"
+          />
         </div>
         <Label>4</Label>
       </div>

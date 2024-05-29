@@ -5,6 +5,7 @@ import { DndProvider, DragSourceMonitor, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { arrangeCard } from '../../lib/arrangeCard';
 import { getCardImageUrl } from '../../lib/card';
+import useGameConfigStore from '../../store/gameConfigStore';
 import useGameStore from '../../store/gameStore';
 import CardGame from '../card/card';
 import { Button } from '../ui/button';
@@ -71,6 +72,7 @@ export const HandCard: React.FC<HandCardProps> = ({ index, cardProp }) => {
   const [titleInstant, setTitleInstant] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const { mainCard, activeGame, setActiveGame } = useGameStore();
+  const { cardType } = useGameConfigStore();
 
   const moveCard = useCallback(
     (dragId: number, hoverId: number) => {
@@ -125,9 +127,9 @@ export const HandCard: React.FC<HandCardProps> = ({ index, cardProp }) => {
 
   useEffect(() => {
     if (cards) {
-      setPart1(cards.slice(0, 5));
-      setPart2(cards.slice(5, 10));
-      setPart3([...cards.slice(10, 13)]);
+      setPart1(cards.slice(0, 5).reverse());
+      setPart2(cards.slice(5, 10).reverse());
+      setPart3([...cards.slice(10, 13).reverse()]);
     }
   }, [cards]);
 
@@ -151,7 +153,7 @@ export const HandCard: React.FC<HandCardProps> = ({ index, cardProp }) => {
   }
 
   useEffect(() => {
-    if (arraysAreEqual(mainCard, cardProp) && activeGame < index) {
+    if (arraysAreEqual(mainCard, cardProp)) {
       setActiveGame(index);
     }
   }, [mainCard, cardProp]);
@@ -188,7 +190,7 @@ export const HandCard: React.FC<HandCardProps> = ({ index, cardProp }) => {
                     >
                       <DraggableCard
                         id={cardNumber}
-                        imageUrl={getCardImageUrl(cardNumber)}
+                        imageUrl={getCardImageUrl(cardNumber, cardType)}
                         moveCard={moveCard}
                       />
                     </DropCard>
@@ -205,7 +207,7 @@ export const HandCard: React.FC<HandCardProps> = ({ index, cardProp }) => {
                     >
                       <DraggableCard
                         id={cardNumber}
-                        imageUrl={getCardImageUrl(cardNumber)}
+                        imageUrl={getCardImageUrl(cardNumber, cardType)}
                         moveCard={moveCard}
                       />
                     </DropCard>
@@ -218,7 +220,7 @@ export const HandCard: React.FC<HandCardProps> = ({ index, cardProp }) => {
                     <DropCard key={index} id={cardNumber} moveCard={moveCard}>
                       <DraggableCard
                         id={cardNumber}
-                        imageUrl={getCardImageUrl(cardNumber)}
+                        imageUrl={getCardImageUrl(cardNumber, cardType)}
                         moveCard={moveCard}
                       />
                     </DropCard>
@@ -227,10 +229,10 @@ export const HandCard: React.FC<HandCardProps> = ({ index, cardProp }) => {
               </div>
               <div className="absolute top-0 right-0">
                 <Button
-                  className="p-0 px-[5px]"
+                  className="p-[7px] h-[30px] py-0"
                   onClick={() => handleArrange()}
                 >
-                  <RotateCw />
+                  <RotateCw className="w-4 h-4" />
                 </Button>
               </div>
             </div>

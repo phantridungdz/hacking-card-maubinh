@@ -1,9 +1,10 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
+import useAccountStore from '../store/accountStore';
 
 const useSubRoomStore = create<any>(
   devtools(
-    (set) => ({
+    (set, get) => ({
       subs: [],
       subsInLobby: [],
       subsInRoom: [],
@@ -26,10 +27,16 @@ const useSubRoomStore = create<any>(
         set((state: { subs: any[] }) => ({
           subs: state.subs.filter((sub) => sub.username !== subUsername),
         })),
-      clearSubs: () =>
-        set(() => ({
-          subs: [],
-        })),
+      clearSubs: () => {
+        const { subs } = get();
+        const updateAccount = useAccountStore.getState().updateAccount;
+
+        subs.forEach((sub: any) => {
+          updateAccount('SUB', sub.username, { role: null });
+        });
+
+        set({ subs: [] });
+      },
       setSubs: (subs: any) =>
         set(() => ({
           subs: subs,

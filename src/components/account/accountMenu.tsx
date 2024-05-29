@@ -71,8 +71,6 @@ const AccountMenu: React.FC<any> = ({
     reader.onload = async (e: any) => {
       const text = e.target.result;
       const newAccounts = readValidAccount(text);
-      console.log('text', text);
-      console.log('newAccounts', newAccounts);
       addUniqueAccounts(
         newAccounts,
         accounts,

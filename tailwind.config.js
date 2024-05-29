@@ -37,6 +37,11 @@ module.exports = {
           DEFAULT: '#53A7B6',
           dark: '#53A7B6',
         },
+        may88: {
+          light: '#3A8DFF',
+          DEFAULT: '#FA360D',
+          dark: '#FA360D',
+        },
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',

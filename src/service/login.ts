@@ -39,6 +39,32 @@ const loginHitBrowser = (botInfo: any) => {
     window.backend.sendMessage('login-hit', botInfo);
   });
 };
+const fetchViaProxy = async (
+  data: any,
+  botInfo: any,
+  headers: any,
+  loginUrl: string
+) => {
+  const proxy = {
+    url: loginUrl,
+    proxyHost: botInfo.proxy,
+    proxyPort: botInfo.port,
+    proxyUsername: botInfo.userProxy,
+    proxyPassword: botInfo.passProxy,
+    headers: headers,
+    data,
+  };
+
+  try {
+    return await axios.post('http://localhost:3500/sendPostViaProxy', proxy);
+  } catch (error) {
+    console.error(
+      'Login failed:',
+      axios.isAxiosError(error) ? error.response?.data : error
+    );
+    return { data: { code: 404 } };
+  }
+};
 const loginRik = async (
   botInfo: any,
   accountType: string,
@@ -58,9 +84,22 @@ const loginRik = async (
     sign: generateRandomHex(16),
     r_token: '',
   };
+  const headers = {
+    Accept: '*/*',
+    'Content-Type': 'text/plain;charset=UTF-8',
+    'Sec-ch-ua': `"Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"`,
+    'User-agent':
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0',
+    Origin: 'https://v.rik.vip',
+    Referer: 'https://v.rik.vip',
+  };
   try {
-    const response = await axios.post(loginUrl, JSON.stringify(credentials));
-
+    let response;
+    if (botInfo.isUseProxy) {
+      response = await fetchViaProxy(credentials, botInfo, headers, loginUrl);
+    } else {
+      response = await axios.post(loginUrl, credentials);
+    }
     if (response.data.code === 200) {
       const data = response.data.data[0];
       updateAccount(accountType, botInfo.username, {
@@ -74,7 +113,6 @@ const loginRik = async (
         main_balance: response.data.message,
       });
     }
-
     return response.data;
   } catch (error) {
     console.error(
@@ -144,9 +182,26 @@ const loginLucky88 = async (
     username: botInfo.username,
     password: botInfo.password,
   };
-
+  const headers = {
+    Accept: '*/*',
+    'Content-Type': 'application/json',
+    'Accept-encoding': 'gzip, deflate, br, zstd',
+    'Sec-ch-ua': `"Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"`,
+    'User-agent':
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0',
+    Origin: 'https://lucky88.vip',
+    Referer: 'https://lucky88.vip',
+    Cookie:
+      'source=lucky88.vip; saleAdvised=null; aff_id=null; utm_source=null; utm_medium=null; utm_campaign=null; utm_term=null; utm_content=null; device=desktop; vgmnid=13971.55342598229111716553376008; mini-opened=%7B%22aviator%22%3A%7B%22left%22%3Anull%2C%22top%22%3A150%7D%2C%22taixiu%22%3A%7B%7D%2C%22hilo%22%3A%7B%7D%2C%22poker%22%3A%7B%7D%7D; whitelist=true',
+  };
   try {
-    const response = await axios.post(loginUrl, credentials);
+    let response;
+    if (botInfo.isUseProxy) {
+      response = await fetchViaProxy(credentials, botInfo, headers, loginUrl);
+    } else {
+      response = await axios.post(loginUrl, credentials);
+    }
+    console.log('response', response);
     if (response.data.code === 200) {
       const data = response.data.data[0];
       updateAccount(accountType, botInfo.username, {
@@ -155,6 +210,7 @@ const loginLucky88 = async (
         fullname: data.fullname,
       });
     } else {
+      console.log('response', response);
       updateAccount(accountType, botInfo.username, {
         main_balance: response.data.message,
       });
@@ -168,6 +224,29 @@ const loginLucky88 = async (
     );
     return null;
   }
+  // try {
+  //   const response = await axios.post(loginUrl, credentials);
+  //   if (response.data.code === 200) {
+  //     const data = response.data.data[0];
+  //     updateAccount(accountType, botInfo.username, {
+  //       main_balance: response.data.message,
+  //       token: data.tp_token,
+  //       fullname: data.fullname,
+  //     });
+  //   } else {
+  //     updateAccount(accountType, botInfo.username, {
+  //       main_balance: response.data.message,
+  //     });
+  //   }
+
+  //   return response.data;
+  // } catch (error) {
+  //   console.error(
+  //     'Login failed:',
+  //     axios.isAxiosError(error) ? error.response?.data : error
+  //   );
+  //   return null;
+  // }
 };
 const loginDebet = async (
   botInfo: any,
@@ -179,9 +258,24 @@ const loginDebet = async (
     username: botInfo.username,
     password: botInfo.password,
   };
-
+  const headers = {
+    Accept: '*/*',
+    'Content-Type': 'application/json, text/plain, */*',
+    'Sec-ch-ua': `"Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"`,
+    'User-agent':
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0',
+    Origin: 'https://debet.net',
+    Referer: 'https://debet.net',
+    Cookie:
+      '_gid=GA1.2.704473547.1716609101; strongPassword=1; _pk_id.4.d164=a9d05cad470f262c.1716609101.; domain=https%3A%2F%2Fdebet.net; host=debet.net; device=desktop; _gcl_au=1.1.1510002727.1716609102; luckyNumber=54; showPopupDomain=true; whitelist=true; _pk_ses.4.d164=1; _clck=1l21aao%7C2%7Cfm2%7C0%7C1606; vgmnid=13838.84719695447221716609103001; mini-opened=%7B%22aviator%22%3A%7B%22left%22%3Anull%2C%22top%22%3A150%7D%2C%22taixiu%22%3A%7B%7D%2C%22hilo%22%3A%7B%7D%2C%22poker%22%3A%7B%7D%7D; _ga=GA1.1.512047530.1716312616; _ga_YB99BJW0HQ=GS1.1.1716608406.3.1.1716609185.59.0.0; _clsk=rr7nm6%7C1716609424069%7C3%7C1%7Cx.clarity.ms%2Fcollect; _ga_WX6RHFP3H4=GS1.1.1716607825.3.1.1716609451.0.0.0',
+  };
   try {
-    const response = await axios.post(loginUrl, credentials);
+    let response;
+    if (botInfo.isUseProxy) {
+      response = await fetchViaProxy(credentials, botInfo, headers, loginUrl);
+    } else {
+      response = await axios.post(loginUrl, credentials);
+    }
     if (response.data.code === 200) {
       const data = response.data.data[0];
       updateAccount(accountType, botInfo.username, {
@@ -194,7 +288,55 @@ const loginDebet = async (
         main_balance: response.data.message,
       });
     }
-
+    return response.data;
+  } catch (error) {
+    console.error(
+      'Login failed:',
+      axios.isAxiosError(error) ? error.response?.data : error
+    );
+    return null;
+  }
+};
+const loginMay88 = async (
+  botInfo: any,
+  accountType: string,
+  updateAccount: any,
+  loginUrl: string
+) => {
+  const credentials = {
+    username: botInfo.username,
+    password: botInfo.password,
+  };
+  const headers = {
+    Accept: '*/*',
+    'Content-Type': 'application/json, text/plain, */*',
+    'Sec-ch-ua': `"Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"`,
+    'User-agent':
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0',
+    Origin: 'https://may88.game',
+    Referer: 'https://may88.game',
+    Cookie:
+      'device=desktop; _gcl_au=1.1.732562051.1716726234; _ga_171YF2R0MV=GS1.1.1716726234.1.0.1716726234.0.0.0; _ga=GA1.2.314653449.1716726234; _gid=GA1.2.245976383.1716726234; _gat_UA-185855122-1=1; _ga_LNECPR22W8=GS1.2.1716726234.1.0.1716726234.60.0.0',
+  };
+  try {
+    let response;
+    if (botInfo.isUseProxy) {
+      response = await fetchViaProxy(credentials, botInfo, headers, loginUrl);
+    } else {
+      response = await axios.post(loginUrl, credentials);
+    }
+    if (response.data.code === 200) {
+      const data = response.data.data[0];
+      updateAccount(accountType, botInfo.username, {
+        main_balance: response.data.message,
+        token: data.tp_token,
+        fullname: data.fullname,
+      });
+    } else {
+      updateAccount(accountType, botInfo.username, {
+        main_balance: response.data.message,
+      });
+    }
     return response.data;
   } catch (error) {
     console.error(
@@ -242,7 +384,6 @@ const fetchToken = async (botInfo: any) => {
     console.error('There was a problem with the fetch operation:', error);
   }
 };
-
 const login = async (bot: any, accountType: string, updateAccount: any) => {
   window.backend.sendMessage('update-header', bot.fromSite);
   switch (bot.fromSite) {
@@ -273,6 +414,13 @@ const login = async (bot: any, accountType: string, updateAccount: any) => {
         accountType,
         updateAccount,
         'https://debet.net/api/v1/login'
+      );
+    case 'MAY88':
+      return await loginMay88(
+        bot,
+        accountType,
+        updateAccount,
+        'https://may88.game/api/v1/login'
       );
     default:
       throw new Error(`Unsupported target site: ${bot.targetSite}`);

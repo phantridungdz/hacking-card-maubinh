@@ -14,6 +14,8 @@ const badgeVariants = cva(
         hit: 'border-white border-transparent bg-[#FFFC00] text-black hover:bg-primary/80',
         lucky88:
           'border-white border-transparent bg-[#53A7B6] text-white hover:bg-primary/80',
+        may88:
+          'border-white border-transparent bg-[#FA360D] text-white hover:bg-primary/80',
         default:
           'border-transparent bg-primary text-primary-foreground hover:bg-primary/80',
         secondary:

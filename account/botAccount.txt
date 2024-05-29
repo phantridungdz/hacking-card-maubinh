@@ -1,10 +1,4 @@
-dangtuyen2|ut8sb2ifg|dangtuyen259|8900|true|undefined|undefined|undefined|undefined|false|RIK|null|6-0938b18b742f61f814a2a1a9c818a2b6|DEBET|
-nguyenvietk|6lrylj8fg|nguyenvietk1|8900|true|undefined|undefined|undefined|undefined|false|RIK|null|6-9b18f101b95bcc56ba761d97d5f94980|DEBET|
-thanngoct|23mr6tngh|thanngoct3|8900|true|undefined|undefined|undefined|undefined|false|RIK|null|6-6f426ecd0ff6fb39e6c6f077fc97513d|DEBET|
-truonghieud|b97rz3drr|truonghieud464|8900|true|undefined|undefined|undefined|undefined|false|RIK|null|6-fdbd857780d8f73a935825db83db483a|DEBET|
-lanlan682|lan1522|undefined|undefined|false|undefined|undefined|undefined|undefined|false|RIK|undefined|undefined|RIK|
-hoangnhung152|nhung1123|undefined|undefined|false|undefined|undefined|undefined|undefined|false|RIK|undefined|undefined|RIK|
-tanbien65662|a152222|undefined|undefined|false|undefined|undefined|undefined|undefined|false|RIK|undefined|undefined|RIK|
+truonghieud|b97rz3drr|truonghieud464|Đăng nhập thành công|true|undefined|undefined|undefined|undefined|false|RIK|null|6-e24ef4556b7ba72dd96959a7af2fa52f|DEBET|
 lethuyen2842|Dnxcvb1jk|lethuyen2842h|9574|true|undefined|undefined|undefined|undefined|false|HIT|undefined|16-28ed1ed20a4816ffbb6eec179491b007|LUCKY88|
 nguyennghi1911|Fhjghk4lho|nguyennghi19|9978|true|undefined|undefined|undefined|undefined|false|HIT|undefined|16-ffd489e779a3fbfacd1343400f3abaac|LUCKY88|
 vodung2207|Djnvmt52|vodung2207mbn|7700|true|undefined|undefined|undefined|undefined|false|HIT|undefined|16-11754bd75d6014bba3a2a91c8416c4b1|LUCKY88|

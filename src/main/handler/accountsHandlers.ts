@@ -161,22 +161,49 @@ export const setupAccountHandlers = (
       let targetSite;
       switch (account.fromSite) {
         case 'RIK':
-          targetSite = 'https://play.rikvip.win/';
+          targetSite = 'https://v.rik.vip/';
           break;
         case 'HIT':
           targetSite = 'https://web.hitclub.win/';
           break;
         case 'LUCKY88':
-          targetSite =
-            'https://games.gnightfast.net/?brand=lucky&token=' +
-            account.token +
-            '&gameid=vgcg_4&ru=';
+          if (account.targetSite === 'HIT') {
+            targetSite =
+              'https://games.gnightfast.net/?brand=lucky&token=' +
+              account.token +
+              '&gameid=vgcg_4&ru=';
+          } else {
+            targetSite =
+              'https://games.prorichvip.com/?brand=lucky&token=' +
+              account.token +
+              '&gameid=vgcg_4&ru=https%3A%2F%2Flucky88.vip';
+          }
           break;
         case 'DEBET':
-          targetSite =
-            'https://games.prorichvip.com/?brand=debet&token=' +
-            account.token +
-            '&gameid=vgcg_4&ru=https%3A%2F%2Fdebet.net';
+          if (account.targetSite === 'HIT') {
+            targetSite =
+              'https://games.gnightfast.net/?brand=debet&token=' +
+              account.token +
+              '&gameid=vgcg_4&ru=https%3A%2F%2Fdebet.net';
+          } else {
+            targetSite =
+              'https://games.prorichvip.com/?brand=debet&token=' +
+              account.token +
+              '&gameid=vgcg_4&ru=https%3A%2F%2Fdebet.net';
+          }
+          break;
+        case 'MAY88':
+          if (account.targetSite === 'HIT') {
+            targetSite =
+              'https://games.gnightfast.net/?token=' +
+              account.token +
+              '&gameid=vgcg_4&brand=may88&ru=https://may88.game/games';
+          } else {
+            targetSite =
+              'https://games.prorichvip.com/?brand=may88&ru=https%3A%2F%2Fmay88.game%2Fgames%23card&token' +
+              account.token +
+              '&gameid=vgcg_4';
+          }
           break;
         default:
           throw new Error(`Unsupported target site: ${account.fromSite}`);

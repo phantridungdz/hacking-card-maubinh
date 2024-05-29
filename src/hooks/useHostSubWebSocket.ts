@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import { toast } from '../components/toast/use-toast';
-import { binhLungCard } from '../lib/arrangeCard';
+import { arrangeCard, binhLungCard } from '../lib/arrangeCard';
 import { fetchToken, login } from '../service/login';
 import useAccountStore from '../store/accountStore';
 import useBotRoomStore from '../store/botRoomStore';
@@ -14,6 +14,7 @@ export default function useHostWebSocket(sub: any, roomID: number) {
   const [shouldConnect, setShouldConnect] = useState(false);
   const [joinedLobby, setJoinedLobby] = useState(false);
   const [createdRoom, setCreatedRoom] = useState(false);
+  const [haveAnotherPlayer, setHaveAnotherPlayer] = useState(false);
   const [fullName, setFullName] = useState('');
   const [botMoneyChange, setBotMoneyChange] = useState('');
   const [token, setToken] = useState('');
@@ -48,11 +49,10 @@ export default function useHostWebSocket(sub: any, roomID: number) {
     isFoundedRoom,
     roomType,
     clearGameState,
-    isMainJoin,
   } = useGameStore();
   const { isBotStart } = useBotRoomStore();
   const { updateAccount } = useAccountStore();
-  const { loginUrl, wsTargetUrl } = useGameConfigStore();
+  const { wsTargetUrl } = useGameConfigStore();
   const connectionStatus = {
     [ReadyState.CONNECTING]: 'Đang kết nối',
     [ReadyState.OPEN]: 'Sẵn sàng',
@@ -71,13 +71,32 @@ export default function useHostWebSocket(sub: any, roomID: number) {
   }, [readyState]);
 
   const startSocketOn = async (token: string, fullName: string) => {
-    await sendMessage(
-      `[1,"Simms","","",{"agentId":"1","accessToken":"${token}","reconnect":true}]`
-    );
-    await setSocketUrl(wsTargetUrl);
-    await setShouldConnect(true);
-    addSubValid(fullName);
-    setFullName(fullName);
+    try {
+      if (sub.isUseProxy) {
+        await sendMessage(
+          JSON.stringify({
+            type: 'proxyInfo',
+            proxyUrl: `http://${sub.userProxy}:${sub.passProxy}@${sub.proxy}:${sub.port}`,
+            wsTargetUrl,
+          })
+        );
+        await setSocketUrl('ws://localhost:4500');
+      } else {
+        await sendMessage(
+          `[1,"Simms","","",{"agentId":"1","accessToken":"${token}","reconnect":true}]`
+        );
+        await setSocketUrl(wsTargetUrl);
+      }
+      await setShouldConnect(true);
+      addSubValid(fullName);
+      setFullName(fullName);
+    } catch (error) {
+      console.error('Error in startSocketOn:', error);
+      toast({
+        title: 'Connection Error',
+        description: 'Không thể thiết lập kết nối WebSocket.',
+      });
+    }
   };
 
   const onConnect = async (sub: any) => {
@@ -87,6 +106,7 @@ export default function useHostWebSocket(sub: any, roomID: number) {
         const user = res?.data[0];
         setToken(user.token);
         startSocketOn(user.token, user.fullname);
+        setToken(user.token);
       } else {
         toast({ title: 'Error', description: res.message });
         setSocketUrl('');
@@ -94,7 +114,7 @@ export default function useHostWebSocket(sub: any, roomID: number) {
         clearGameState();
       }
     } else {
-      if (!sub.username) {
+      if (!sub.token) {
         const resToken = await fetchToken(sub);
         if (resToken?.data) {
           startSocketOn(sub.token, resToken.data.displayName);
@@ -109,6 +129,7 @@ export default function useHostWebSocket(sub: any, roomID: number) {
           });
         }
       } else {
+        setToken(sub.token);
         startSocketOn(sub.token, sub.fullname);
       }
     }
@@ -161,6 +182,7 @@ export default function useHostWebSocket(sub: any, roomID: number) {
           if (message[1].cmd === 200) {
             if (!subsValid.includes(message[1].p.dn)) {
               console.log(`Có chó vào phòng:${message[1].p.dn}`);
+              setHaveAnotherPlayer(true);
               // updateSubStatus(
               //   sub.username,
               //   'Phát hiện người chơi khác vào phòng'
@@ -179,7 +201,7 @@ export default function useHostWebSocket(sub: any, roomID: number) {
           if (message[1].cmd === 205 && message[1].ps) {
             updateSubStatus(sub.username, 'Out room');
             sendMessage(`[4,"Simms",${roomID}]`);
-
+            setHaveAnotherPlayer(false);
             setReadyToJoinStatus(false);
           }
           // //In-lobby
@@ -199,6 +221,12 @@ export default function useHostWebSocket(sub: any, roomID: number) {
             setSubStart(false);
             setReadyToJoinStatus(true);
             sendMessage(`[3,"Simms",${message[1].ri.rid},""]`);
+          }
+          if (message[1].cmd === 308 && message[1].mgs) {
+            toast({
+              title: `SUB ${sub.username} không đủ tiền`,
+              description: message[1].mgs,
+            });
           }
           //Ping-join-room
           if (message[1].cmd === 310 && message[1].As) {
@@ -243,12 +271,17 @@ export default function useHostWebSocket(sub: any, roomID: number) {
           if (message[1].cs && message[1].T === 60000) {
             updateSubStatus(sub.username, `${message[1].cs}`);
             addCard('subCards', message[1].cs);
-            const baiLung = binhLungCard(message[1].cs) as any;
+            let finalCard;
+            if (haveAnotherPlayer) {
+              finalCard = arrangeCard(message[1].cs) as any;
+            } else {
+              finalCard = binhLungCard(message[1].cs) as any;
+            }
             sendMessage(
-              `[5,"Simms",${roomID},{"cmd":606,"cs":[${baiLung.cards}]}]`
+              `[5,"Simms",${roomID},{"cmd":606,"cs":[${finalCard.cards}]}]`
             );
             sendMessage(
-              `[5,"Simms",${roomID},{"cmd":603,"cs":[${baiLung.cards}]}]`
+              `[5,"Simms",${roomID},{"cmd":603,"cs":[${finalCard.cards}]}]`
             );
             updateSubStatus(sub.username, `${message[1].cs}`);
           }

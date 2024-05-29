@@ -100,13 +100,32 @@ export default function useHostWebSocket(bot: any, roomID: number) {
   }
 
   const startSocketOn = async (token: string, fullName: string) => {
-    await sendMessage(
-      `[1,"Simms","","",{"agentId":"1","accessToken":"${token}","reconnect":true}]`
-    );
-    await setSocketUrl(wsTargetUrl);
-    await setShouldConnect(true);
-    addBotValid(fullName);
-    setFullName(fullName);
+    try {
+      if (bot.isUseProxy) {
+        await sendMessage(
+          JSON.stringify({
+            type: 'proxyInfo',
+            proxyUrl: `http://${bot.userProxy}:${bot.passProxy}@${bot.proxy}:${bot.port}`,
+            wsTargetUrl,
+          })
+        );
+        await setSocketUrl('ws://localhost:4500');
+      } else {
+        await sendMessage(
+          `[1,"Simms","","",{"agentId":"1","accessToken":"${token}","reconnect":true}]`
+        );
+        await setSocketUrl(wsTargetUrl);
+      }
+      await setShouldConnect(true);
+      addBotValid(fullName);
+      setFullName(fullName);
+    } catch (error) {
+      console.error('Error in startSocketOn:', error);
+      toast({
+        title: 'Connection Error',
+        description: 'Không thể thiết lập kết nối WebSocket.',
+      });
+    }
   };
 
   const onConnect = async (bot: any) => {
@@ -116,6 +135,7 @@ export default function useHostWebSocket(bot: any, roomID: number) {
         const user = res?.data[0];
         setToken(user.token);
         startSocketOn(user.token, user.fullname);
+        setToken(user.token);
       } else {
         toast({ title: 'Error', description: res.message });
         setSocketUrl('');
@@ -123,7 +143,7 @@ export default function useHostWebSocket(bot: any, roomID: number) {
         clearGameState();
       }
     } else {
-      if (!bot.username) {
+      if (!bot.token) {
         const resToken = await fetchToken(bot);
         if (resToken?.data) {
           startSocketOn(bot.token, resToken.data.displayName);
@@ -138,6 +158,7 @@ export default function useHostWebSocket(bot: any, roomID: number) {
           });
         }
       } else {
+        setToken(bot.token);
         startSocketOn(bot.token, bot.fullname);
       }
     }
@@ -152,6 +173,13 @@ export default function useHostWebSocket(bot: any, roomID: number) {
             `[1,"Simms","","",{"agentId":"1","accessToken":"${token}","reconnect":true}]`
           );
         }
+        if (message.error) {
+          toast({
+            title: bot.username + ' lỗi proxy',
+            description: message.error,
+          });
+        }
+
         // console.log(message);
         if (message[0] === 1) {
           if (message[1] === true && message[2] === 0) {
@@ -218,7 +246,6 @@ export default function useHostWebSocket(bot: any, roomID: number) {
               }
             }
             if (!isFoundedRoom) {
-              console.log('vẫn send mesage');
               updateBotStatus(bot.username, 'Sent start');
               sendMessage(`[5,"Simms",${roomID},{"cmd":698}]`);
               sendMessage(`[5,"Simms",${roomID},{"cmd":5}]`);

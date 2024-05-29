@@ -6,7 +6,6 @@ import { AccountSection } from '../components/account/accountSection';
 import MainSetting from '../components/menu/mainSetting';
 import RemoteBar from '../components/menu/remoteBar';
 import { useToast } from '../components/toast/use-toast';
-import { validateLicense } from '../lib/supabase';
 import { isMatchCards } from '../lib/utils';
 import useGameStore from '../store/gameStore';
 import useSubRoomStore from '../store/subRoomStore';
@@ -51,11 +50,8 @@ export function App() {
   }, [subCards, botCards]);
 
   useEffect(() => {
-    if (
-      process.env.NODE_ENV != 'development' &&
-      !localStorage.getItem('license-key')
-    ) {
-      validateLicense(setLoading, toast, navigate);
+    if (!localStorage.getItem('license-key')) {
+      navigate('/');
     }
   }, []);
 

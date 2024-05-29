@@ -29,8 +29,6 @@ const readValidAccount = (input: string): any => {
           token,
           fromSite,
         ] = line.trim().split('|');
-
-        console.log('targetSite', targetSite);
         return {
           username,
           password,

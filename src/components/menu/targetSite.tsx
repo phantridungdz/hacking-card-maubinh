@@ -1,5 +1,5 @@
 import { ChevronDown, GlobeLock } from 'lucide-react';
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -20,6 +20,9 @@ const TargetSite: React.FC<any> = () => {
     setTargetSite(target);
     window.backend.sendMessage('update-header', target);
   };
+  useEffect(() => {
+    setTargetSite('RIK');
+  }, []);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

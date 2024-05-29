@@ -23,12 +23,8 @@ const RoomType: React.FC<any> = () => {
   };
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="outline"
-          size="sm"
-          className="h-8 gap-1 !border-[#fff]"
-        >
+      <DropdownMenuTrigger className="border" asChild>
+        <Button variant="outline" size="sm" className="h-8 gap-1 border">
           <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
             {formatCurrency(roomType)}
           </span>

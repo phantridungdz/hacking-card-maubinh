@@ -3,9 +3,11 @@ import {
   CirclePlus,
   Loader2,
   LogIn,
+  Moon,
   SearchCheck,
   Settings,
   SquareMousePointer,
+  Sun,
 } from 'lucide-react';
 import React, { useState } from 'react';
 import HandType from '../../components/menu/handType';
@@ -21,7 +23,9 @@ import useBotRoomStore from '../../store/botRoomStore';
 import useGameStore from '../../store/gameStore';
 import useSubRoomStore from '../../store/subRoomStore';
 import CreateAccount from '../model/createAccount';
+import { useTheme } from '../provider/theme-provider';
 import { FindRoomSheet } from '../sheet/findSheet';
+import CardType from './cardType';
 import TargetSite from './targetSite';
 
 const RemoteBar: React.FC<any> = ({
@@ -49,8 +53,10 @@ const RemoteBar: React.FC<any> = ({
   const [refreshKey, setRefreshKey] = useState(0);
   const [isOpenBotSheet, setIsOpenBotSheet] = useState(false);
   const [isOpenCreateAccount, setIsOpenCreateAccount] = useState(false);
+  const { theme, setTheme } = useTheme();
 
-  const onLogin = () => {
+  const onLogin = async () => {
+    await onRefreshBot();
     setStartGameStatus(true);
     setIsLogining(true);
   };
@@ -120,11 +126,20 @@ const RemoteBar: React.FC<any> = ({
               </Label>
             </div>
           )}
-
           <TargetSite />
-
           <HandType cardDeck={cardDeck} setCardDeck={setCardDeck} />
           <RoomType />
+          <CardType />
+          <div className="flex flex-row gap-1 items-center">
+            <Button variant="ghost" size="icon" type="button">
+              {theme === 'light' ? (
+                <Moon onClick={() => setTheme('dark')} />
+              ) : (
+                <Sun onClick={() => setTheme('light')} />
+              )}
+              <span className="sr-only">Add account</span>
+            </Button>
+          </div>
         </div>
 
         <div className="flex gap-2 items-center">

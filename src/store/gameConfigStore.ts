@@ -12,6 +12,16 @@ const useGameConfigStore = create<any>(
       registerUrl: 'https://bordergw.api-inovated.com/user',
       depositUrl: 'https://baymentes.gwrykgems.net/payment/card',
       wsTargetUrl: 'wss://cardskgw.ryksockesg.net/websocket',
+      cardType: 'set2',
+      theme: 'dark',
+      setCardType: (type: any) =>
+        set(() => ({
+          cardType: type,
+        })),
+      setTheme: (theme: any) =>
+        set(() => ({
+          theme: theme,
+        })),
       setTargetSite: (site: any) => {
         let newCheckBalanceUrl;
         let newLoginUrl;
@@ -33,15 +43,6 @@ const useGameConfigStore = create<any>(
             newCheckBalanceUrl =
               'https://bodergatez.dsrcgoms.net/gwms/v1/safe/load.aspx';
             newLoginUrl = 'https://bodergatez.dsrcgoms.net/user/login.aspx';
-            newTrackingIPUrl = 'https://bodergatez.dsrcgoms.net/sw/collect';
-            newRegisterUrl = 'https://bodergatez.dsrcgoms.net/user';
-            newDepositUrl = 'https://pmbodergw.dsrcgoms.net/payment/card/hit';
-            newWsTargetUrl = 'wss://carkgwaiz.hytsocesk.com/websocket';
-            break;
-          case 'LUCKY88':
-            newCheckBalanceUrl =
-              'https://bodergatez.dsrcgoms.net/gwms/v1/safe/load.aspx';
-            newLoginUrl = 'https://lucky88.vip/api/v1/login';
             newTrackingIPUrl = 'https://bodergatez.dsrcgoms.net/sw/collect';
             newRegisterUrl = 'https://bodergatez.dsrcgoms.net/user';
             newDepositUrl = 'https://pmbodergw.dsrcgoms.net/payment/card/hit';

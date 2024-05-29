@@ -1,10 +1,12 @@
 // components/columns/AccountTableColumns.ts
 
 import { ColumnDef } from '@tanstack/react-table';
+import axios from 'axios';
 import {
   ArrowUpDown,
   Check,
   DollarSign,
+  MapPin,
   MoreHorizontal,
   Plug,
   RefreshCcw,
@@ -38,7 +40,43 @@ export const getAccountTableColumns = (
   toast: any,
   onCheckAll: any
 ): ColumnDef<unknown, any>[] => {
-  const { checkBalanceUrl, loginUrl, trackingIPUrl } = useGameConfigStore();
+  const { checkBalanceUrl } = useGameConfigStore();
+
+  const onCheckProxy = async (row: any) => {
+    const url = 'http://ip-api.com/json';
+    const proxyHost = row.proxy;
+    const proxyPort = row.port;
+    const proxyUsername = row.userProxy;
+    const proxyPassword = row.passProxy;
+
+    try {
+      await window.backend.sendMessage('update-header', 'JSON');
+      const response = await axios.post(
+        'http://localhost:3500/fetchWithProxy',
+        {
+          url: url,
+          proxyHost: proxyHost,
+          proxyPort: proxyPort,
+          proxyUsername: proxyUsername,
+          proxyPassword: proxyPassword,
+        }
+      );
+
+      if (response.data) {
+        toast({
+          title: `${response.data.city} ${response.data.country}`,
+          description: `${response.data.query} ${response.data.as}`,
+        });
+      } else {
+        console.log('Data fetched using proxy:', response);
+      }
+    } catch (error: any) {
+      toast({
+        title: `Error fetching data with proxy`,
+        description: `Error: ${error.message}`,
+      });
+    }
+  };
 
   const columns: ColumnDef<unknown, any>[] = [
     {
@@ -191,7 +229,6 @@ export const getAccountTableColumns = (
               <Switch
                 checked={rowData.isUseProxy}
                 onCheckedChange={(e) => {
-                  console.log('value', e);
                   if (rowData && rowData?.username) {
                     updateAccount(accountType, rowData.username, {
                       isUseProxy: e,
@@ -258,6 +295,15 @@ export const getAccountTableColumns = (
               >
                 <DollarSign className="w-3.5 h-3.5" />
                 Deposit
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  onCheckProxy(rowData);
+                }}
+                className="flex flex-row items-center gap-1"
+              >
+                <MapPin className="w-3.5 h-3.5" />
+                Check Proxy
               </DropdownMenuItem>
 
               <DropdownMenuItem

@@ -46,7 +46,7 @@ export default function useBotWebSocket(bot: any, roomID: number) {
     clearGameState,
   } = useGameStore();
   const { updateAccount } = useAccountStore();
-  const { loginUrl, wsTargetUrl, currentTargetSite } = useGameConfigStore();
+  const { wsTargetUrl, currentTargetSite } = useGameConfigStore();
   const connectionStatus = {
     [ReadyState.CONNECTING]: 'Đang kết nối',
     [ReadyState.OPEN]: 'Sẵn sàng',
@@ -65,13 +65,32 @@ export default function useBotWebSocket(bot: any, roomID: number) {
   }, [readyState]);
 
   const startSocketOn = async (token: string, fullName: string) => {
-    await sendMessage(
-      `[1,"Simms","","",{"agentId":"1","accessToken":"${token}","reconnect":true}]`
-    );
-    await setSocketUrl(wsTargetUrl);
-    await setShouldConnect(true);
-    addBotValid(fullName);
-    setFullName(fullName);
+    try {
+      if (bot.isUseProxy) {
+        await sendMessage(
+          JSON.stringify({
+            type: 'proxyInfo',
+            proxyUrl: `http://${bot.userProxy}:${bot.passProxy}@${bot.proxy}:${bot.port}`,
+            wsTargetUrl,
+          })
+        );
+        await setSocketUrl('ws://localhost:4500');
+      } else {
+        await sendMessage(
+          `[1,"Simms","","",{"agentId":"1","accessToken":"${token}","reconnect":true}]`
+        );
+        await setSocketUrl(wsTargetUrl);
+      }
+      await setShouldConnect(true);
+      addBotValid(fullName);
+      setFullName(fullName);
+    } catch (error) {
+      console.error('Error in startSocketOn:', error);
+      toast({
+        title: 'Connection Error',
+        description: 'Không thể thiết lập kết nối WebSocket.',
+      });
+    }
   };
 
   const onConnect = async (bot: any) => {
@@ -81,6 +100,7 @@ export default function useBotWebSocket(bot: any, roomID: number) {
         const user = res?.data[0];
         setToken(user.token);
         startSocketOn(user.token, user.fullname);
+        setToken(user.token);
       } else {
         toast({ title: 'Error', description: res.message });
         setSocketUrl('');
@@ -88,7 +108,7 @@ export default function useBotWebSocket(bot: any, roomID: number) {
         clearGameState();
       }
     } else {
-      if (!bot.username) {
+      if (!bot.token) {
         const resToken = await fetchToken(bot);
         if (resToken?.data) {
           startSocketOn(bot.token, resToken.data.displayName);
@@ -103,6 +123,7 @@ export default function useBotWebSocket(bot: any, roomID: number) {
           });
         }
       } else {
+        setToken(bot.token);
         startSocketOn(bot.token, bot.fullname);
       }
     }
@@ -143,6 +164,9 @@ export default function useBotWebSocket(bot: any, roomID: number) {
         //Outed Room
         if (message[0] === 4) {
           if (message[1] === true && message[2] === 1) {
+            sendMessage(
+              `[6,"Simms","channelPlugin",{"cmd":300,"aid":"1","gid":4}]`
+            );
             outRoom(bot.username);
             setJoinedRoom(false);
             removeBotCard();

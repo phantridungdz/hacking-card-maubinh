@@ -1,4 +1,4 @@
-import { Ban } from 'lucide-react';
+import { Ban, Gamepad } from 'lucide-react';
 import React, { useId, useMemo } from 'react';
 import useGameStore from '../../store/gameStore';
 import { HandCard } from '../card/handcard';
@@ -31,13 +31,20 @@ const BoardCard: React.FC<any> = ({ indexProps, cards, numPlayers }) => {
       {cards.length > 1 && (
         <TableCell
           key={indexProps}
-          className={`grid grid-cols-1 tablet:grid-cols-2 laptop:grid-cols-4 !w-[100%] gap-[10px] py-6 bg-opacity-60 ${
+          className={`flex flex-row gap-[10px] py-6 bg-opacity-60 ${
             activeGame === indexProps && 'bg-gray-400'
           }`}
           id={activeGame === indexProps ? 'boardCard-active' : id}
         >
-          <Label className="absolute top-[-10px] left-[-10px] border bg-background rounded-md p-2 z-[20]">
-            {indexProps + 1}
+          <Label
+            style={{ fontFamily: 'monospace' }}
+            className={`absolute top-[-10px] left-[-10px] border  bg-background font-black rounded-md py-1 px-3 z-[20] flex flex-row items-center gap-1 ${
+              activeGame === indexProps &&
+              'shadow-[0px_0px_10px_5px_rgba(255,_0,_0,_0.8)]'
+            }`}
+          >
+            <Gamepad />
+            Game:{indexProps + 1}
           </Label>
           {playerHands.map((hand, index) => (
             <HandCard key={index} index={indexProps} cardProp={hand} />

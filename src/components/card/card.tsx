@@ -1,4 +1,5 @@
 import React from 'react';
+import useGameConfigStore from '../../store/gameConfigStore';
 
 interface CardProps {
   imageUrl: string;
@@ -6,12 +7,16 @@ interface CardProps {
 }
 
 const CardGame: React.FC<CardProps> = ({ imageUrl, altText }) => {
+  const { cardType } = useGameConfigStore();
   return (
     <div
-      className="bg-white py-[4%] px-[3%] border-[#424141] border-[1px] "
+      className={`${
+        cardType === 'set1' &&
+        'bg-white border-[#424141] border-[1px] py-[4%] px-[3%]'
+      }   `}
       style={{
         boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-        borderRadius: '7%',
+        borderRadius: cardType === 'set1' ? '7%' : '',
         maxWidth: '300px',
       }}
     >

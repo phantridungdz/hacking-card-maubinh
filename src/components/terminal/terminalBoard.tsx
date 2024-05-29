@@ -11,6 +11,7 @@ import {
   UserPlus,
 } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '../../components/ui/button';
 import { Label } from '../../components/ui/label';
 import { ScrollArea } from '../../components/ui/scroll-area';
@@ -39,6 +40,7 @@ import {
 
 export const TerminalBoard: React.FC<any> = ({ main }) => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [data, setData] = useState<unknown[]>([]);
   const [isLogin, setIsLogin] = useState(false);
   const [currentSit, setCurrentSit] = useState('');
@@ -114,7 +116,7 @@ export const TerminalBoard: React.FC<any> = ({ main }) => {
               process.env.NODE_ENV != 'development'
                 ? localStorage.getItem('license-key')
                 : ('local-chase' as string);
-            moneyChange(licenseKey, parseInt(user.mX));
+            moneyChange(licenseKey, parseInt(user.mX), navigate);
           } else {
             console.log('Username not found.');
           }
@@ -215,7 +217,11 @@ export const TerminalBoard: React.FC<any> = ({ main }) => {
           `__require('GamePlayManager').default.getInstance().joinRoom(${mainRoomID},0,'',true);`
         );
       } else {
-        if (main.fromSite === 'LUCKY88') {
+        if (
+          main.fromSite === 'LUCKY88' ||
+          main.fromSite === 'DEBET' ||
+          main.fromSite === 'MAY88'
+        ) {
           window.backend.sendMessage(
             'execute-script',
             main,
@@ -285,7 +291,7 @@ export const TerminalBoard: React.FC<any> = ({ main }) => {
                 <div
                   onClick={() => openAccounts(main)}
                   style={{ fontFamily: 'monospace' }}
-                  className="rounded-[5px] px-[5px] py-[0px] h-full bg-white flex items-center hover:bg-slate-400 justify-center cursor-pointer hover:opacity-70"
+                  className="rounded-[5px] px-[5px] py-[0px] h-full border bg-white flex items-center hover:bg-slate-400 justify-center cursor-pointer hover:opacity-70"
                 >
                   <Chrome className="h-3.5 w-3.5 text-black" />
                 </div>
@@ -299,7 +305,7 @@ export const TerminalBoard: React.FC<any> = ({ main }) => {
                 <div
                   onClick={() => joinLobby(main)}
                   style={{ fontFamily: 'monospace' }}
-                  className="rounded-[5px] px-[5px] py-[0px] h-full bg-white flex items-center hover:bg-slate-400 justify-center cursor-pointer hover:opacity-70"
+                  className="rounded-[5px] px-[5px] py-[0px] h-full border bg-white flex items-center hover:bg-slate-400 justify-center cursor-pointer hover:opacity-70"
                 >
                   <Home className="h-3.5 w-3.5 text-black" />
                 </div>
@@ -313,7 +319,7 @@ export const TerminalBoard: React.FC<any> = ({ main }) => {
                 <div
                   onClick={() => createRoom(main)}
                   style={{ fontFamily: 'monospace' }}
-                  className="rounded-[5px] px-[5px] py-[0px] h-full bg-white flex items-center hover:bg-slate-400 justify-center cursor-pointer hover:opacity-70"
+                  className="rounded-[5px] px-[5px] py-[0px] h-full border bg-white flex items-center hover:bg-slate-400 justify-center cursor-pointer hover:opacity-70"
                 >
                   <PlusCircle className="h-3.5 w-3.5 text-black" />
                 </div>
@@ -330,7 +336,7 @@ export const TerminalBoard: React.FC<any> = ({ main }) => {
                     setMainJoinStatus(true);
                   }}
                   style={{ fontFamily: 'monospace' }}
-                  className="rounded-[5px] px-[5px] py-[0px] h-full bg-white flex items-center hover:bg-slate-400 justify-center cursor-pointer hover:opacity-70"
+                  className="rounded-[5px] px-[5px] py-[0px] h-full border bg-white flex items-center hover:bg-slate-400 justify-center cursor-pointer hover:opacity-70"
                 >
                   <ArrowRight className="h-3.5 w-3.5 text-black" />
                 </div>
@@ -346,7 +352,7 @@ export const TerminalBoard: React.FC<any> = ({ main }) => {
                     outRoom(main), setMainJoinStatus(false);
                   }}
                   style={{ fontFamily: 'monospace' }}
-                  className="rounded-[5px] px-[5px] py-[0px] h-full bg-white flex items-center hover:bg-slate-400 justify-center cursor-pointer hover:opacity-70"
+                  className="rounded-[5px] px-[5px] py-[0px] h-full border bg-white flex items-center hover:bg-slate-400 justify-center cursor-pointer hover:opacity-70"
                 >
                   <ArrowLeft className="h-3.5 w-3.5 text-black" />
                 </div>
@@ -360,7 +366,7 @@ export const TerminalBoard: React.FC<any> = ({ main }) => {
                 <div
                   onClick={() => outInRoom(main, mainRoomID)}
                   style={{ fontFamily: 'monospace' }}
-                  className="rounded-[5px] px-[5px] py-[0px] h-[30px] bg-white flex items-center hover:bg-slate-400 justify-center cursor-pointer hover:opacity-70"
+                  className="rounded-[5px] px-[5px] py-[0px] h-[30px] border bg-white flex items-center hover:bg-slate-400 justify-center cursor-pointer hover:opacity-70"
                 >
                   <RefreshCcw className="h-3.5 w-3.5 text-black" />
                 </div>
@@ -369,12 +375,12 @@ export const TerminalBoard: React.FC<any> = ({ main }) => {
                 <p>Out-In Room</p>
               </TooltipContent>
             </Tooltip>
-            <div className="h-full w-full rounded-[5px] flex justify-center items-center border">
+            <div className="h-full w-full rounded-[5px] flex justify-center items-center border cursor-pointer">
               <Toggle pressed={autoInvite} onPressedChange={setAutoInvite}>
                 <UserPlus className="h-3.5 w-3.5" />
               </Toggle>
             </div>
-            <div className="h-full w-full rounded-[5px] flex justify-center items-center border">
+            <div className="h-full w-full rounded-[5px] flex justify-center items-center border cursor-pointer">
               <Toggle pressed={autoStart} onPressedChange={setAutoStart}>
                 <Play className="h-3.5 w-3.5" />
               </Toggle>
