@@ -1,10 +1,10 @@
 const { ipcMain } = require('electron');
 const os = require('os');
 const puppeteer = require('puppeteer');
-// const StealthPlugin = require('puppeteer-extra-plugin-stealth');
-// puppeteer.use(StealthPlugin());
+
 import path from 'path';
 import { loginHitCommand, loginRikCommand } from '../command/command';
+import { getTargetUrl } from './supabase';
 
 interface WebSocketCreatedData {
   requestId: string;
@@ -17,10 +17,21 @@ interface WebSocketFrameReceivedData {
     payloadData: string;
   };
 }
-export const setupAccountHandlers = (
+export const setupAccountHandlers = async (
   mainWindow: Electron.CrossProcessExports.BrowserWindow
 ) => {
   let puppeteerInstances: any[] = [];
+  let targetUrls = await getTargetUrl();
+
+  const hitTarget = targetUrls
+    ? targetUrls.find((target) => target.target_name === 'HIT')
+    : '';
+  const rikTarget = targetUrls
+    ? targetUrls.find((target) => target.target_name === 'RIK')
+    : '';
+
+  const hitUrl = hitTarget ? hitTarget.url : '';
+  const rikUrl = rikTarget ? rikTarget.url : '';
 
   async function startPuppeteerForAccount(account: any) {
     const existingInstance = puppeteerInstances.find(
@@ -161,10 +172,11 @@ export const setupAccountHandlers = (
       let targetSite;
       switch (account.fromSite) {
         case 'RIK':
-          targetSite = 'https://v.rik.vip/';
+          console.log('rikUrl', rikUrl);
+          targetSite = rikUrl;
           break;
         case 'HIT':
-          targetSite = 'https://web.hitclub.win/';
+          targetSite = hitUrl;
           break;
         case 'LUCKY88':
           if (account.targetSite === 'HIT') {
@@ -216,6 +228,19 @@ export const setupAccountHandlers = (
               'https://games.prorichvip.com/?brand=sv88&token=' +
               account.token +
               '&gameid=vgcg_4&ru=https%3A%2F%2Fsv88.top%2Fgame-bai';
+          }
+          break;
+        case 'XO88':
+          if (account.targetSite === 'HIT') {
+            targetSite =
+              'https://games.gnightfast.net/?brand=xo88&token=' +
+              account.token +
+              '&gameid=vgcg_4&ru=https%3A%2F%xo88.us';
+          } else {
+            targetSite =
+              'https://games.prorichvip.com/?brand=xo88&token=' +
+              account.token +
+              '&gameid=vgcg_4&ru=https%3A%2F%xo88.us%2Fgame-bai';
           }
           break;
         case 'UK88':

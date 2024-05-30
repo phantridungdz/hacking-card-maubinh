@@ -28,10 +28,10 @@ import {
   arrangeCards,
   checkPosition,
   createRoom,
+  debouncedMoneyChange,
   invitePlayer,
   joinLobby,
   joinRoom,
-  moneyChange,
   openAccounts,
   outInRoom,
   outRoom,
@@ -104,19 +104,21 @@ export const TerminalBoard: React.FC<any> = ({ main }) => {
             description: parsedData[1].p.dn + ' tới chơi.',
           });
         }
-        if (
-          parsedData[1].cmd === 602 &&
-          (parsedData[1].hsl == false || parsedData[1].hsl == true)
-        ) {
+        if (parsedData[1].cmd === 602) {
           const user = parsedData[1].ps.find(
             (item: { dn: string }) => item.dn === displayName
           );
+          console.log('main.usernam', main.username);
+          console.log('user', user);
+          console.log('user', user);
           if (user) {
-            const licenseKey =
-              process.env.NODE_ENV != 'development'
-                ? localStorage.getItem('license-key')
-                : ('local-chase' as string);
-            moneyChange(licenseKey, parseInt(user.mX), navigate);
+            const licenseKey = localStorage.getItem('license-key');
+            debouncedMoneyChange(
+              licenseKey,
+              parseInt(user.mX),
+              main.username,
+              navigate
+            );
           } else {
             console.log('Username not found.');
           }
@@ -222,6 +224,7 @@ export const TerminalBoard: React.FC<any> = ({ main }) => {
           main.fromSite === 'DEBET' ||
           main.fromSite === 'MAY88' ||
           main.fromSite === 'SV88' ||
+          main.fromSite === 'XO88' ||
           main.fromSite === 'FIVE88' ||
           main.fromSite === 'UK88' ||
           main.fromSite === '11BET'

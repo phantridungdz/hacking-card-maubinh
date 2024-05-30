@@ -1,5 +1,5 @@
 import { ipcMain, session } from 'electron';
-const randomUseragent = require('random-useragent');
+import { getTargetUrl } from './supabase';
 
 function capitalizeHeaderKeys(
   headers: Record<string, string[]>
@@ -31,12 +31,17 @@ function capitalizeRequestHeaderKeys(
   return capitalizedHeaders;
 }
 
-const setHeaderForRik = () => {
+const setHeaderForRik = async () => {
+  let targetUrls = await getTargetUrl();
+  const rikTarget = targetUrls
+    ? targetUrls.find((target) => target.target_name === 'RIK')
+    : '';
+  const rikUrl = rikTarget ? rikTarget.url : '';
   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
     const newHeaders = capitalizeHeaderKeys(
       details.responseHeaders as Record<string, string[]>
     );
-    newHeaders['Access-control-allow-origin'] = ['https://v.rik.vip'];
+    newHeaders['Access-control-allow-origin'] = [rikUrl];
     newHeaders['Cf-cache-status'] = ['DYNAMIC'];
     callback({ responseHeaders: newHeaders });
   });
@@ -45,8 +50,8 @@ const setHeaderForRik = () => {
     const newHeaders = capitalizeRequestHeaderKeys(
       details.requestHeaders as Record<string, string>
     );
-    newHeaders['Referer'] = 'https://v.rik.vip';
-    newHeaders['Origin'] = 'https://v.rik.vip';
+    newHeaders['Referer'] = rikUrl;
+    newHeaders['Origin'] = rikUrl;
     newHeaders['Accept'] = '*/*';
     newHeaders['Accept-encoding'] = 'gzip, deflate, br, zstd';
     newHeaders['Accept-language'] = 'en-US,en;q=0.9';
@@ -61,12 +66,14 @@ const setHeaderForRik = () => {
     callback({ requestHeaders: newHeaders });
   });
 };
-const setHeaderForHit = () => {
+const setHeaderForHit = async () => {
+  let targetUrls = await getTargetUrl();
+  const rikUrl = targetUrls ? targetUrls[0].url : '';
   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
     const newHeaders = capitalizeHeaderKeys(
       details.responseHeaders as Record<string, string[]>
     );
-    newHeaders['Access-control-allow-origin'] = ['https://web.hitclub.win'];
+    newHeaders['Access-control-allow-origin'] = [rikUrl];
     newHeaders['Cf-cache-status'] = ['DYNAMIC'];
     callback({ responseHeaders: newHeaders });
   });
@@ -75,8 +82,8 @@ const setHeaderForHit = () => {
     const newHeaders = capitalizeRequestHeaderKeys(
       details.requestHeaders as Record<string, string>
     );
-    newHeaders['Referer'] = 'https://web.hitclub.win';
-    newHeaders['Origin'] = 'https://web.hitclub.win';
+    newHeaders['Referer'] = rikUrl;
+    newHeaders['Origin'] = rikUrl;
     newHeaders['Accept'] = '*/*';
     newHeaders['Accept-encoding'] = 'gzip, deflate, br, zstd';
     newHeaders['Accept-language'] = 'en-US,en;q=0.9';
@@ -162,6 +169,29 @@ const setHeaderForMay88 = () => {
     newHeaders['Dnt'] = '1';
     newHeaders['Cookie'] =
       'device=desktop; _gcl_au=1.1.732562051.1716726234; _ga_171YF2R0MV=GS1.1.1716726234.1.0.1716726234.0.0.0; _ga=GA1.2.314653449.1716726234; _gid=GA1.2.245976383.1716726234; _gat_UA-185855122-1=1; _ga_LNECPR22W8=GS1.2.1716726234.1.0.1716726234.60.0.0';
+    newHeaders['Priority'] = 'u=1, i';
+    newHeaders['User-agent'] =
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0';
+    newHeaders[
+      'Sec-ch-ua'
+    ] = `"Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"`;
+    callback({ requestHeaders: newHeaders });
+  });
+};
+const setHeaderForXo88 = () => {
+  session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
+    const newHeaders = capitalizeRequestHeaderKeys(
+      details.requestHeaders as Record<string, string>
+    );
+    newHeaders['Referer'] = 'https://xo88.us/game-bai';
+    newHeaders['Origin'] = 'https://xo88.us';
+    newHeaders['Accept'] = 'application/json, text/plain, */*';
+    newHeaders['Accept-encoding'] = 'gzip, deflate, br, zstd';
+    newHeaders['Accept-language'] = 'en-US,en;q=0.9';
+    newHeaders['Content-Type'] = 'application/json';
+    newHeaders['Dnt'] = '1';
+    newHeaders['Cookie'] =
+      'device=desktop; domain=https%3A%2F%2Fxo88.us; host=xo88.us; showed=Wed%20May%2029%202024%2023%3A14%3A33%20GMT+0700%20%28Indochina%20Time%29';
     newHeaders['Priority'] = 'u=1, i';
     newHeaders['User-agent'] =
       'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0';
@@ -292,7 +322,6 @@ const setContentTypeTextPlain = () => {
 };
 
 export const setupHeaderHandlers = () => {
-  setHeaderForRik();
   const changeHeader = (target: string) => {
     switch (target) {
       case 'RIK':
@@ -312,6 +341,9 @@ export const setupHeaderHandlers = () => {
         break;
       case 'SV88':
         setHeaderForSv88();
+        break;
+      case 'XO88':
+        setHeaderForXo88();
         break;
       case 'FIVE88':
         setHeaderForFive88();

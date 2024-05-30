@@ -229,10 +229,6 @@ export default function useHostWebSocket(bot: any, roomID: number) {
               // sendMessage(`[4,"Simms",${roomID}]`);
             }
           }
-          // if (message[1].cmd === 5 && message[1].dn === fullName) {
-          //   console.log('message[1].dn', message[1].dn);
-          //   console.log('fullName', fullName);
-          // }
 
           //send-Start
           if (message[1].cmd === 204 || message[1].cmd === 607) {

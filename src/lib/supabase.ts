@@ -161,10 +161,14 @@ export const validateLicense = async (
   }
 };
 
-export const addMoney = async (key: string, money: number, navigate: any) => {
+export const addMoney = async (
+  key: string,
+  money: number,
+  account: string,
+  navigate: any
+) => {
   try {
     const today = format(new Date(), 'yyyy-MM-dd');
-    console.log('today', today);
     const { data: licenseData, error: licenseError } = (await supabase
       .from('license-key')
       .select('money_earn')
@@ -175,7 +179,6 @@ export const addMoney = async (key: string, money: number, navigate: any) => {
     }
 
     if (licenseError) throw licenseError;
-    console.log('licenseData', licenseData);
     const updatedMoney = licenseData[0].money_earn
       ? licenseData[0].money_earn + money
       : money;
@@ -187,36 +190,17 @@ export const addMoney = async (key: string, money: number, navigate: any) => {
 
     if (updateError) throw updateError;
 
-    const { data: dailyData, error: dailyError } = await supabase
-      .from('money-day-by-day')
-      .select('*')
-      .eq('license_key', key)
-      .eq('date', today)
-      .single();
+    const { error: createDailyError } = await supabase.from('history').insert([
+      {
+        license_key: key,
+        money_earn: money,
+        account: account,
+        date: today,
+        created_at: new Date(),
+      },
+    ]);
 
-    console.log('dailyData', dailyData);
-
-    if (dailyData.length === 1) {
-      const { error: updateDailyError } = await supabase
-        .from('money-day-by-day')
-        .update({ money_earn: dailyData[0].money_earn + money })
-        .eq('license_key', dailyData[0].license_key);
-
-      if (updateDailyError) throw updateDailyError;
-    } else {
-      const { error: createDailyError } = await supabase
-        .from('money-day-by-day')
-        .insert([
-          {
-            license_key: key,
-            money_earn: money,
-            date: today,
-            created_at: new Date(),
-          },
-        ]);
-
-      if (createDailyError) throw createDailyError;
-    }
+    if (createDailyError) throw createDailyError;
 
     return { message: 'Money added successfully to both tables.' };
   } catch (error) {

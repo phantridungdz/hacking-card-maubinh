@@ -1,6 +1,5 @@
-import { Paperclip, Plus, RefreshCcw, Trash } from 'lucide-react';
+import { Plus, RefreshCcw, Trash } from 'lucide-react';
 import React, { useRef } from 'react';
-import { addUniqueAccounts, readValidAccount } from '../../lib/account';
 import { checkBalance } from '../../service/balance';
 import useAccountStore from '../../store/accountStore';
 import useGameConfigStore from '../../store/gameConfigStore';
@@ -17,8 +16,7 @@ const AccountMenu: React.FC<any> = ({
   updateAccount,
 }) => {
   const { accounts, removeAccount, addAccount } = useAccountStore();
-  const { checkBalanceUrl, loginUrl, trackingIPUrl, currentTargetSite } =
-    useGameConfigStore();
+  const { checkBalanceUrl, currentTargetSite } = useGameConfigStore();
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -63,48 +61,9 @@ const AccountMenu: React.FC<any> = ({
     }
   };
 
-  const handleFileChange = (event: any) => {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = async (e: any) => {
-      const text = e.target.result;
-      const newAccounts = readValidAccount(text);
-      addUniqueAccounts(
-        newAccounts,
-        accounts,
-        accountType,
-        addAccount,
-        currentTargetSite
-      );
-    };
-    reader.onerror = () => {
-      toast({
-        title: 'Error',
-        description: `Failed to read file`,
-      });
-    };
-    reader.readAsText(file);
-  };
-
   return (
     <div className="flex flex-row justify-end items-center">
       <Tooltip>
-        <TooltipTrigger asChild>
-          <Button
-            variant="ghost"
-            size="icon"
-            type="button"
-            onClick={() => {
-              if (fileInputRef.current) {
-                fileInputRef.current.click();
-              }
-            }}
-          >
-            <Paperclip className="size-4" />
-          </Button>
-        </TooltipTrigger>
         <Dialog
           open={isDialogAddAccountOpen}
           onOpenChange={setDialogAddAccountOpen}
@@ -114,6 +73,7 @@ const AccountMenu: React.FC<any> = ({
               variant="ghost"
               size="icon"
               type="button"
+              className="!border"
               onClick={() => setDialogAddAccountOpen(true)}
             >
               <Plus className="size-4" />
@@ -142,15 +102,6 @@ const AccountMenu: React.FC<any> = ({
           </Button>
         </TooltipTrigger>
       </Tooltip>
-      <div className="flex items-center p-3 pt-0">
-        <input
-          type="file"
-          accept=".txt"
-          ref={fileInputRef}
-          onChange={handleFileChange}
-          style={{ display: 'none' }}
-        />
-      </div>
     </div>
   );
 };

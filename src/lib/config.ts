@@ -9,8 +9,9 @@ export const fromHitSites = [
   'DEBET',
   'MAY88',
   'SV88',
-  'FIVE88',
+  // 'FIVE88',
   'UK88',
+  'XO88',
   '11BET',
 ];
 export const fromRikSites = [
@@ -19,6 +20,7 @@ export const fromRikSites = [
   'LUCKY88',
   'MAY88',
   'SV88',
+  // 'XO88',
   // 'FIVE88',
   'UK88',
   '11BET',

@@ -1,3 +1,4 @@
+import { debounce } from 'lodash';
 import { addMoney } from '../../lib/supabase';
 import { toast } from '../toast/use-toast';
 import {
@@ -50,6 +51,7 @@ export const joinRoom = (
         account.fromSite === 'SV88' ||
         account.fromSite === 'FIVE88' ||
         account.fromSite === 'UK88' ||
+        account.fromSite === 'XO88' ||
         account.fromSite === '11BET'
       ) {
         window.backend.sendMessage(
@@ -73,14 +75,16 @@ export const checkPosition = (account: any): void => {
 export const moneyChange = async (
   key: string | null,
   money: number,
+  account: string,
   navigate: any
 ) => {
   if (money && key) {
-    addMoney(key, money, navigate);
+    addMoney(key, money, account, navigate);
   } else {
     toast({ title: 'Error', description: 'Not have money to change.' });
   }
 };
+export const debouncedMoneyChange = debounce(moneyChange, 10);
 export const outInRoom = async (
   account: any,
   mainRoomID: any
@@ -100,6 +104,7 @@ export const outInRoom = async (
         account.fromSite === 'DEBET' ||
         account.fromSite === 'MAY88' ||
         account.fromSite === 'SV88' ||
+        account.fromSite === 'XO88' ||
         account.fromSite === 'UK88' ||
         account.fromSite === '11BET'
       ) {

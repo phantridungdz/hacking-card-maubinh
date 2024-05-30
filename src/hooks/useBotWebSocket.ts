@@ -185,10 +185,7 @@ export default function useBotWebSocket(bot: any, roomID: number) {
             }
             // updateBotStatus(bot.username, 'Joined Room');
           }
-          console.log('fullName', fullName);
           if (message[1].cmd === 5 && message[1].dn === fullName) {
-            console.log('message[1].dn', message[1].dn);
-            console.log('fullName', fullName);
             if (!botsReady.includes(bot.userName)) {
               setTimeout(() => {
                 addBotReady(bot.username);

@@ -1,5 +1,6 @@
 import { ChevronDown, GlobeLock } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -10,6 +11,7 @@ import {
 } from '../../components/ui/dropdown-menu';
 import { generateAccount } from '../../lib/account';
 import { fromHitSites, fromRikSites } from '../../lib/config';
+import { supabase } from '../../lib/supabase';
 import useAccountStore from '../../store/accountStore';
 import useGameConfigStore from '../../store/gameConfigStore';
 import { Button } from '../ui/button';
@@ -33,6 +35,35 @@ const AddAccount: React.FC<any> = ({
   const passwordRef = useRef<HTMLInputElement>(null);
   const [fromSite, setFromSite] = useState(currentTargetSite);
   const [fromSites, setFromSites] = useState(fromRikSites);
+  const navigate = useNavigate();
+
+  const handleAddAccountToSupabase = async () => {
+    const licenseKey = localStorage.getItem('license-key');
+    if (!licenseKey) {
+      navigate('/');
+    }
+    if (usernameRef.current && passwordRef.current && licenseKey) {
+      const { data, error } = await supabase.from('accounts').insert([
+        {
+          username: usernameRef.current.value,
+          password: passwordRef.current.value,
+          target_site: currentTargetSite,
+          from_site: fromSite,
+          account_type: accountType,
+          license_key: licenseKey,
+        },
+      ]);
+
+      if (error) {
+        console.error('Error inserting data:', error);
+      } else {
+        console.log('Account added:', data);
+        setDialogAddAccountOpen(false);
+      }
+    } else {
+      console.log('Required fields are missing');
+    }
+  };
 
   const handleAddAccount = () => {
     if (usernameRef.current && passwordRef.current) {
@@ -44,6 +75,9 @@ const AddAccount: React.FC<any> = ({
       };
       addAccount(accountType, generateAccount(newAccount), currentTargetSite);
       setDialogAddAccountOpen(false);
+      if (accountType == 'MAIN') {
+        handleAddAccountToSupabase();
+      }
     }
   };
 
@@ -114,11 +148,14 @@ const AddAccount: React.FC<any> = ({
         <div className="flex justify-end space-x-2">
           <Button
             variant="secondary"
+            className=" py-0"
             onClick={() => setDialogAddAccountOpen(false)}
           >
             Cancel
           </Button>
-          <Button onClick={handleAddAccount}>Add Account</Button>
+          <Button className=" py-0" onClick={handleAddAccount}>
+            Add Account
+          </Button>
         </div>
       </DialogContent>
     </Dialog>

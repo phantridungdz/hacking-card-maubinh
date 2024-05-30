@@ -84,6 +84,7 @@ const loginRik = async (
     sign: generateRandomHex(16),
     r_token: '',
   };
+
   const headers = {
     Accept: '*/*',
     'Content-Type': 'text/plain;charset=UTF-8',
@@ -201,7 +202,7 @@ const loginLucky88 = async (
     } else {
       response = await axios.post(loginUrl, credentials);
     }
-    console.log('response', response);
+
     if (response.data.code === 200) {
       const data = response.data.data[0];
       updateAccount(accountType, botInfo.username, {
@@ -210,7 +211,6 @@ const loginLucky88 = async (
         fullname: data.fullname,
       });
     } else {
-      console.log('response', response);
       updateAccount(accountType, botInfo.username, {
         main_balance: response.data.message,
       });
@@ -383,6 +383,56 @@ const loginMay88 = async (
       updateAccount(accountType, botInfo.username, {
         main_balance: response.data.message,
         token: data.token_play,
+        fullname: data.fullname,
+      });
+    } else {
+      updateAccount(accountType, botInfo.username, {
+        main_balance: response.data.message,
+      });
+    }
+    return response.data;
+  } catch (error) {
+    console.error(
+      'Login failed:',
+      axios.isAxiosError(error) ? error.response?.data : error
+    );
+    return null;
+  }
+};
+const loginXo88 = async (
+  botInfo: any,
+  accountType: string,
+  updateAccount: any,
+  loginUrl: string
+) => {
+  const credentials = {
+    username: botInfo.username,
+    password: botInfo.password,
+  };
+  const headers = {
+    Accept: '*/*',
+    'Content-Type': 'application/json',
+    'Sec-ch-ua': `"Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"`,
+    'User-agent':
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0',
+    Origin: 'https://xo88.us',
+    Referer: 'https://xo88.us/game-bai',
+    Cookie:
+      'device=desktop; domain=https%3A%2F%xo88.us; host=xo88.us; showed=Wed%20May%2029%202024%2023%3A14%3A33%20GMT+0700%20%28Indochina%20Time%29',
+  };
+  try {
+    let response;
+    if (botInfo.isUseProxy) {
+      response = await fetchViaProxy(credentials, botInfo, headers, loginUrl);
+    } else {
+      response = await axios.post(loginUrl, credentials);
+    }
+    if (response.data.code === 200) {
+      const data = response.data.data[0];
+      console.log('data', data);
+      updateAccount(accountType, botInfo.username, {
+        main_balance: response.data.message,
+        token: data.tp_token,
         fullname: data.fullname,
       });
     } else {
@@ -588,7 +638,7 @@ const fetchToken = async (botInfo: any) => {
   }
 };
 const login = async (bot: any, accountType: string, updateAccount: any) => {
-  window.backend.sendMessage('update-header', bot.fromSite);
+  await window.backend.sendMessage('update-header', bot.fromSite);
   switch (bot.fromSite) {
     case 'RIK':
       return await loginRik(
@@ -631,6 +681,13 @@ const login = async (bot: any, accountType: string, updateAccount: any) => {
         accountType,
         updateAccount,
         'https://sv88.top/api/v1/login'
+      );
+    case 'XO88':
+      return await loginXo88(
+        bot,
+        accountType,
+        updateAccount,
+        'https://xo88.us/api/v1/login'
       );
     case 'FIVE88':
       return await loginFive88(

@@ -136,7 +136,6 @@ const RemoteBar: React.FC<any> = ({
               ) : (
                 <Sun onClick={() => setTheme('light')} />
               )}
-              <span className="sr-only">Add account</span>
             </Button>
           </div>
         </div>
