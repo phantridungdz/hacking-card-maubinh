@@ -35,13 +35,14 @@ export const handleActive = async (
       .single();
 
     if (error) throw new Error('Error while active license key.');
-    if (data.length === 1) {
+
+    if (data) {
       if (
-        !data[0].uuid &&
-        !data[0].pc_name &&
-        !data[0].cpu &&
-        !data[0].system &&
-        !data[0].active_at
+        !data.uuid &&
+        !data.pc_name &&
+        !data.cpu &&
+        !data.system &&
+        !data.active_at
       ) {
         const { error: updateError } = await supabase
           .from('license-key')
@@ -64,10 +65,10 @@ export const handleActive = async (
         navigate('/app');
       } else {
         if (
-          _.isEqual(data[0].uuid, hardwareInfo.system.uuid) &&
-          _.isEqual(data[0].pc_name, hardwareInfo.hostname) &&
-          _.isEqual(data[0].cpu, hardwareInfo.cpu) &&
-          _.isEqual(data[0].system, hardwareInfo.system)
+          _.isEqual(data.uuid, hardwareInfo.system.uuid) &&
+          _.isEqual(data.pc_name, hardwareInfo.hostname) &&
+          _.isEqual(data.cpu, hardwareInfo.cpu) &&
+          _.isEqual(data.system, hardwareInfo.system)
         ) {
           localStorage.setItem('license-key', key);
           navigate('/app');
@@ -132,13 +133,13 @@ export const validateLicense = async (
       return hardwareInfo;
     }
     console.log('hardwareInfo', hardwareInfo);
-    console.log('data[0]', data[0]);
+    console.log('data[0]', data);
 
     if (
-      _.isEqual(data[0].uuid, hardwareInfo.system.uuid) &&
-      _.isEqual(data[0].pc_name, hardwareInfo.hostname) &&
-      _.isEqual(data[0].cpu, hardwareInfo.cpu) &&
-      _.isEqual(data[0].system, hardwareInfo.system)
+      _.isEqual(data.uuid, hardwareInfo.system.uuid) &&
+      _.isEqual(data.pc_name, hardwareInfo.hostname) &&
+      _.isEqual(data.cpu, hardwareInfo.cpu) &&
+      _.isEqual(data.system, hardwareInfo.system)
     ) {
       navigate('/app');
     } else {

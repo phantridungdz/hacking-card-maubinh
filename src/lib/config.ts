@@ -18,12 +18,12 @@ export const fromRikSites = [
   'RIK',
   'DEBET',
   'LUCKY88',
-  'MAY88',
-  'SV88',
+  // 'MAY88',
+  // 'SV88',
   // 'XO88',
   // 'FIVE88',
-  'UK88',
-  '11BET',
+  // 'UK88',
+  // '11BET',
 ];
 export const cardAmounts = [10000, 20000, 30000, 50000, 100000, 200000];
 export const accountType = ['BOT', 'SUB', 'MAIN'];
