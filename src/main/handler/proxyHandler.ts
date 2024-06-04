@@ -63,19 +63,4 @@ export const setupProxyHandler = () => {
   app.listen(port, () => {
     console.log(`Server proxy running on port: ${port}`);
   });
-  // async function fetchWithProxy(url: fetch.RequestInfo) {
-  //   const proxyAgent = new HttpsProxyAgent({
-  //     host: '171.229.220.189',
-  //     port: 43424,
-  //     auth: 'trant_fyRKK:fzmoaiFW',
-  //   });
-
-  //   try {
-  //     const response = await fetch(url, { agent: proxyAgent });
-  //     const data = await response.json();
-  //     console.log(data);
-  //   } catch (error) {
-  //     console.error('Error with proxy request', error);
-  //   }
-  // }
 };

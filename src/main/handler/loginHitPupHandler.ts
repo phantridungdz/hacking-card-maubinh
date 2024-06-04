@@ -102,12 +102,10 @@ export const setupLoginHitHandlers = () => {
           const parsedBody = JSON.parse(responseBody.replace(`)]}'`, ''));
           result.body = parsedBody[1];
           // await page.close();
-          console.log('parsedBody', parsedBody[1]);
         }
       });
       return result;
     } catch (error) {
-      console.log('eee', error);
       return false;
     }
   }

@@ -40,7 +40,6 @@ export const setupFileHandlers = () => {
         return;
       }
       event.reply('read-file', data, accountType);
-      // console.log('Readed File:', data);
     });
   });
 

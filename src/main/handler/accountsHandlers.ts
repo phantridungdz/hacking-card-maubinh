@@ -172,7 +172,6 @@ export const setupAccountHandlers = async (
       let targetSite;
       switch (account.fromSite) {
         case 'RIK':
-          console.log('rikUrl', rikUrl);
           targetSite = rikUrl;
           break;
         case 'HIT':

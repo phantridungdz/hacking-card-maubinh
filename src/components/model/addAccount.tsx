@@ -57,7 +57,6 @@ const AddAccount: React.FC<any> = ({
       if (error) {
         console.error('Error inserting data:', error);
       } else {
-        console.log('Account added:', data);
         setDialogAddAccountOpen(false);
       }
     } else {

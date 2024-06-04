@@ -204,12 +204,18 @@ const loginLucky88 = async (
     }
 
     if (response.data.code === 200) {
-      const data = response.data.data[0];
-      updateAccount(accountType, botInfo.username, {
-        main_balance: response.data.message,
-        token: data.tp_token,
-        fullname: data.fullname,
-      });
+      const data = response.data.data ? response?.data?.data[0] : undefined;
+      if (data) {
+        updateAccount(accountType, botInfo.username, {
+          main_balance: response.data.message,
+          token: data.tp_token,
+          fullname: data.fullname,
+        });
+      } else {
+        updateAccount(accountType, botInfo.username, {
+          main_balance: response.data.message,
+        });
+      }
     } else {
       updateAccount(accountType, botInfo.username, {
         main_balance: response.data.message,
@@ -224,29 +230,6 @@ const loginLucky88 = async (
     );
     return null;
   }
-  // try {
-  //   const response = await axios.post(loginUrl, credentials);
-  //   if (response.data.code === 200) {
-  //     const data = response.data.data[0];
-  //     updateAccount(accountType, botInfo.username, {
-  //       main_balance: response.data.message,
-  //       token: data.tp_token,
-  //       fullname: data.fullname,
-  //     });
-  //   } else {
-  //     updateAccount(accountType, botInfo.username, {
-  //       main_balance: response.data.message,
-  //     });
-  //   }
-
-  //   return response.data;
-  // } catch (error) {
-  //   console.error(
-  //     'Login failed:',
-  //     axios.isAxiosError(error) ? error.response?.data : error
-  //   );
-  //   return null;
-  // }
 };
 const loginDebet = async (
   botInfo: any,
@@ -379,7 +362,7 @@ const loginMay88 = async (
     }
     if (response.data.code === 200) {
       const data = response.data.data[0];
-      console.log('data', data);
+
       updateAccount(accountType, botInfo.username, {
         main_balance: response.data.message,
         token: data.token_play,
@@ -415,10 +398,10 @@ const loginXo88 = async (
     'Sec-ch-ua': `"Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"`,
     'User-agent':
       'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0',
-    Origin: 'https://xo88.us',
-    Referer: 'https://xo88.us/game-bai',
+    Origin: 'https://xo88.com',
+    Referer: 'https://xo88.com',
     Cookie:
-      'device=desktop; domain=https%3A%2F%xo88.us; host=xo88.us; showed=Wed%20May%2029%202024%2023%3A14%3A33%20GMT+0700%20%28Indochina%20Time%29',
+      'device=desktop; domain=https%3A%2F%xo88.com; host=xo88.com; showed=Wed%20May%2029%202024%2023%3A14%3A33%20GMT+0700%20%28Indochina%20Time%29',
   };
   try {
     let response;
@@ -429,7 +412,7 @@ const loginXo88 = async (
     }
     if (response.data.code === 200) {
       const data = response.data.data[0];
-      console.log('data', data);
+
       updateAccount(accountType, botInfo.username, {
         main_balance: response.data.message,
         token: data.tp_token,
@@ -479,7 +462,7 @@ const loginSv88 = async (
     }
     if (response.data.code === 200) {
       const data = response.data.data[0];
-      console.log('data', data);
+
       updateAccount(accountType, botInfo.username, {
         main_balance: response.data.message,
         token: data.tp_token,
@@ -529,7 +512,7 @@ const loginOne88 = async (
     }
     if (response.data.code === 200) {
       const data = response.data.data[0];
-      console.log('data', data);
+
       updateAccount(accountType, botInfo.username, {
         main_balance: response.data.message,
         token: data.tp_token,
@@ -579,7 +562,7 @@ const loginUk88 = async (
     }
     if (response.data.code === 200) {
       const data = response.data.data[0];
-      console.log('data', data);
+
       updateAccount(accountType, botInfo.username, {
         main_balance: response.data.message,
         token: data.tp_token,
@@ -629,7 +612,7 @@ const loginTa88 = async (
     }
     if (response.data.code === 200) {
       const data = response.data.data[0];
-      console.log('data', data);
+
       updateAccount(accountType, botInfo.username, {
         main_balance: response.data.message,
         token: data.tp_token,
@@ -679,7 +662,7 @@ const loginMu99 = async (
     }
     if (response.data.code === 200) {
       const data = response.data.data[0];
-      console.log('data', data);
+
       updateAccount(accountType, botInfo.username, {
         main_balance: response.data.message,
         token: data.tp_token,
@@ -729,7 +712,7 @@ const loginZbet = async (
     }
     if (response.data.code === 200) {
       const data = response.data.data[0];
-      console.log('data', data);
+
       updateAccount(accountType, botInfo.username, {
         main_balance: response.data.message,
         token: data.tp_token,
@@ -779,7 +762,7 @@ const login11bet = async (
     }
     if (response.data.code === 200) {
       const data = response.data.data[0];
-      console.log('data', data);
+
       updateAccount(accountType, botInfo.username, {
         main_balance: response.data.message,
         token: data.tp_token,
@@ -911,7 +894,7 @@ const login = async (bot: any, accountType: string, updateAccount: any) => {
         bot,
         accountType,
         updateAccount,
-        'https://xo88.us/api/v1/login'
+        'https://xo88.com/api/v1/login'
       );
     case 'FIVE88':
       return await loginFive88(

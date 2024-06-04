@@ -179,8 +179,6 @@ export default function useHostWebSocket(bot: any, roomID: number) {
             description: message.error,
           });
         }
-
-        // console.log(message);
         if (message[0] === 1) {
           if (message[1] === true && message[2] === 0) {
             sendMessage(`[6,"Simms","channelPlugin",{"cmd":310}]`);
@@ -261,7 +259,6 @@ export default function useHostWebSocket(bot: any, roomID: number) {
           // //In-lobby
           // if (message[1].cmd === 300 && message[1].rs) {
           //   if (bot.status != 'In lobby') {
-          //     console.log(bot.username, bot.status);
           //     updateBotStatus(bot.username, 'In lobby');
           //   }
           // }

@@ -1,5 +1,5 @@
 import { Plus, RefreshCcw, Trash } from 'lucide-react';
-import React, { useRef } from 'react';
+import React from 'react';
 import { checkBalance } from '../../service/balance';
 import useAccountStore from '../../store/accountStore';
 import useGameConfigStore from '../../store/gameConfigStore';
@@ -15,10 +15,9 @@ const AccountMenu: React.FC<any> = ({
   accountType,
   updateAccount,
 }) => {
-  const { accounts, removeAccount, addAccount } = useAccountStore();
-  const { checkBalanceUrl, currentTargetSite } = useGameConfigStore();
+  const { accounts, removeAccount } = useAccountStore();
+  const { checkBalanceUrl } = useGameConfigStore();
   const { toast } = useToast();
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleDeleteSelectedRows = () => {
     const selectedRows = table.getSelectedRowModel().rows;

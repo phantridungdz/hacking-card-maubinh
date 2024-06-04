@@ -144,7 +144,6 @@ export default function useHostWebSocket(sub: any, roomID: number) {
             `[1,"Simms","","",{"agentId":"1","accessToken":"${token}","reconnect":true}]`
           );
         }
-        // console.log(message);
         if (message[0] === 1) {
           if (message[1] === true && message[2] === 0) {
             sendMessage(`[6,"Simms","channelPlugin",{"cmd":310}]`);
@@ -181,7 +180,6 @@ export default function useHostWebSocket(sub: any, roomID: number) {
           //Detect-user-join
           if (message[1].cmd === 200) {
             if (!subsValid.includes(message[1].p.dn)) {
-              console.log(`Có chó vào phòng:${message[1].p.dn}`);
               setHaveAnotherPlayer(true);
               // updateSubStatus(
               //   sub.username,
@@ -207,7 +205,6 @@ export default function useHostWebSocket(sub: any, roomID: number) {
           // //In-lobby
           // if (message[1].cmd === 300 && message[1].rs) {
           //   if (sub.status != 'In lobby') {
-          //     console.log(sub.username, sub.status);
           //     updateSubStatus(sub.username, 'In lobby');
           //   }
           // }

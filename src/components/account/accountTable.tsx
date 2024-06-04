@@ -92,7 +92,7 @@ export const AccountTable: React.FC<any> = ({ accountType }) => {
       setDataTable(accountFilter);
       updateFile(accounts[accountType], accountType);
     }
-  }, [accounts, currentTargetSite]);
+  }, [accounts, currentTargetSite, readedFile]);
 
   const handleDeleteRow = (rowData: any) => {
     removeAccount(accountType, rowData.username);

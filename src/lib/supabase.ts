@@ -132,14 +132,14 @@ export const validateLicense = async (
       setLoading(false);
       return hardwareInfo;
     }
-    console.log('hardwareInfo', hardwareInfo);
-    console.log('data[0]', data);
+
+    const dataRes = data.length > 0 ? data[0] : data;
 
     if (
-      _.isEqual(data.uuid, hardwareInfo.system.uuid) &&
-      _.isEqual(data.pc_name, hardwareInfo.hostname) &&
-      _.isEqual(data.cpu, hardwareInfo.cpu) &&
-      _.isEqual(data.system, hardwareInfo.system)
+      _.isEqual(dataRes.uuid, hardwareInfo.system.uuid) &&
+      _.isEqual(dataRes.pc_name, hardwareInfo.hostname) &&
+      _.isEqual(dataRes.cpu, hardwareInfo.cpu) &&
+      _.isEqual(dataRes.system, hardwareInfo.system)
     ) {
       navigate('/app');
     } else {

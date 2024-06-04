@@ -108,9 +108,6 @@ export const TerminalBoard: React.FC<any> = ({ main }) => {
           const user = parsedData[1].ps.find(
             (item: { dn: string }) => item.dn === displayName
           );
-          console.log('main.usernam', main.username);
-          console.log('user', user);
-          console.log('user', user);
           if (user) {
             const licenseKey = localStorage.getItem('license-key');
             debouncedMoneyChange(
@@ -119,8 +116,6 @@ export const TerminalBoard: React.FC<any> = ({ main }) => {
               main.username,
               navigate
             );
-          } else {
-            console.log('Username not found.');
           }
         }
         if (parsedData[1].cs && parsedData[1].cmd === 600) {
@@ -151,7 +146,6 @@ export const TerminalBoard: React.FC<any> = ({ main }) => {
   const handleDataSent = ({ data, username }: any) => {
     if (username === main.username) {
       if (data == `[ 1, true, 0, "rik_${main.username}", "Simms", null ]`) {
-        console.log('Đã login man');
       }
       if (
         !data.includes('[6,1') &&
