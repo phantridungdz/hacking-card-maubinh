@@ -34,9 +34,6 @@ export const joinRoom = (
   targetSite: string
 ): void => {
   if (mainRoomID) {
-    console.log('account.username', account.username);
-    console.log('targetSite', targetSite);
-    console.log('fromSite', account.fromSite);
     if (targetSite === 'RIK') {
       window.backend.sendMessage(
         'execute-script',
@@ -51,6 +48,9 @@ export const joinRoom = (
         account.fromSite === 'SV88' ||
         account.fromSite === 'FIVE88' ||
         account.fromSite === 'UK88' ||
+        account.fromSite === 'TA88' ||
+        account.fromSite === 'ONE88' ||
+        account.fromSite === 'ZBET' ||
         account.fromSite === 'XO88' ||
         account.fromSite === '11BET'
       ) {
@@ -105,7 +105,11 @@ export const outInRoom = async (
         account.fromSite === 'MAY88' ||
         account.fromSite === 'SV88' ||
         account.fromSite === 'XO88' ||
+        account.fromSite === 'ZBET' ||
         account.fromSite === 'UK88' ||
+        account.fromSite === 'TA88' ||
+        account.fromSite === 'MU99' ||
+        account.fromSite === 'ONE88' ||
         account.fromSite === '11BET'
       ) {
         window.backend.sendMessage(

@@ -8,19 +8,24 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '../../components/ui/dropdown-menu';
-import { fromHitSites, fromRikSites } from '../../lib/config';
+import { fromHitSites, fromRikSites, fromSunWinSites } from '../../lib/config';
 import useGameConfigStore from '../../store/gameConfigStore';
 import useGameStore from '../../store/gameStore';
 import { Label } from '../ui/label';
 
 const FromSite: React.FC<any> = () => {
-  const { roomType, setRoomType } = useGameStore();
+  const { roomType } = useGameStore();
   const { currentFromSite } = useGameConfigStore();
   const [fromSite, setFromSite] = useState(currentFromSite);
   const handleFromSiteChange = (target: number) => {
     setFromSite(target);
   };
-  const fromSites = currentFromSite === 'RIK' ? fromRikSites : fromHitSites;
+  const fromSites =
+    currentFromSite === 'RIK'
+      ? fromRikSites
+      : currentFromSite === 'HIT'
+      ? fromHitSites
+      : fromSunWinSites;
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

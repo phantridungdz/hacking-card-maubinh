@@ -19,6 +19,13 @@ const badgeVariants = cva(
         sv88: 'border-white border-transparent bg-[#F68323] text-white hover:bg-primary/80',
         xo88: 'border-white border-transparent bg-[#FDFE67] text-white hover:bg-primary/80',
         uk88: 'border-white border-transparent bg-[#3CDCA1] text-white hover:bg-primary/80',
+        mu99: 'border-white border-transparent bg-[#E32C22] text-white hover:bg-primary/80',
+        ta88: 'border-white border-transparent bg-[#FFA619] text-white hover:bg-primary/80',
+        sunwin:
+          'border-white border-transparent bg-[#FFA619] text-white hover:bg-primary/80',
+        one88:
+          'border-white border-transparent bg-[#244ED6] text-white hover:bg-primary/80',
+        zbet: 'border-white border-transparent bg-[#5ECB33] text-white hover:bg-primary/80',
         five88:
           'border-white border-transparent bg-[#53A7B6] text-white hover:bg-primary/80',
         default:

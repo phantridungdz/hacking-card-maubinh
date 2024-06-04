@@ -1,5 +1,5 @@
 nguyenhaol|xz9aaefttt|nguyenhaol41|8900|true|undefined|undefined|undefined|undefined|false|RIK|null|6-8a65381a449d98895cc9a2c49e2b7e9c|DEBET|
 luuanhc|ly48qxsfh|luuanhc5|8900|true|undefined|undefined|undefined|undefined|false|RIK|null|6-fc604cced7338ca7ef9be81ad6a0ec26|DEBET|
-dinhkhanh0304|Cnhmte65|dinhkhanh0304b|undefined|false|undefined|undefined|undefined|undefined|false|HIT|undefined|16-163fb5897e4100426c116148ab4d82f4|LUCKY88|
-EzekielCharles|Zxcv123123|ezekielcharles5|30620|true|undefined|undefined|undefined|undefined|false|HIT|undefined|16-6bdbedaddb5c27d3b713dfc660dc1b48|LUCKY88|
-anhhungdaden|anhdadenR1|anhhungdadenro|26902|true|undefined|undefined|undefined|undefined|false|HIT|undefined|16-8867f35d62b35eacbcb75a0544170af0|LUCKY88|
+dinhkhanh0304|Cnhmte65|dinhkhanh0304b|5900|true|undefined|undefined|undefined|undefined|false|HIT|undefined|16-fdf7e68c59cce0450f97deb3f0322101|LUCKY88|
+EzekielCharles|Zxcv123123|ezekielcharles5|29506|true|undefined|undefined|undefined|undefined|false|HIT|undefined|16-063e8ca828697d64fc83e82f10ce23b4|LUCKY88|
+anhhungdaden|anhdadenR1|anhhungdadenro|26731|false|undefined|undefined|undefined|undefined|false|HIT|undefined|16-60f66263d6d0d819dfd7e1d2c7cce33c|LUCKY88|

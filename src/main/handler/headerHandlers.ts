@@ -66,6 +66,38 @@ const setHeaderForRik = async () => {
     callback({ requestHeaders: newHeaders });
   });
 };
+const setHeaderForSunWin = async () => {
+  let targetUrls = await getTargetUrl();
+  const rikUrl = targetUrls ? targetUrls[0].url : '';
+  session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
+    const newHeaders = capitalizeHeaderKeys(
+      details.responseHeaders as Record<string, string[]>
+    );
+    newHeaders['Access-control-allow-origin'] = [rikUrl];
+    newHeaders['Cf-cache-status'] = ['DYNAMIC'];
+    callback({ responseHeaders: newHeaders });
+  });
+
+  session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
+    const newHeaders = capitalizeRequestHeaderKeys(
+      details.requestHeaders as Record<string, string>
+    );
+    newHeaders['Referer'] = 'https://web.sunwin.uk/';
+    newHeaders['Origin'] = 'https://web.sunwin.uk/';
+    newHeaders['Accept'] = '*/*';
+    newHeaders['Accept-encoding'] = 'gzip, deflate, br, zstd';
+    newHeaders['Accept-language'] = 'en-US,en;q=0.9';
+    newHeaders['Content-Type'] = 'text/plain;charset=UTF-8';
+    newHeaders['Dnt'] = '1';
+    newHeaders['Priority'] = 'u=1, i';
+    newHeaders['User-agent'] =
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0';
+    newHeaders[
+      'Sec-ch-ua'
+    ] = `"Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"`;
+    callback({ requestHeaders: newHeaders });
+  });
+};
 const setHeaderForHit = async () => {
   let targetUrls = await getTargetUrl();
   const rikUrl = targetUrls ? targetUrls[0].url : '';
@@ -247,6 +279,29 @@ const setHeaderFor11BET = () => {
     callback({ requestHeaders: newHeaders });
   });
 };
+const setHeaderForOne88 = () => {
+  session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
+    const newHeaders = capitalizeRequestHeaderKeys(
+      details.requestHeaders as Record<string, string>
+    );
+    newHeaders['Referer'] = 'https://one88.com';
+    newHeaders['Origin'] = 'https://one88.com';
+    newHeaders['Accept'] = 'application/json';
+    newHeaders['Accept-encoding'] = 'gzip, deflate, br, zstd';
+    newHeaders['Accept-language'] = 'en-US,en;q=0.9';
+    newHeaders['Content-Type'] = 'application/json';
+    newHeaders['Dnt'] = '1';
+    newHeaders['Cookie'] =
+      'device=desktop; os=desktop; source=one88.com; saleAdvised=null; aff_id=null; utm_source=null; utm_medium=null; utm_campaign=null; utm_term=null; utm_content=null';
+    newHeaders['Priority'] = 'u=1, i';
+    newHeaders['User-agent'] =
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0';
+    newHeaders[
+      'Sec-ch-ua'
+    ] = `"Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"`;
+    callback({ requestHeaders: newHeaders });
+  });
+};
 const setHeaderForUk88 = () => {
   session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
     const newHeaders = capitalizeRequestHeaderKeys(
@@ -254,6 +309,75 @@ const setHeaderForUk88 = () => {
     );
     newHeaders['Referer'] = 'https://uk88.com';
     newHeaders['Origin'] = 'https://uk88.com';
+    newHeaders['Accept'] = 'application/json';
+    newHeaders['Accept-encoding'] = 'gzip, deflate, br, zstd';
+    newHeaders['Accept-language'] = 'en-US,en;q=0.9';
+    newHeaders['Content-Type'] = 'application/json';
+    newHeaders['Dnt'] = '1';
+    newHeaders['Cookie'] =
+      'device=desktop; os=desktop; source=uk88.com; saleAdvised=null; aff_id=null; utm_source=null; utm_medium=null; utm_campaign=null; utm_term=null; utm_content=null';
+    newHeaders['Priority'] = 'u=1, i';
+    newHeaders['User-agent'] =
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0';
+    newHeaders[
+      'Sec-ch-ua'
+    ] = `"Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"`;
+    callback({ requestHeaders: newHeaders });
+  });
+};
+const setHeaderForMu99 = () => {
+  session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
+    const newHeaders = capitalizeRequestHeaderKeys(
+      details.requestHeaders as Record<string, string>
+    );
+    newHeaders['Referer'] = 'https://mu99.vin';
+    newHeaders['Origin'] = 'https://mu99.vin';
+    newHeaders['Accept'] = 'application/json';
+    newHeaders['Accept-encoding'] = 'gzip, deflate, br, zstd';
+    newHeaders['Accept-language'] = 'en-US,en;q=0.9';
+    newHeaders['Content-Type'] = 'application/json';
+    newHeaders['Dnt'] = '1';
+    newHeaders['Cookie'] =
+      'device=desktop; os=desktop; source=mu99.vin; saleAdvised=null; aff_id=null; utm_source=null; utm_medium=null; utm_campaign=null; utm_term=null; utm_content=null';
+    newHeaders['Priority'] = 'u=1, i';
+    newHeaders['User-agent'] =
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0';
+    newHeaders[
+      'Sec-ch-ua'
+    ] = `"Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"`;
+    callback({ requestHeaders: newHeaders });
+  });
+};
+const setHeaderForTa88 = () => {
+  session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
+    const newHeaders = capitalizeRequestHeaderKeys(
+      details.requestHeaders as Record<string, string>
+    );
+    newHeaders['Referer'] = 'https://ta88.com';
+    newHeaders['Origin'] = 'https://ta88.com';
+    newHeaders['Accept'] = 'application/json';
+    newHeaders['Accept-encoding'] = 'gzip, deflate, br, zstd';
+    newHeaders['Accept-language'] = 'en-US,en;q=0.9';
+    newHeaders['Content-Type'] = 'application/json';
+    newHeaders['Dnt'] = '1';
+    newHeaders['Cookie'] =
+      'device=desktop; os=desktop; source=ta88.com; saleAdvised=null; aff_id=null; utm_source=null; utm_medium=null; utm_campaign=null; utm_term=null; utm_content=null';
+    newHeaders['Priority'] = 'u=1, i';
+    newHeaders['User-agent'] =
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0';
+    newHeaders[
+      'Sec-ch-ua'
+    ] = `"Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"`;
+    callback({ requestHeaders: newHeaders });
+  });
+};
+const setHeaderForZbet = () => {
+  session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
+    const newHeaders = capitalizeRequestHeaderKeys(
+      details.requestHeaders as Record<string, string>
+    );
+    newHeaders['Referer'] = 'https://zbet.com';
+    newHeaders['Origin'] = 'https://zbet.com';
     newHeaders['Accept'] = 'application/json';
     newHeaders['Accept-encoding'] = 'gzip, deflate, br, zstd';
     newHeaders['Accept-language'] = 'en-US,en;q=0.9';
@@ -330,6 +454,9 @@ export const setupHeaderHandlers = () => {
       case 'HIT':
         setHeaderForHit();
         break;
+      case 'SUNWIN':
+        setHeaderForHit();
+        break;
       case 'LUCKY88':
         setHeaderForLucky88();
         break;
@@ -350,6 +477,18 @@ export const setupHeaderHandlers = () => {
         break;
       case 'UK88':
         setHeaderForUk88();
+        break;
+      case 'TA88':
+        setHeaderForTa88();
+        break;
+      case 'MU99':
+        setHeaderForMu99();
+        break;
+      case 'ONE88':
+        setHeaderForOne88();
+        break;
+      case 'ZBET':
+        setHeaderForZbet();
         break;
       case '11BET':
         setHeaderFor11BET();

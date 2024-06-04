@@ -499,6 +499,56 @@ const loginSv88 = async (
     return null;
   }
 };
+const loginOne88 = async (
+  botInfo: any,
+  accountType: string,
+  updateAccount: any,
+  loginUrl: string
+) => {
+  const credentials = {
+    username: botInfo.username,
+    password: botInfo.password,
+  };
+  const headers = {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'Sec-ch-ua': `"Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"`,
+    'User-agent':
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0',
+    Origin: 'https://one88.com',
+    Referer: 'https://one88.com',
+    Cookie:
+      'device=desktop; os=desktop; source=one88.com; saleAdvised=null; aff_id=null; utm_source=null; utm_medium=null; utm_campaign=null; utm_term=null; utm_content=null',
+  };
+  try {
+    let response;
+    if (botInfo.isUseProxy) {
+      response = await fetchViaProxy(credentials, botInfo, headers, loginUrl);
+    } else {
+      response = await axios.post(loginUrl, credentials);
+    }
+    if (response.data.code === 200) {
+      const data = response.data.data[0];
+      console.log('data', data);
+      updateAccount(accountType, botInfo.username, {
+        main_balance: response.data.message,
+        token: data.tp_token,
+        fullname: data.fullname,
+      });
+    } else {
+      updateAccount(accountType, botInfo.username, {
+        main_balance: response.data.message,
+      });
+    }
+    return response.data;
+  } catch (error) {
+    console.error(
+      'Login failed:',
+      axios.isAxiosError(error) ? error.response?.data : error
+    );
+    return null;
+  }
+};
 const loginUk88 = async (
   botInfo: any,
   accountType: string,
@@ -519,6 +569,156 @@ const loginUk88 = async (
     Referer: 'https://uk88.com',
     Cookie:
       'device=desktop; os=desktop; source=uk88.com; saleAdvised=null; aff_id=null; utm_source=null; utm_medium=null; utm_campaign=null; utm_term=null; utm_content=null',
+  };
+  try {
+    let response;
+    if (botInfo.isUseProxy) {
+      response = await fetchViaProxy(credentials, botInfo, headers, loginUrl);
+    } else {
+      response = await axios.post(loginUrl, credentials);
+    }
+    if (response.data.code === 200) {
+      const data = response.data.data[0];
+      console.log('data', data);
+      updateAccount(accountType, botInfo.username, {
+        main_balance: response.data.message,
+        token: data.tp_token,
+        fullname: data.fullname,
+      });
+    } else {
+      updateAccount(accountType, botInfo.username, {
+        main_balance: response.data.message,
+      });
+    }
+    return response.data;
+  } catch (error) {
+    console.error(
+      'Login failed:',
+      axios.isAxiosError(error) ? error.response?.data : error
+    );
+    return null;
+  }
+};
+const loginTa88 = async (
+  botInfo: any,
+  accountType: string,
+  updateAccount: any,
+  loginUrl: string
+) => {
+  const credentials = {
+    username: botInfo.username,
+    password: botInfo.password,
+  };
+  const headers = {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'Sec-ch-ua': `"Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"`,
+    'User-agent':
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0',
+    Origin: 'https://ta88.com',
+    Referer: 'https://ta88.com',
+    Cookie:
+      'device=desktop; os=desktop; source=ta88.com; saleAdvised=null; aff_id=null; utm_source=null; utm_medium=null; utm_campaign=null; utm_term=null; utm_content=null',
+  };
+  try {
+    let response;
+    if (botInfo.isUseProxy) {
+      response = await fetchViaProxy(credentials, botInfo, headers, loginUrl);
+    } else {
+      response = await axios.post(loginUrl, credentials);
+    }
+    if (response.data.code === 200) {
+      const data = response.data.data[0];
+      console.log('data', data);
+      updateAccount(accountType, botInfo.username, {
+        main_balance: response.data.message,
+        token: data.tp_token,
+        fullname: data.fullname,
+      });
+    } else {
+      updateAccount(accountType, botInfo.username, {
+        main_balance: response.data.message,
+      });
+    }
+    return response.data;
+  } catch (error) {
+    console.error(
+      'Login failed:',
+      axios.isAxiosError(error) ? error.response?.data : error
+    );
+    return null;
+  }
+};
+const loginMu99 = async (
+  botInfo: any,
+  accountType: string,
+  updateAccount: any,
+  loginUrl: string
+) => {
+  const credentials = {
+    username: botInfo.username,
+    password: botInfo.password,
+  };
+  const headers = {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'Sec-ch-ua': `"Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"`,
+    'User-agent':
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0',
+    Origin: 'https://mu99.vin',
+    Referer: 'https://mu99.vin',
+    Cookie:
+      'device=desktop; os=desktop; source=mu99.vin; saleAdvised=null; aff_id=null; utm_source=null; utm_medium=null; utm_campaign=null; utm_term=null; utm_content=null',
+  };
+  try {
+    let response;
+    if (botInfo.isUseProxy) {
+      response = await fetchViaProxy(credentials, botInfo, headers, loginUrl);
+    } else {
+      response = await axios.post(loginUrl, credentials);
+    }
+    if (response.data.code === 200) {
+      const data = response.data.data[0];
+      console.log('data', data);
+      updateAccount(accountType, botInfo.username, {
+        main_balance: response.data.message,
+        token: data.tp_token,
+        fullname: data.fullname,
+      });
+    } else {
+      updateAccount(accountType, botInfo.username, {
+        main_balance: response.data.message,
+      });
+    }
+    return response.data;
+  } catch (error) {
+    console.error(
+      'Login failed:',
+      axios.isAxiosError(error) ? error.response?.data : error
+    );
+    return null;
+  }
+};
+const loginZbet = async (
+  botInfo: any,
+  accountType: string,
+  updateAccount: any,
+  loginUrl: string
+) => {
+  const credentials = {
+    username: botInfo.username,
+    password: botInfo.password,
+  };
+  const headers = {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'Sec-ch-ua': `"Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"`,
+    'User-agent':
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0',
+    Origin: 'https://zbet.com',
+    Referer: 'https://zbet.com',
+    Cookie:
+      'device=desktop; os=desktop; source=zbet.com; saleAdvised=null; aff_id=null; utm_source=null; utm_medium=null; utm_campaign=null; utm_term=null; utm_content=null',
   };
   try {
     let response;
@@ -637,6 +837,30 @@ const fetchToken = async (botInfo: any) => {
     console.error('There was a problem with the fetch operation:', error);
   }
 };
+const getCaptcha = async (sessionId: string, loginUrl: string) => {
+  const url = `${loginUrl}?command=getCaptcha&sessionId=${sessionId}`;
+
+  const headers = {
+    Accept: '*/*',
+    'Accept-Language': 'en-US,en;q=0.9',
+    'Content-Type': 'application/json',
+    Origin: 'https://web.sunwin.uk',
+    Referer: 'https://web.sunwin.uk/',
+    'User-Agent':
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0',
+  };
+
+  try {
+    const response = await axios.get(url, { headers });
+    return response.data;
+  } catch (error) {
+    console.error(
+      'Error fetching captcha:',
+      axios.isAxiosError(error) ? error.response?.data : error
+    );
+    return null;
+  }
+};
 const login = async (bot: any, accountType: string, updateAccount: any) => {
   await window.backend.sendMessage('update-header', bot.fromSite);
   switch (bot.fromSite) {
@@ -703,6 +927,27 @@ const login = async (bot: any, accountType: string, updateAccount: any) => {
         updateAccount,
         'https://uk88.com/api/v1/login'
       );
+    case 'TA88':
+      return await loginUk88(
+        bot,
+        accountType,
+        updateAccount,
+        'https://ta88.com/api/v1/login'
+      );
+    case 'ONE88':
+      return await loginOne88(
+        bot,
+        accountType,
+        updateAccount,
+        'https://one88.com/api/v1/login'
+      );
+    case 'ZBET':
+      return await loginZbet(
+        bot,
+        accountType,
+        updateAccount,
+        'https://zbet.com/api-v1/v1/login'
+      );
     case '11BET':
       return await login11bet(
         bot,
@@ -710,9 +955,16 @@ const login = async (bot: any, accountType: string, updateAccount: any) => {
         updateAccount,
         'https://11bet.uk/api/v1/login'
       );
+    case 'MU99':
+      return await loginMu99(
+        bot,
+        accountType,
+        updateAccount,
+        'https://api.mu9.vin/users/login'
+      );
     default:
       throw new Error(`Unsupported target site: ${bot.targetSite}`);
   }
 };
 
-export { fetchToken, login };
+export { fetchToken, getCaptcha, login };

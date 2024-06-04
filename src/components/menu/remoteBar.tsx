@@ -25,6 +25,7 @@ import CreateAccount from '../model/createAccount';
 import { useTheme } from '../provider/theme-provider';
 import { FindRoomSheet } from '../sheet/findSheet';
 import CardType from './cardType';
+import TargetSite from './targetSite';
 
 const RemoteBar: React.FC<any> = ({
   cardDeck,
@@ -124,7 +125,7 @@ const RemoteBar: React.FC<any> = ({
               </Label>
             </div>
           )}
-          {/* <TargetSite /> */}
+          <TargetSite />
           <HandType cardDeck={cardDeck} setCardDeck={setCardDeck} />
           <RoomType />
           <CardType />

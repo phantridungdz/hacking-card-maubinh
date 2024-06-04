@@ -178,6 +178,9 @@ export const setupAccountHandlers = async (
         case 'HIT':
           targetSite = hitUrl;
           break;
+        case 'SUNWIN':
+          targetSite = 'hitUrl';
+          break;
         case 'LUCKY88':
           if (account.targetSite === 'HIT') {
             targetSite =
@@ -243,6 +246,19 @@ export const setupAccountHandlers = async (
               '&gameid=vgcg_4&ru=https%3A%2F%xo88.us%2Fgame-bai';
           }
           break;
+        case 'ZBET':
+          if (account.targetSite === 'HIT') {
+            targetSite =
+              'https://games.hickcorps.com/?brand=zbet&token=' +
+              account.token +
+              '&gameid=vgcg_4&ru=https%3A%2F%2Fzbet.com%2Fgamebai';
+          } else {
+            targetSite =
+              'https://games.prorichvip.com/?brand=zbet&token=' +
+              account.token +
+              '&gameid=vgcg_4&ru=https%3A%2F%2Fzbet.com%2Fgame-bai';
+          }
+          break;
         case 'UK88':
           if (account.targetSite === 'HIT') {
             targetSite =
@@ -254,6 +270,45 @@ export const setupAccountHandlers = async (
               'https://games.prorichvip.com/?brand=uk88&token=' +
               account.token +
               '&gameid=vgcg_4&ru=https%3A%2F%2Fuk88.com%2Fgame-bai';
+          }
+          break;
+        case 'MU99':
+          if (account.targetSite === 'HIT') {
+            targetSite =
+              'https://games.gnightfast.net/?brand=mu99&token=' +
+              account.token +
+              '&gameid=vgcg_4&ru=https%3A%2F%2Fmu99.vin%2Fgame-bai';
+          } else {
+            targetSite =
+              'https://games.prorichvip.com/?brand=mu99&token=' +
+              account.token +
+              '&gameid=vgcg_4&ru=https%3A%2F%2Fmu99.vin%2Fgame-bai';
+          }
+          break;
+        case 'TA88':
+          if (account.targetSite === 'HIT') {
+            targetSite =
+              'https://games.gnightfast.net/?brand=ta88&token=' +
+              account.token +
+              '&gameid=vgcg_4&ru=https%3A%2F%ta88.com%2Fgame-bai';
+          } else {
+            targetSite =
+              'https://games.prorichvip.com/?brand=ta88&token=' +
+              account.token +
+              '&gameid=vgcg_4&ru=https%3A%2F%2Fta88.com%2Fgame-bai';
+          }
+          break;
+        case 'ONE88':
+          if (account.targetSite === 'HIT') {
+            targetSite =
+              'https://games.gnightfast.net/?brand=one88&token=' +
+              account.token +
+              '&gameid=vgcg_4&ru=https%3A%2F%2Fone88.com%2Flobby%2Fgame-bai';
+          } else {
+            targetSite =
+              'https://games.prorichvip.com/?brand=one88&token=' +
+              account.token +
+              '&gameid=vgcg_4&ru=';
           }
           break;
         case '11BET':

@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from '../../components/ui/dropdown-menu';
 import { generateAccount } from '../../lib/account';
-import { fromHitSites, fromRikSites } from '../../lib/config';
+import { fromHitSites, fromRikSites, fromSunWinSites } from '../../lib/config';
 import { supabase } from '../../lib/supabase';
 import useAccountStore from '../../store/accountStore';
 import useGameConfigStore from '../../store/gameConfigStore';
@@ -88,7 +88,9 @@ const AddAccount: React.FC<any> = ({
   useEffect(() => {
     currentTargetSite === 'RIK'
       ? setFromSites(fromRikSites)
-      : setFromSites(fromHitSites);
+      : currentTargetSite === 'HIT'
+      ? setFromSites(fromHitSites)
+      : setFromSites(fromSunWinSites);
     setFromSite(currentTargetSite);
   }, [currentTargetSite]);
   return (

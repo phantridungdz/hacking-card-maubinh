@@ -227,6 +227,10 @@ export const TerminalBoard: React.FC<any> = ({ main }) => {
           main.fromSite === 'XO88' ||
           main.fromSite === 'FIVE88' ||
           main.fromSite === 'UK88' ||
+          main.fromSite === 'TA88' ||
+          main.fromSite === 'ONE88' ||
+          main.fromSite === 'MU99' ||
+          main.fromSite === 'ZBET' ||
           main.fromSite === '11BET'
         ) {
           window.backend.sendMessage(
