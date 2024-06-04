@@ -7,7 +7,6 @@ import { setupAccountHandlers } from './handler/accountsHandlers';
 import { setupArrangeCardHandlers } from './handler/arrangeCardHandlers';
 import { setupFileHandlers } from './handler/fileHandlers';
 import { setupHeaderHandlers } from './handler/headerHandlers';
-import { setupLoginHitHandlers } from './handler/loginHitPupHandler';
 import { setupProxyHandler } from './handler/proxyHandler';
 import { setupProxyWebsocketHandler } from './handler/proxyWebsocketHandler';
 import { setupReadHardwareHandlers } from './handler/readHardwareHandler';
@@ -89,11 +88,9 @@ const createWindow = async () => {
 
   setInterval(detectDebugger, 20000);
 
-  // Listen for the 'devtools-closed' event
-  mainWindow.webContents.on('devtools-closed', () => {
-    console.log('DevTools closed');
-    // mainWindow.webContents.send('devtools-status', false);
-  });
+  // mainWindow.webContents.on('devtools-closed', () => {
+  //   console.log('DevTools closed');
+  // });
 
   mainWindow.on('closed', () => {
     mainWindow = null;
@@ -113,7 +110,6 @@ const createWindow = async () => {
   setupArrangeCardHandlers();
   setupProxyWebsocketHandler();
   setupHeaderHandlers();
-  setupLoginHitHandlers();
   setupProxyHandler();
 
   new AppUpdater();

@@ -445,8 +445,14 @@ const setContentTypeTextPlain = () => {
   });
 };
 
+let currentHeader: string;
+
 export const setupHeaderHandlers = () => {
   const changeHeader = (target: string) => {
+    if (currentHeader === target) {
+      return;
+    }
+    currentHeader = target;
     switch (target) {
       case 'RIK':
         setHeaderForRik();
@@ -455,7 +461,7 @@ export const setupHeaderHandlers = () => {
         setHeaderForHit();
         break;
       case 'SUNWIN':
-        setHeaderForHit();
+        setHeaderForSunWin();
         break;
       case 'LUCKY88':
         setHeaderForLucky88();

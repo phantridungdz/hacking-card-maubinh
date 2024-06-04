@@ -29,16 +29,6 @@ const getFg = (botInfo: any) => {
     );
   });
 };
-const loginHitBrowser = (botInfo: any) => {
-  return new Promise((resolve) => {
-    const handleGetFG = (data: any) => {
-      resolve(data);
-    };
-    window.backend.on('login-hit', handleGetFG);
-
-    window.backend.sendMessage('login-hit', botInfo);
-  });
-};
 const fetchViaProxy = async (
   data: any,
   botInfo: any,
@@ -331,7 +321,6 @@ const loginFive88 = async (
     return null;
   }
 };
-
 const loginMay88 = async (
   botInfo: any,
   accountType: string,
@@ -911,7 +900,7 @@ const login = async (bot: any, accountType: string, updateAccount: any) => {
         'https://uk88.com/api/v1/login'
       );
     case 'TA88':
-      return await loginUk88(
+      return await loginTa88(
         bot,
         accountType,
         updateAccount,
@@ -940,6 +929,13 @@ const login = async (bot: any, accountType: string, updateAccount: any) => {
       );
     case 'MU99':
       return await loginMu99(
+        bot,
+        accountType,
+        updateAccount,
+        'https://api.mu9.vin/users/login'
+      );
+    case 'SUNWIN':
+      return await loginSunWin(
         bot,
         accountType,
         updateAccount,
