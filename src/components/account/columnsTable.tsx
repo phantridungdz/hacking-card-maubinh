@@ -5,6 +5,7 @@ import axios from 'axios';
 import {
   ArrowUpDown,
   Check,
+  CheckSquare,
   DollarSign,
   MapPin,
   MoreHorizontal,
@@ -35,6 +36,7 @@ export const getAccountTableColumns = (
   removeProxy: any,
   setDialogDepositOpen: any,
   setDialogProxyOpen: any,
+  setDialogCaptchaOpen: any,
   setRowSelected: any,
   accounts: any[],
   toast: any,
@@ -177,9 +179,24 @@ export const getAccountTableColumns = (
       },
 
       cell: ({ row }) => {
-        const rowData = row.original;
+        const rowData = row.original as any;
 
-        return (
+        return rowData.fromSite === 'SUNWIN' ? (
+          <div className="flex flex-row justify-center items-center">
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              onClick={() => {
+                setDialogCaptchaOpen(true);
+                setRowSelected(rowData);
+              }}
+            >
+              <CheckSquare className="w-3.5 h-3.5" />
+              Login
+            </Button>
+          </div>
+        ) : (
           <div className="flex flex-row justify-center items-center">
             {row.getValue('main_balance') ===
             'Tài khoản bị khoá vì hành vi lừa đảo, trục lợi cá nhân.'

@@ -17,6 +17,7 @@ import useAccountStore from '../../store/accountStore';
 import useGameConfigStore from '../../store/gameConfigStore';
 import AddAccount from '../model/addAccount';
 import AddProxy from '../model/addProxy';
+import CaptCha from '../model/captcha';
 import Deposit from '../model/deposit';
 import { useToast } from '../toast/use-toast';
 import { Input } from '../ui/input';
@@ -40,6 +41,7 @@ export const AccountTable: React.FC<any> = ({ accountType }) => {
   const [dataTable, setDataTable] = useState<any>([]);
   const [isDialogAddAccountOpen, setDialogAddAccountOpen] = useState(false);
   const [isDialogDepositOpen, setDialogDepositOpen] = useState(false);
+  const [isDialogCaptchaOpen, setDialogCaptchaOpen] = useState(false);
   const [isDialogProxyOpen, setDialogProxyOpen] = useState(false);
   const [rowSelected, setRowSelected] = useState<any>();
   const [readedFile, setReadedFile] = useState(false);
@@ -138,6 +140,7 @@ export const AccountTable: React.FC<any> = ({ accountType }) => {
     removeProxy,
     setDialogDepositOpen,
     setDialogProxyOpen,
+    setDialogCaptchaOpen,
     setRowSelected,
     accounts,
     toast,
@@ -239,6 +242,12 @@ export const AccountTable: React.FC<any> = ({ accountType }) => {
       <Deposit
         isDialogDepositOpen={isDialogDepositOpen}
         setDialogDepositOpen={setDialogDepositOpen}
+        rowSelected={rowSelected}
+        accountType={accountType}
+      />
+      <CaptCha
+        isDialogCaptchaOpen={isDialogCaptchaOpen}
+        setDialogCaptchaOpen={setDialogCaptchaOpen}
         rowSelected={rowSelected}
         accountType={accountType}
       />

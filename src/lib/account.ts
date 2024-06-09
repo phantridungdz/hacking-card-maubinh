@@ -28,7 +28,11 @@ const readValidAccount = (input: string): any => {
           session_id,
           token,
           fromSite,
+          info,
+          signature,
+          refreshToken,
         ] = line.trim().split('|');
+        console.log('info', info);
         return {
           username,
           password,
@@ -51,6 +55,9 @@ const readValidAccount = (input: string): any => {
           token,
           fromSite,
           main_balance: parseInt(main_balance),
+          info: info !== 'undefined' ? JSON.parse(info) : undefined,
+          signature: signature,
+          refreshToken: refreshToken,
         };
       } else {
         return;
@@ -130,6 +137,9 @@ const generateAccount = (account: any) => {
     targetSite: targetSite,
     fullname: account.fullname,
     fromSite: fromSite,
+    info: account.info,
+    signature: account.signature,
+    refreshToken: account.refreshToken,
   };
 };
 

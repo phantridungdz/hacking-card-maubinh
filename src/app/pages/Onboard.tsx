@@ -12,7 +12,13 @@ export const Onboard = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (localStorage.getItem('license-key')) {
+    if (process.env.NODE_ENV === 'development') {
+      navigate('/app');
+    }
+    if (
+      process.env.NODE_ENV !== 'development' &&
+      localStorage.getItem('license-key')
+    ) {
       validateLicense(setLoading, toast, navigate);
     }
   }, []);

@@ -3,8 +3,11 @@ import { useEffect } from 'react';
 import useBotRoomStore from '../../store/botRoomStore';
 import useGameStore from '../../store/gameStore';
 import { BotController } from './botController';
+import { BotSunController } from './botSunController';
 import { HostController } from './hostController';
+import { HostSunController } from './hostSunController';
 import { WaiterController } from './waiterController';
+import { WaiterSunController } from './waiterSunController';
 
 export const BotRoomController: React.FC<any> = ({}) => {
   const { bots, botsInLobby, botsInRoom, botRoomStatus, roomID, updateStatus } =
@@ -50,15 +53,35 @@ export const BotRoomController: React.FC<any> = ({}) => {
       </div>
       <div className="flex flex-col gap-2">
         {bots &&
-          bots.map((bot: any, index: any) =>
-            bot.role == 'host' ? (
-              <HostController key={index} bot={bot} roomID={roomID} />
-            ) : bot.role == 'guest' ? (
-              <BotController key={index} bot={bot} roomID={roomID} />
-            ) : (
-              <WaiterController key={index} bot={bot} roomID={roomID} />
-            )
-          )}
+          bots.map((bot: any, index: any) => {
+            if (bot.role === 'host') {
+              if (bot.targetSite !== 'SUNWIN') {
+                return <HostController key={index} bot={bot} roomID={roomID} />;
+              } else {
+                return (
+                  <HostSunController key={index} bot={bot} roomID={roomID} />
+                );
+              }
+            } else if (bot.role === 'guest') {
+              if (bot.targetSite !== 'SUNWIN') {
+                return <BotController key={index} bot={bot} roomID={roomID} />;
+              } else {
+                return (
+                  <BotSunController key={index} bot={bot} roomID={roomID} />
+                );
+              }
+            } else {
+              if (bot.targetSite !== 'SUNWIN') {
+                return (
+                  <WaiterController key={index} bot={bot} roomID={roomID} />
+                );
+              } else {
+                return (
+                  <WaiterSunController key={index} bot={bot} roomID={roomID} />
+                );
+              }
+            }
+          })}
       </div>
     </fieldset>
   );

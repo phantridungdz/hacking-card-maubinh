@@ -2,7 +2,9 @@ import { Gamepad, Home } from 'lucide-react';
 import { useEffect } from 'react';
 import useSubRoomStore from '../../store/subRoomStore';
 import { HostSubController } from './hostSubController';
+import { HostSubSunController } from './hostSubSunController';
 import { SubController } from './subController';
+import { SubSunController } from './subSunController';
 
 export const SubRoomController: React.FC<any> = ({}) => {
   const { subs, subsInLobby, subsInRoom, subRoomStatus, roomID, updateStatus } =
@@ -41,13 +43,27 @@ export const SubRoomController: React.FC<any> = ({}) => {
       </div>
       <div className="flex flex-col gap-2">
         {subs &&
-          subs.map((sub: any, index: any) =>
-            sub.role == 'host' ? (
-              <HostSubController key={index} sub={sub} roomID={roomID} />
-            ) : (
-              <SubController key={index} sub={sub} roomID={roomID} />
-            )
-          )}
+          subs.map((sub: any, index: any) => {
+            if (sub.role === 'host') {
+              if (sub.targetSite !== 'SUNWIN') {
+                return (
+                  <HostSubController key={index} sub={sub} roomID={roomID} />
+                );
+              } else {
+                return (
+                  <HostSubSunController key={index} sub={sub} roomID={roomID} />
+                );
+              }
+            } else if (sub.role === 'guest') {
+              if (sub.targetSite !== 'SUNWIN') {
+                return <SubController key={index} sub={sub} roomID={roomID} />;
+              } else {
+                return (
+                  <SubSunController key={index} sub={sub} roomID={roomID} />
+                );
+              }
+            }
+          })}
       </div>
     </fieldset>
   );

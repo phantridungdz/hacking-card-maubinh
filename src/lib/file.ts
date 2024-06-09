@@ -16,14 +16,25 @@ const updateFile = async (accountsUpdate: any, accountType: string) => {
         token: string;
         fromSite: string;
         main_balance: any;
-      }) =>
-        `${account.username}|${account.password}|${account.fullname}|${
+        info: any;
+        signature: string;
+        refreshToken: string;
+      }) => {
+        console.log(
+          'JSON.stringify(account.info)',
+          JSON.stringify(account.info)
+        );
+
+        return `${account.username}|${account.password}|${account.fullname}|${
           account.main_balance ? account.main_balance.toString() : 'undefined'
         }|${account.isSelected}|${account.proxy}|${account.port}|${
           account.userProxy
         }|${account.passProxy}|${account.isUseProxy}|${account.targetSite}|${
           account.session_id
-        }|${account.token}|${account.fromSite}|`
+        }|${account.token}|${account.fromSite}|${JSON.stringify(
+          account.info
+        )}|${account.signature}|${account.refreshToken}|`;
+      }
     )
     .join('\n');
   window.backend.sendMessage(

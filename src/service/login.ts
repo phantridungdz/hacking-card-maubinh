@@ -1,4 +1,5 @@
 import axios from 'axios';
+import CryptoJS from 'crypto-js';
 import { now } from 'lodash';
 import { generateRandomHex, getRandomOS } from '../lib/utils';
 
@@ -521,6 +522,77 @@ const loginOne88 = async (
     return null;
   }
 };
+export const loginSunWin = async (
+  botInfo: any,
+  accountType: string,
+  updateAccount: any,
+  loginUrl: string,
+  answer: string,
+  sessionId: string
+) => {
+  var platform = 0x4;
+  var finalHash = botInfo.username;
+  finalHash += botInfo.password;
+  finalHash += '4';
+  finalHash += '03BPiRbkirq15NsunGJ0';
+  finalHash += 'kUHH2za4EuRjWGPk';
+
+  finalHash = CryptoJS.MD5(finalHash).toString();
+  const credentials = {
+    advId: '',
+    answer: answer,
+    brand: 'sun.win',
+    command: 'loginWebHash',
+    deviceId: '03BPiRbkirq15NsunGJ0',
+    hash: finalHash,
+    platformId: 4,
+    sessionId: sessionId,
+    username: botInfo.username,
+    password: botInfo.password,
+  };
+  const headers = {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'Sec-ch-ua': `"Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"`,
+    'User-agent':
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0',
+    Origin: 'https://one88.com',
+    Referer: 'https://one88.com',
+    Cookie:
+      'device=desktop; os=desktop; source=one88.com; saleAdvised=null; aff_id=null; utm_source=null; utm_medium=null; utm_campaign=null; utm_term=null; utm_content=null',
+  };
+  try {
+    let response;
+    if (botInfo.isUseProxy) {
+      response = await fetchViaProxy(credentials, botInfo, headers, loginUrl);
+    } else {
+      response = await axios.post(loginUrl, credentials);
+    }
+    if (response.data.data.message === 'Thành công') {
+      const data = response.data.data;
+
+      updateAccount(accountType, botInfo.username, {
+        main_balance: response.data.data.message,
+        token: data.accessToken,
+        fullname: data.info.username,
+        info: data.info,
+        signature: data.signature,
+        refreshToken: data.refreshToken,
+      });
+    } else {
+      updateAccount(accountType, botInfo.username, {
+        main_balance: response.data.data.message,
+      });
+    }
+    return response.data;
+  } catch (error) {
+    console.error(
+      'Login failed:',
+      axios.isAxiosError(error) ? error.response?.data : error
+    );
+    return null;
+  }
+};
 const loginUk88 = async (
   botInfo: any,
   accountType: string,
@@ -810,20 +882,11 @@ const fetchToken = async (botInfo: any) => {
   }
 };
 const getCaptcha = async (sessionId: string, loginUrl: string) => {
+  await window.backend.sendMessage('update-header', 'SUNWIN');
   const url = `${loginUrl}?command=getCaptcha&sessionId=${sessionId}`;
 
-  const headers = {
-    Accept: '*/*',
-    'Accept-Language': 'en-US,en;q=0.9',
-    'Content-Type': 'application/json',
-    Origin: 'https://web.sunwin.uk',
-    Referer: 'https://web.sunwin.uk/',
-    'User-Agent':
-      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0',
-  };
-
   try {
-    const response = await axios.get(url, { headers });
+    const response = await axios.get(url);
     return response.data;
   } catch (error) {
     console.error(
@@ -833,6 +896,7 @@ const getCaptcha = async (sessionId: string, loginUrl: string) => {
     return null;
   }
 };
+
 const login = async (bot: any, accountType: string, updateAccount: any) => {
   await window.backend.sendMessage('update-header', bot.fromSite);
   switch (bot.fromSite) {
@@ -934,13 +998,13 @@ const login = async (bot: any, accountType: string, updateAccount: any) => {
         updateAccount,
         'https://api.mu9.vin/users/login'
       );
-    case 'SUNWIN':
-      return await loginSunWin(
-        bot,
-        accountType,
-        updateAccount,
-        'https://api.mu9.vin/users/login'
-      );
+    // case 'SUNWIN':
+    //   return await loginSunWin(
+    //     bot,
+    //     accountType,
+    //     updateAccount,
+    //     'https://api.mu9.vin/users/login'
+    //   );
     default:
       throw new Error(`Unsupported target site: ${bot.targetSite}`);
   }
