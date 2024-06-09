@@ -96,11 +96,9 @@ export default function useHostSubSunWebSocket(sub: any, roomID: number) {
             },
           ])
         );
-        await setSocketUrl(wsTargetUrl);
+        await setSocketUrl('wss://websocket.azhkthg1.net/websocket2');
       }
       await setShouldConnect(true);
-      addSubValid(fullName);
-      setFullName(fullName);
     } catch (error) {
       console.error('Error in startSocketOn:', error);
       toast({
@@ -168,6 +166,7 @@ export default function useHostSubSunWebSocket(sub: any, roomID: number) {
         }
         if (message[0] === 1) {
           if (message[1] === true && message[2] === 0) {
+            sendMessage(`[7,"Simms",1,0]`);
             sendMessage(`[6,"Simms","channelPlugin",{"cmd":310}]`);
             if (!joinedLobby) {
               joinLobby(sub.username);
@@ -199,6 +198,10 @@ export default function useHostSubSunWebSocket(sub: any, roomID: number) {
           }
         }
         if (message[0] === 5) {
+          if (message[1].dn) {
+            addSubValid(message[1].dn);
+            setFullName(message[1].dn);
+          }
           //Detect-user-join
           if (message[1].cmd === 200) {
             if (!subsValid.includes(message[1].p.dn)) {
@@ -239,7 +242,7 @@ export default function useHostSubSunWebSocket(sub: any, roomID: number) {
             setSubStart(true);
             setSubStart(false);
             setReadyToJoinStatus(true);
-            sendMessage(`[3,"Simms",${message[1].ri.rid},""]`);
+            sendMessage(`[3,"Simms",${message[1].ri.rid},"123123"]`);
           }
           if (message[1].cmd === 308 && message[1].mgs) {
             toast({
@@ -325,23 +328,20 @@ export default function useHostSubSunWebSocket(sub: any, roomID: number) {
   }, [lastMessage]);
 
   useEffect(() => {
-    if (
-      (isReadyToFind && isReadyToCreate && !createdRoom) ||
-      (isBotStart && !createdRoom)
-    ) {
+    if (isReadyToFind && isReadyToCreate && !createdRoom) {
       if (!isFoundedRoom) {
         // sendMessage(
         //   `[6,"Simms","channelPlugin",{"cmd":308,"aid":1,"gid":4,"b":${roomType},"Mu":4,"iJ":true,"inc":false,"pwd":""}]`
         // );
         sendMessage(
-          `[6,"Simms","channelPlugin",{"cmd":308,"gid":4,"aid":1,"b":${roomType},"Mu":4,"pwd":"","iJ":true}]`
+          `[6,"Simms","channelPlugin",{"cmd":308,"gid":4,"aid":1,"b":${roomType},"Mu":4,"pwd":"123123","iJ":true}]`
         );
         updateSubStatus(sub.username, 'Create Room');
         updateStatus('Create Room');
         setCreatedRoom(true);
       }
     }
-  }, [lastMessage, isReadyToCreate, isReadyToFind, isBotStart]);
+  }, [lastMessage, isReadyToCreate, isReadyToFind]);
 
   const onDisconnect = useCallback(() => {
     setSocketUrl('');

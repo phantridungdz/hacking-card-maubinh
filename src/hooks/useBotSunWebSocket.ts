@@ -93,8 +93,6 @@ export default function useBotSunWebSocket(bot: any, roomID: number) {
         await setSocketUrl(wsTargetUrl);
       }
       await setShouldConnect(true);
-      addBotValid(fullName);
-      setFullName(fullName);
     } catch (error) {
       console.error('Error in startSocketOn:', error);
       toast({
@@ -162,6 +160,7 @@ export default function useBotSunWebSocket(bot: any, roomID: number) {
         }
         if (message[0] === 1) {
           if (message[1] === true && message[2] === 0) {
+            sendMessage(`[7,"Simms",1,0]`);
             sendMessage(`[6,"Simms","channelPlugin",{"cmd":310}]`);
             if (!joinedLobby) {
               joinLobby(bot.username);
@@ -182,14 +181,6 @@ export default function useBotSunWebSocket(bot: any, roomID: number) {
               description: message[4],
             });
           }
-          //joined-room
-          if (message[1] && message[1].Mu == 4) {
-            if (!joinedRoom) {
-              joinRoom(bot.username);
-              setJoinedRoom(true);
-            }
-            // updateBotStatus(bot.username, 'Joined Room');
-          }
         }
         //Outed Room
         if (message[0] === 4) {
@@ -197,6 +188,7 @@ export default function useBotSunWebSocket(bot: any, roomID: number) {
             sendMessage(
               `[6,"Simms","channelPlugin",{"cmd":300,"gid":4,"aid":1}]`
             );
+            console.log('bot out room, ', bot.username);
             outRoom(bot.username);
             setJoinedRoom(false);
             removeBotCard();
@@ -207,6 +199,10 @@ export default function useBotSunWebSocket(bot: any, roomID: number) {
           }
         }
         if (message[0] === 5) {
+          if (message[1].dn) {
+            addBotValid(message[1].dn);
+            setFullName(message[1].dn);
+          }
           if (message[1].cmd === 5 && message[1].dn === fullName) {
             if (!botsReady.includes(bot.userName)) {
               setTimeout(() => {
@@ -229,6 +225,14 @@ export default function useBotSunWebSocket(bot: any, roomID: number) {
               sendMessage(`[4,"Simms",${roomID}]`);
             }
           }
+          //joined-room
+          if (message[1].cmd === 202 && message[1].Mu == 4) {
+            if (!joinedRoom) {
+              joinRoom(bot.username);
+              setJoinedRoom(true);
+            }
+            // updateSubStatus(sub.username, 'Joined Room');
+          }
           // //In-lobby
           // if (message[1].cmd === 300 && message[1].rs) {
           //   if (bot.status != 'In lobby') {
@@ -245,7 +249,7 @@ export default function useBotSunWebSocket(bot: any, roomID: number) {
             // sendMessage(
             //   `[6,"Simms","channelPlugin",{"cmd":"306","subi":false}]`
             // );
-            sendMessage(`["7", "Simms", 1,0]`);
+            // sendMessage(`["7", "Simms", 1,0]`);
             sendMessage(
               `[6,"Simms","channelPlugin",{"cmd":300,"gid":4,"aid":1}]`
             );
@@ -319,7 +323,7 @@ export default function useBotSunWebSocket(bot: any, roomID: number) {
 
   useEffect(() => {
     if (isReadyToJoin) {
-      sendMessage(`[3,"Simms",${roomID},"123123",true]`);
+      sendMessage(`[3,"Simms","${roomID}","123123"]`);
 
       updateBotStatus(bot.username, 'Joining Room');
     }

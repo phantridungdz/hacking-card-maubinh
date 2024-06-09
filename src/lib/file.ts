@@ -20,11 +20,6 @@ const updateFile = async (accountsUpdate: any, accountType: string) => {
         signature: string;
         refreshToken: string;
       }) => {
-        console.log(
-          'JSON.stringify(account.info)',
-          JSON.stringify(account.info)
-        );
-
         return `${account.username}|${account.password}|${account.fullname}|${
           account.main_balance ? account.main_balance.toString() : 'undefined'
         }|${account.isSelected}|${account.proxy}|${account.port}|${

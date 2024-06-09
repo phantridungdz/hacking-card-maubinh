@@ -32,7 +32,6 @@ const readValidAccount = (input: string): any => {
           signature,
           refreshToken,
         ] = line.trim().split('|');
-        console.log('info', info);
         return {
           username,
           password,

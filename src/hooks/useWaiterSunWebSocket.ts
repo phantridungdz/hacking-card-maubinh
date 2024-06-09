@@ -76,23 +76,24 @@ export default function useWaiterSunWebSocket(bot: any, roomID: number) {
         );
         await setSocketUrl('ws://localhost:4500');
       } else {
-        JSON.stringify([
-          1,
-          'Simms',
-          bot.info.username,
-          bot.password,
-          {
-            info: bot.info,
-            signature: bot.signature,
-            pid: 4,
-            subi: true,
-          },
-        ]);
+        await sendMessage(
+          JSON.stringify([
+            1,
+            'Simms',
+            bot.info.username,
+            bot.password,
+            {
+              info: bot.info,
+              signature: bot.signature,
+              pid: 4,
+              subi: true,
+            },
+          ])
+          // `[1,"Simms","${bot.info.username}","${bot.password}",{"info":"{\"ipAddress\":\"${bot.info.ipAddress}\",\"userId\":\"${bot.info.userId}\",\"username\":\"${bot.info.username}\",\"timestamp\":${bot.info.timestamp}}","signature":"${bot.signature}","pid":4,"subi":false}]`
+        );
         await setSocketUrl(wsTargetUrl);
       }
       await setShouldConnect(true);
-      addBotValid(fullName);
-      setFullName(fullName);
     } catch (error) {
       console.error('Error in startSocketOn:', error);
       toast({
@@ -160,6 +161,7 @@ export default function useWaiterSunWebSocket(bot: any, roomID: number) {
         }
         if (message[0] === 1) {
           if (message[1] === true && message[2] === 0) {
+            sendMessage(`[7,"Simms",1,0]`);
             sendMessage(`[6,"Simms","channelPlugin",{"cmd":310}]`);
             if (!joinedLobby) {
               joinLobby(bot.username);
@@ -195,8 +197,20 @@ export default function useWaiterSunWebSocket(bot: any, roomID: number) {
           if (message[1] === true && message[2] === 2 && message[4] === 11) {
             sendMessage(`[8,"Simms",${roomID},"",4]`);
           }
+          //joined-room
+          if (message[1] && message[2] == 1) {
+            if (!joinedRoom) {
+              joinRoom(bot.username);
+              setJoinedRoom(true);
+            }
+            // updateBotStatus(bot.username, 'Joined Room');
+          }
         }
         if (message[0] === 5) {
+          if (message[1].dn) {
+            addBotValid(message[1].dn);
+            setFullName(message[1].dn);
+          }
           //Detect-user-join
           if (message[1].cmd === 200) {
             if (!botsValid.includes(message[1].p.dn)) {
@@ -253,10 +267,10 @@ export default function useWaiterSunWebSocket(bot: any, roomID: number) {
                 main_balance: message[1].As.gold,
               });
             }
-            sendMessage(
-              `[6,"Simms","channelPlugin",{"cmd":"306","subi":false}]`
-            );
-            sendMessage(`["7", "Simms", "1",1]`);
+            // sendMessage(
+            //   `[6,"Simms","channelPlugin",{"cmd":"306","subi":false}]`
+            // );
+            // sendMessage(`["7", "Simms", "1",1]`);
             sendMessage(
               `[6,"Simms","channelPlugin",{"cmd":300,"aid":"1","gid":4}]`
             );
@@ -320,7 +334,7 @@ export default function useWaiterSunWebSocket(bot: any, roomID: number) {
 
   useEffect(() => {
     if (isFoundedRoom) {
-      sendMessage(`[3,"Simms",${roomID},"123123",true]`);
+      sendMessage(`[3,"Simms","${roomID}","123123"]`);
       updateBotStatus(bot.username, 'Joining Room');
     }
   }, [isFoundedRoom]);

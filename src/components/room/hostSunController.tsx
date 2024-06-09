@@ -9,9 +9,7 @@ export const HostSunController: React.FC<any> = ({ bot, roomID }) => {
     bot,
     roomID
   );
-  useEffect(() => {
-    console.log('bot', bot);
-  }, [bot]);
+  useEffect(() => {}, [bot]);
   return (
     <fieldset className=" rounded-lg border p-4 text-right">
       <legend className="-ml-1 px-1 text-sm font-medium flex gap-2 items-center">

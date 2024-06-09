@@ -129,8 +129,6 @@ export default function useHostBotSunWebSocket(bot: any, roomID: number) {
         await setSocketUrl(wsTargetUrl);
       }
       await setShouldConnect(true);
-      addBotValid(fullName);
-      setFullName(fullName);
     } catch (error) {
       console.error('Error in startSocketOn:', error);
       toast({
@@ -204,7 +202,7 @@ export default function useHostBotSunWebSocket(bot: any, roomID: number) {
         }
         if (message[0] === 1) {
           if (message[1] === true && message[2] === 0) {
-            // sendMessage(`[7,"Simms",1,0]`);
+            sendMessage(`[7,"Simms",1,0]`);
             sendMessage(`[6,"Simms","channelPlugin",{"cmd":310}]`);
             if (!joinedLobby) {
               joinLobby(bot.username);
@@ -237,6 +235,10 @@ export default function useHostBotSunWebSocket(bot: any, roomID: number) {
           }
         }
         if (message[0] === 5) {
+          if (message[1].dn) {
+            addBotValid(message[1].dn);
+            setFullName(message[1].dn);
+          }
           //Detect-user-join
           if (message[1].cmd === 200) {
             if (!botsValid.includes(message[1].p.dn)) {
@@ -257,7 +259,6 @@ export default function useHostBotSunWebSocket(bot: any, roomID: number) {
           if (message[1].cmd === 204 || message[1].cmd === 607) {
             if (isFoundedRoom && message[1].cmd === 607) {
               if (botsReady.length === 3) {
-                console.log('botsReady.length', botsReady.length);
                 updateBotStatus(bot.username, 'Sent start');
                 sendMessage(`[5,"Simms",${roomID},{"cmd":698}]`);
                 sendMessage(`[5,"Simms",${roomID},{"cmd":5}]`);
@@ -399,10 +400,7 @@ export default function useHostBotSunWebSocket(bot: any, roomID: number) {
   }, [lastMessage]);
 
   useEffect(() => {
-    if (
-      (isReadyToFind && isReadyToCreate && !createdRoom) ||
-      (isSubStart && !createdRoom)
-    ) {
+    if (isReadyToFind && isReadyToCreate && !createdRoom) {
       sendMessage(
         '[6,"Simms","channelPlugin",{"cmd":308,"gid":4,"aid":1,"b":100,"Mu":4,"pwd":"123123","iJ":true}]'
       );
@@ -410,13 +408,13 @@ export default function useHostBotSunWebSocket(bot: any, roomID: number) {
 
       updateBotStatus(bot.username, 'Create Room');
       updateStatus('Create Room');
+      console.log('createdRoom', createdRoom);
       setCreatedRoom(true);
     }
   }, [lastMessage, isReadyToCreate, isReadyToFind, isSubStart]);
   useEffect(() => {
     if (isFoundedRoom) {
       if (botsReady.length === 3) {
-        console.log('botsReady.length', botsReady.length);
         updateBotStatus(bot.username, 'Sent start');
         sendMessage(`[5,"Simms",${roomID},{"cmd":698}]`);
         sendMessage(`[5,"Simms",${roomID},{"cmd":5}]`);

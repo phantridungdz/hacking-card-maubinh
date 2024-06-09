@@ -232,7 +232,6 @@ export default function useHostWebSocket(bot: any, roomID: number) {
           if (message[1].cmd === 204 || message[1].cmd === 607) {
             if (isFoundedRoom && message[1].cmd === 607) {
               if (botsReady.length === 3) {
-                console.log('botsReady.length', botsReady.length);
                 updateBotStatus(bot.username, 'Sent start');
                 sendMessage(`[5,"Simms",${roomID},{"cmd":698}]`);
                 sendMessage(`[5,"Simms",${roomID},{"cmd":5}]`);
@@ -405,7 +404,6 @@ export default function useHostWebSocket(bot: any, roomID: number) {
   useEffect(() => {
     if (isFoundedRoom) {
       if (botsReady.length === 3) {
-        console.log('botsReady.length', botsReady.length);
         updateBotStatus(bot.username, 'Sent start');
         sendMessage(`[5,"Simms",${roomID},{"cmd":698}]`);
         sendMessage(`[5,"Simms",${roomID},{"cmd":5}]`);

@@ -89,11 +89,9 @@ export default function useSubSunWebSocket(sub: any, roomID: number) {
             },
           ])
         );
-        await setSocketUrl(wsTargetUrl);
+        await setSocketUrl('wss://websocket.azhkthg1.net/websocket2');
       }
       await setShouldConnect(true);
-      addSubValid(fullName);
-      setFullName(fullName);
     } catch (error) {
       console.error('Error in startSocketOn:', error);
       toast({
@@ -161,6 +159,7 @@ export default function useSubSunWebSocket(sub: any, roomID: number) {
         // console.log(message);
         if (message[0] === 1) {
           if (message[1] === true && message[2] === 0) {
+            sendMessage(`[7,"Simms",1,0]`);
             sendMessage(`[6,"Simms","channelPlugin",{"cmd":310}]`);
             if (!joinedLobby) {
               joinLobby(sub.username);
@@ -195,6 +194,10 @@ export default function useSubSunWebSocket(sub: any, roomID: number) {
           }
         }
         if (message[0] === 5) {
+          if (message[1].dn) {
+            addSubValid(message[1].dn);
+            setFullName(message[1].dn);
+          }
           //Detect-user-join
           if (message[1].cmd === 200) {
             if (!subsValid.includes(message[1].p.dn)) {
@@ -248,7 +251,7 @@ export default function useSubSunWebSocket(sub: any, roomID: number) {
             // sendMessage(
             //   `[6,"Simms","channelPlugin",{"cmd":"306","subi":false}]`
             // );
-            sendMessage(`["7", "Simms", 1,0]`);
+            // sendMessage(`["7", "Simms", 1,0]`);
             sendMessage(
               `[6,"Simms","channelPlugin",{"cmd":300,"gid":4,"aid":1}]`
             );
@@ -317,7 +320,7 @@ export default function useSubSunWebSocket(sub: any, roomID: number) {
 
   useEffect(() => {
     if (isReadyToJoin) {
-      sendMessage(`[3,"Simms",${roomID},"",true]`);
+      sendMessage(`[3,"Simms",${roomID},"123123"]`);
 
       updateSubStatus(sub.username, 'Joining Room');
     }

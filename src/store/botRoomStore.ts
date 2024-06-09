@@ -20,9 +20,16 @@ const useBotRoomStore = create<any>(
           bots: [...state.bots, { ...bot, role, status: 'idle' }],
         })),
       addBotValid: (fullname: string) =>
-        set((state: { botsValid: string[] }) => ({
-          botsValid: [...state.botsValid, fullname],
-        })),
+        set((state: { botsValid: string[]; bots: any[] }) => {
+          const isAlreadyInBots = state.bots.some(
+            (bot) => bot.username === fullname
+          );
+          return {
+            botsValid: isAlreadyInBots
+              ? state.botsValid
+              : [...state.botsValid, fullname],
+          };
+        }),
       addBotReady: (botUsername: string) =>
         set((state: { botsReady: string[] }) => ({
           botsReady: state.botsReady.includes(botUsername)
