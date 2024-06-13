@@ -1,5 +1,6 @@
 import {
   Bot,
+  Expand,
   Loader2,
   LogIn,
   Moon,
@@ -24,6 +25,7 @@ import useSubRoomStore from '../../store/subRoomStore';
 import CreateAccount from '../model/createAccount';
 import { useTheme } from '../provider/theme-provider';
 import { FindRoomSheet } from '../sheet/findSheet';
+import { Toggle } from '../ui/toggle';
 import CardType from './cardType';
 import TargetSite from './targetSite';
 
@@ -45,6 +47,8 @@ const RemoteBar: React.FC<any> = ({
     isLogining,
     setIsLogining,
     setFoundedRoom,
+    setFlexCard,
+    flexCard,
   } = useGameStore();
   const { clearAllStatesBot } = useBotRoomStore();
   const { clearAllStatesSub } = useSubRoomStore();
@@ -137,6 +141,15 @@ const RemoteBar: React.FC<any> = ({
                 <Sun onClick={() => setTheme('light')} />
               )}
             </Button>
+          </div>
+          <div className="h-full w-full rounded-[5px] flex justify-center items-center border cursor-pointer">
+            <Toggle
+              pressed={flexCard}
+              onPressedChange={setFlexCard}
+              className="p-[5px]"
+            >
+              <Expand className="h-3.5 w-3.5" />
+            </Toggle>
           </div>
         </div>
 

@@ -192,6 +192,9 @@ export default function useBotWebSocket(bot: any, roomID: number) {
               }, 100);
             }
           }
+          if (message[1].cmd === 607 && message[1].T === 7000) {
+            sendMessage(`[5,"Simms",${roomID},{"cmd":5}]`);
+          }
           //send-Ready
           if (message[1].cmd === 204 || message[1].cmd === 203) {
             // updateBotStatus(bot.username, 'Sent ready');

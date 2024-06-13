@@ -17,6 +17,7 @@ const useGameStore = create<any>(
       mainRoomID: null,
       isMainJoin: false,
       isLogining: false,
+      flexCard: false,
       roomType: 100,
       activeGame: 0,
       mainCard: [],
@@ -48,6 +49,10 @@ const useGameStore = create<any>(
       setMainCard: (card: boolean) =>
         set(() => ({
           mainCard: card,
+        })),
+      setFlexCard: (value: boolean) =>
+        set(() => ({
+          flexCard: value,
         })),
       setActiveGame: (index: number) =>
         set(() => ({

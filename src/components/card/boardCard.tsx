@@ -7,7 +7,7 @@ import { Label } from '../ui/label';
 import { TableCell } from '../ui/table';
 
 const BoardCard: React.FC<any> = ({ indexProps, cards, numPlayers }) => {
-  const { activeGame } = useGameStore();
+  const { activeGame, flexCard } = useGameStore();
 
   const id = useId();
   const playerHands = useMemo(() => {
@@ -31,7 +31,9 @@ const BoardCard: React.FC<any> = ({ indexProps, cards, numPlayers }) => {
       {cards.length > 1 && (
         <TableCell
           key={indexProps}
-          className={`flex flex-row gap-[10px] py-6 bg-opacity-60 ${
+          className={`${
+            flexCard ? 'flex flex-row' : 'grid grid-cols-4'
+          } gap-[10px] py-6 bg-opacity-60 ${
             activeGame === indexProps && 'bg-gray-400'
           }`}
           id={activeGame === indexProps ? 'boardCard-active' : id}

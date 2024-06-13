@@ -1,4 +1,5 @@
 import { Label } from '@radix-ui/react-label';
+import { debounce } from 'lodash';
 import { Loader, RotateCw, Star } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { DndProvider, DragSourceMonitor, useDrag, useDrop } from 'react-dnd';
@@ -113,17 +114,20 @@ export const HandCard: React.FC<HandCardProps> = ({ index, cardProp }) => {
     return 'bg-opacity-20';
   }
 
-  const handleArrange = (): void => {
-    setLoading(true);
-    const newCard = arrangeCard(cardProp) as any;
-    setCards(newCard.cards);
-    setEvaluation1(newCard.chi1);
-    setEvaluation2(newCard.chi2);
-    setEvaluation3(newCard.chi3);
-    setIsInstant(newCard.instant ? true : false);
-    setTitleInstant(newCard.instant);
-    setLoading(false);
-  };
+  const handleArrange = useCallback(
+    debounce((): void => {
+      setLoading(true);
+      const newCard = arrangeCard(cardProp) as any;
+      setCards(newCard.cards);
+      setEvaluation1(newCard.chi1);
+      setEvaluation2(newCard.chi2);
+      setEvaluation3(newCard.chi3);
+      setIsInstant(newCard.instant ? true : false);
+      setTitleInstant(newCard.instant);
+      setLoading(false);
+    }, 300),
+    [cardProp]
+  );
 
   useEffect(() => {
     if (cards) {
@@ -135,7 +139,9 @@ export const HandCard: React.FC<HandCardProps> = ({ index, cardProp }) => {
 
   useEffect(() => {
     setCards(cardProp ?? []);
-    handleArrange();
+    if (index >= activeGame) {
+      handleArrange();
+    }
   }, [cardProp]);
 
   function arraysAreEqual(array1: string | any[], array2: string | any[]) {

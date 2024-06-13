@@ -192,8 +192,8 @@ export default function useHostWebSocket(sub: any, roomID: number) {
           //send-Start
           if (message[1].cmd === 204 || message[1].cmd === 607) {
             updateSubStatus(sub.username, 'Sent start');
-            sendMessage(`[5,"Simms",${roomID},{"cmd":698}]`);
             sendMessage(`[5,"Simms",${roomID},{"cmd":5}]`);
+            sendMessage(`[5,"Simms",${roomID},{"cmd":698}]`);
           }
           //end-game-> out room
           if (message[1].cmd === 205 && message[1].ps) {
