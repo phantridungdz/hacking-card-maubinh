@@ -76,7 +76,11 @@ export function App() {
                 setRefreshCardsKey={setRefreshCardsKey}
                 setIsOpenSheet={setIsOpenSheet}
               />
-              <HomePage key={refreshCardsKey} cardDeck={cardDeck} />
+              <HomePage
+                key={refreshCardsKey}
+                cardDeck={cardDeck}
+                setCardDeck={setCardDeck}
+              />
             </main>
           </div>
         )}

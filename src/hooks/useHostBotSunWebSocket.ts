@@ -260,15 +260,15 @@ export default function useHostBotSunWebSocket(bot: any, roomID: number) {
             if (isFoundedRoom && message[1].cmd === 607) {
               if (botsReady.length === 3) {
                 updateBotStatus(bot.username, 'Sent start');
-                sendMessage(`[5,"Simms",${roomID},{"cmd":698}]`);
                 sendMessage(`[5,"Simms",${roomID},{"cmd":5}]`);
+                sendMessage(`[5,"Simms",${roomID},{"cmd":698}]`);
                 clearBotReady();
               }
             }
             if (!isFoundedRoom) {
               updateBotStatus(bot.username, 'Sent start');
-              sendMessage(`[5,"Simms",${roomID},{"cmd":698}]`);
               sendMessage(`[5,"Simms",${roomID},{"cmd":5}]`);
+              sendMessage(`[5,"Simms",${roomID},{"cmd":698}]`);
               clearBotReady();
             }
           }
@@ -416,8 +416,8 @@ export default function useHostBotSunWebSocket(bot: any, roomID: number) {
     if (isFoundedRoom) {
       if (botsReady.length === 3) {
         updateBotStatus(bot.username, 'Sent start');
-        sendMessage(`[5,"Simms",${roomID},{"cmd":698}]`);
         sendMessage(`[5,"Simms",${roomID},{"cmd":5}]`);
+        sendMessage(`[5,"Simms",${roomID},{"cmd":698}]`);
       }
     }
   }, [botsReady, isFoundedRoom]);

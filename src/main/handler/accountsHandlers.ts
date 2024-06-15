@@ -190,7 +190,7 @@ export const setupAccountHandlers = async (
             targetSite =
               'https://games.prorichvip.com/?brand=lucky&token=' +
               account.token +
-              '&gameid=vgcg_4&ru=https%3A%2F%2Flucky88.vip';
+              '&gameid=vgcg_4&ru=https%3A%2F%2Flucky88.com';
           }
           break;
         case 'DEBET':

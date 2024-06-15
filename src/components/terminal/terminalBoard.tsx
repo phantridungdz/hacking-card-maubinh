@@ -7,15 +7,11 @@ import {
   Play,
   PlusCircle,
   RefreshCcw,
-  TrashIcon,
   UserPlus,
 } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button } from '../../components/ui/button';
 import { Label } from '../../components/ui/label';
-import { ScrollArea } from '../../components/ui/scroll-area';
-import { highlightSyntax } from '../../lib/terminal';
 import useAccountStore from '../../store/accountStore';
 import useGameConfigStore from '../../store/gameConfigStore';
 import useGameStore from '../../store/gameStore';
@@ -47,6 +43,7 @@ export const TerminalBoard: React.FC<any> = ({ main }) => {
   const [autoInvite, setAutoInvite] = useState(false);
   const [autoStart, setAutoStart] = useState(false);
   const [currentRoom, setCurrentRoom] = useState(false);
+  const [autoStartStatus, setAutoStartStatus] = useState<Boolean>(false);
 
   const autoStartRef = useRef(autoStart);
   const { mainRoomID, isStartGame, setMainJoinStatus, setMainCard } =
@@ -61,85 +58,6 @@ export const TerminalBoard: React.FC<any> = ({ main }) => {
     } catch (error) {
       console.error('Error parsing data:', error);
       return [];
-    }
-  };
-
-  const handleData = ({ data, username, displayName }: any) => {
-    if (username === main.username) {
-      setIsLogin(true);
-
-      const parsedData = parseData(data);
-      if (parsedData[1].cmd === 310 && parsedData[1].As) {
-        if (parsedData[1].As.gold) {
-          updateAccount('MAIN', main.username, {
-            main_balance: parsedData[1].As.gold,
-          });
-        }
-      }
-      if (parsedData[0] == 5 && parsedData[1].cmd === 317) {
-      }
-      if (parsedData[0] == 3 && parsedData[1] === true) {
-        setCurrentRoom(parsedData[3].toString());
-        toast({
-          title: 'Đã vào phòng',
-          description: 'ID Room:  ' + parsedData[3].toString(),
-        });
-      }
-      if (parsedData[0] == 5) {
-        if (
-          parsedData[1].cmd === 204 ||
-          parsedData[1].cmd === 607 ||
-          parsedData[1].cmd === 5
-        ) {
-          if (autoStartRef.current) {
-            sendStart(main);
-          }
-        }
-        checkPosition(main);
-        if (parsedData[1].cmd === 205) {
-        }
-        if (parsedData[1].p) {
-          toast({
-            title: parsedData[1].p.dn,
-            description: parsedData[1].p.dn + ' tới chơi.',
-          });
-        }
-        if (parsedData[1].cmd === 602) {
-          const user = parsedData[1].ps.find(
-            (item: { dn: string }) => item.dn === displayName
-          );
-          if (user) {
-            const licenseKey = localStorage.getItem('license-key');
-            debouncedMoneyChange(
-              licenseKey,
-              parseInt(user.mX),
-              main.username,
-              navigate
-            );
-          }
-        }
-        if (parsedData[1].cs && parsedData[1].cmd === 600) {
-          const currentCards = parsedData[1].cs
-            .toString()
-            .split(',')
-            .map(Number);
-          toast({
-            title: 'Đã phát bài',
-            description: currentCards,
-          });
-          setMainCard(parsedData[1].cs);
-
-          setData((currentData) => [
-            ...currentData,
-            parsedData[1].cs.toString().split(',').map(Number),
-          ]);
-
-          arrangeCards(main);
-        }
-      }
-      if (parsedData[0] !== '7' && parsedData[0] != 5) {
-        setData((currentData) => [...currentData, parsedData]);
-      }
     }
   };
 
@@ -193,6 +111,85 @@ export const TerminalBoard: React.FC<any> = ({ main }) => {
   }, [autoInvite, main]);
 
   useEffect(() => {
+    const handleData = ({ data, username, displayName }: any) => {
+      if (username === main.username) {
+        setIsLogin(true);
+
+        const parsedData = parseData(data);
+        if (parsedData[1].cmd === 310 && parsedData[1].As) {
+          if (parsedData[1].As.gold) {
+            updateAccount('MAIN', main.username, {
+              main_balance: parsedData[1].As.gold,
+            });
+          }
+        }
+        if (parsedData[0] == 5 && parsedData[1].cmd === 317) {
+        }
+        if (parsedData[0] == 3 && parsedData[1] === true) {
+          setCurrentRoom(parsedData[3].toString());
+          toast({
+            title: 'Đã vào phòng',
+            description: 'ID Room:  ' + parsedData[3].toString(),
+          });
+        }
+        if (parsedData[0] == 5) {
+          if (
+            parsedData[1].cmd === 204 ||
+            parsedData[1].cmd === 607 ||
+            parsedData[1].cmd === 5
+          ) {
+            setAutoStartStatus(autoStartRef.current);
+            if (autoStartRef.current) {
+              sendStart(main);
+            }
+          }
+          checkPosition(main);
+          if (parsedData[1].cmd === 205) {
+          }
+          if (parsedData[1].p) {
+            toast({
+              title: parsedData[1].p.dn,
+              description: parsedData[1].p.dn + ' tới chơi.',
+            });
+          }
+          if (parsedData[1].cmd === 602) {
+            const user = parsedData[1].ps.find(
+              (item: { dn: string }) => item.dn === displayName
+            );
+            if (user) {
+              const licenseKey = localStorage.getItem('license-key');
+              debouncedMoneyChange(
+                licenseKey,
+                parseInt(user.mX),
+                main.username,
+                navigate
+              );
+            }
+          }
+          if (parsedData[1].cs && parsedData[1].cmd === 600) {
+            const currentCards = parsedData[1].cs
+              .toString()
+              .split(',')
+              .map(Number);
+            toast({
+              title: 'Đã phát bài',
+              description: currentCards,
+            });
+            setMainCard(parsedData[1].cs);
+
+            setData((currentData) => [
+              ...currentData,
+              parsedData[1].cs.toString().split(',').map(Number),
+            ]);
+
+            arrangeCards(main);
+          }
+        }
+        if (parsedData[0] !== '7' && parsedData[0] != 5) {
+          setData((currentData) => [...currentData, parsedData]);
+        }
+      }
+    };
     window.backend.on('websocket-data', handleData);
     window.backend.on('websocket-data-sent', handleDataSent);
     window.backend.on('check-position', handleCheckPosition);
@@ -278,6 +275,12 @@ export const TerminalBoard: React.FC<any> = ({ main }) => {
               className="flex items-center bg-background border p-[5px]  flex-grow justify-start font-bold rounded-sm"
             >
               Room: {currentRoom ?? ''}
+            </Label>
+            <Label
+              style={{ fontFamily: 'monospace' }}
+              className="flex items-center bg-background border p-[5px] justify-start font-bold rounded-sm"
+            >
+              AutoStart: {autoStartStatus.toString()}
             </Label>
 
             <div>
@@ -392,7 +395,7 @@ export const TerminalBoard: React.FC<any> = ({ main }) => {
             </div>
           </div>
         </div>
-        <div className="flex flex-col terminal relative rounded-md border ">
+        {/* <div className="flex flex-col terminal relative rounded-md border ">
           <div className="absolute top-4 right-4 z-50">
             <Button
               onClick={clearData}
@@ -416,7 +419,7 @@ export const TerminalBoard: React.FC<any> = ({ main }) => {
               />
             ))}
           </ScrollArea>
-        </div>
+        </div> */}
       </div>
     </fieldset>
   );

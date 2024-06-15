@@ -547,7 +547,7 @@ function mBaiSapXep(t: any) {
   if (n.mark3 > 544 || n.mark3 > 476) sortedList = n.list;
   if (n.mb > 0) sortedList = n.list;
   else if (n.mark3 > 408 || n.mark3 > 340) {
-    var o = t.map((cardCode: number) => decodeCard(cardCode));
+    var o = t.map((cardCode: number) => decodeCard2(cardCode));
     var a = -1;
     n.mark3 > 408 ? (a = 1) : n.mark3 > 340 && (a = 2);
     var s = sapXep2(o, a) as any;

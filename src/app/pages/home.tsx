@@ -1,11 +1,12 @@
+import BoardCard from 'components/card/boardCard';
+import { Table, TableBody, TableRow } from 'components/ui/table';
+import { Tabs, TabsContent } from 'components/ui/tabs';
 import { Plus } from 'lucide-react';
 import { useContext, useEffect, useState } from 'react';
-import BoardCard from '../../components/card/boardCard';
 import { TerminalBoard } from '../../components/terminal/terminalBoard';
 import { Button } from '../../components/ui/button';
 import {
   Card,
-  CardContent,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -16,14 +17,13 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from '../../components/ui/resizablePanelGroup';
-import { Table, TableBody, TableRow } from '../../components/ui/table';
 import { getRandomCards } from '../../lib/card';
 import { AppContext } from '../../renderer/providers/app';
 import useAccountStore from '../../store/accountStore';
 import useGameConfigStore from '../../store/gameConfigStore';
 import useGameStore from '../../store/gameStore';
 
-export const HomePage: React.FC<any> = (cardDeck, setNumberOfCards) => {
+export const HomePage: React.FC<any> = ({ cardDeck, setCardDeck }) => {
   const [cards, setCards] = useState<number[][]>([]);
   const { state } = useContext(AppContext);
   const { crawledCards, isFoundedRoom } = useGameStore();
@@ -60,35 +60,83 @@ export const HomePage: React.FC<any> = (cardDeck, setNumberOfCards) => {
   return (
     <ResizablePanelGroup
       direction="horizontal"
-      className="mt-[90px] relative h-screen !overflow-visible"
+      className="mt-[120px] relative min-h-screen !overflow-visible"
     >
-      <ResizablePanel defaultSize={75}>
-        <Card
-          className="tablet:col-span-2 text-center border relative"
-          x-chunk="dashboard-03-chunk-0"
-        >
+      <ResizablePanel defaultSize={65}>
+        <Card>
           <CardHeader>
             <CardTitle>All card in room</CardTitle>
           </CardHeader>
-          <CardContent>
-            <Table>
-              <TableBody>
-                {cards.map((card, index) => (
-                  <TableRow
-                    key={index}
-                    className={`relative !rounded-[20px] bg-opacity-60 `}
-                  >
-                    <BoardCard
-                      cards={card}
-                      indexProps={index}
-                      numPlayers={cardDeck.cardDeck}
-                      currentGame={state.currentGame}
-                    />
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </CardContent>
+          <Tabs
+            defaultValue="2"
+            onValueChange={setCardDeck}
+            value={cardDeck}
+            className="w-full p-4"
+          >
+            <TabsContent forceMount hidden={'2' !== cardDeck} value="2">
+              <Card>
+                <Table>
+                  <TableBody>
+                    {cards.map((card, index) => (
+                      <TableRow
+                        key={index}
+                        className={`relative !rounded-[20px] bg-opacity-60 `}
+                      >
+                        <BoardCard
+                          cards={card}
+                          indexProps={index}
+                          numPlayers={2}
+                          currentGame={state.currentGame}
+                        />
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </Card>
+            </TabsContent>
+            <TabsContent forceMount hidden={'3' !== cardDeck} value="3">
+              <Card>
+                <Table>
+                  <TableBody>
+                    {cards.map((card, index) => (
+                      <TableRow
+                        key={index}
+                        className={`relative !rounded-[20px] bg-opacity-60 `}
+                      >
+                        <BoardCard
+                          cards={card}
+                          indexProps={index}
+                          numPlayers={3}
+                          currentGame={state.currentGame}
+                        />
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </Card>
+            </TabsContent>
+            <TabsContent forceMount hidden={'4' !== cardDeck} value="4">
+              <Card>
+                <Table>
+                  <TableBody>
+                    {cards.map((card, index) => (
+                      <TableRow
+                        key={index}
+                        className={`relative !rounded-[20px] bg-opacity-60 `}
+                      >
+                        <BoardCard
+                          cards={card}
+                          indexProps={index}
+                          numPlayers={4}
+                          currentGame={state.currentGame}
+                        />
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </Card>
+            </TabsContent>
+          </Tabs>
           {process.env.NODE_ENV == 'development' && (
             <CardFooter>
               <div className="text-xs text-muted-foreground flex flex-row gap-2 items-center">
@@ -108,7 +156,7 @@ export const HomePage: React.FC<any> = (cardDeck, setNumberOfCards) => {
         </Card>
       </ResizablePanel>
       <ResizableHandle className="mx-2" />
-      <ResizablePanel className="!overflow-visible" defaultSize={25}>
+      <ResizablePanel className="!overflow-visible">
         <div className=" sticky top-[90px]">
           <Card className="w-full flex flex-col gap-4 border-0 ">
             {accounts['MAIN'].map(

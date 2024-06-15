@@ -181,10 +181,10 @@ const loginLucky88 = async (
     'Sec-ch-ua': `"Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"`,
     'User-agent':
       'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0',
-    Origin: 'https://lucky88.vip',
-    Referer: 'https://lucky88.vip',
+    Origin: 'https://lucky88.com',
+    Referer: 'https://lucky88.com',
     Cookie:
-      'source=lucky88.vip; saleAdvised=null; aff_id=null; utm_source=null; utm_medium=null; utm_campaign=null; utm_term=null; utm_content=null; device=desktop; vgmnid=13971.55342598229111716553376008; mini-opened=%7B%22aviator%22%3A%7B%22left%22%3Anull%2C%22top%22%3A150%7D%2C%22taixiu%22%3A%7B%7D%2C%22hilo%22%3A%7B%7D%2C%22poker%22%3A%7B%7D%7D; whitelist=true',
+      'source=lucky88.com; saleAdvised=null; aff_id=null; utm_source=null; utm_medium=null; utm_campaign=null; utm_term=null; utm_content=null; device=desktop; vgmnid=13971.55342598229111716553376008; mini-opened=%7B%22aviator%22%3A%7B%22left%22%3Anull%2C%22top%22%3A150%7D%2C%22taixiu%22%3A%7B%7D%2C%22hilo%22%3A%7B%7D%2C%22poker%22%3A%7B%7D%7D; whitelist=true',
   };
   try {
     let response;
@@ -919,7 +919,7 @@ const login = async (bot: any, accountType: string, updateAccount: any) => {
         bot,
         accountType,
         updateAccount,
-        'https://lucky88.vip/api/v1/login'
+        'https://lucky88.com/api/v1/login'
       );
     case 'DEBET':
       return await loginDebet(

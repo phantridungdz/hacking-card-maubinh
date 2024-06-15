@@ -399,7 +399,7 @@ const setHeaderForLucky88 = () => {
     const newHeaders = capitalizeHeaderKeys(
       details.responseHeaders as Record<string, string[]>
     );
-    newHeaders['Access-control-allow-origin'] = ['https://lucky88.vip'];
+    newHeaders['Access-control-allow-origin'] = ['https://lucky88.com'];
     newHeaders['Cf-cache-status'] = ['DYNAMIC'];
     callback({ responseHeaders: newHeaders });
   });
@@ -408,16 +408,16 @@ const setHeaderForLucky88 = () => {
     const newHeaders = capitalizeRequestHeaderKeys(
       details.requestHeaders as Record<string, string>
     );
-    newHeaders['Referer'] = 'https://lucky88.vip';
-    newHeaders['Origin'] = 'https://lucky88.vip';
+    newHeaders['Referer'] = 'https://lucky88.com';
+    newHeaders['Origin'] = 'https://lucky88.com';
     newHeaders['Accept'] = '*/*';
     newHeaders['Accept-encoding'] = 'gzip, deflate, br, zstd';
     newHeaders['Accept-language'] = 'en-US,en;q=0.9';
     newHeaders['Content-Type'] = 'application/json';
     newHeaders['Dnt'] = '1';
-    newHeaders['Cookie'] =
-      'source=lucky88.vip; saleAdvised=null; aff_id=null; utm_source=null; utm_medium=null; utm_campaign=null; utm_term=null; utm_content=null; device=desktop; vgmnid=13971.55342598229111716553376008; mini-opened=%7B%22aviator%22%3A%7B%22left%22%3Anull%2C%22top%22%3A150%7D%2C%22taixiu%22%3A%7B%7D%2C%22hilo%22%3A%7B%7D%2C%22poker%22%3A%7B%7D%7D; whitelist=true';
-    newHeaders['Priority'] = 'u=1, i';
+    (newHeaders['Cookie'] =
+      'device=desktop; source=lucky88.com; saleAdvised=null; aff_id=null; utm_source=null; utm_medium=null; utm_campaign=null; utm_term=null; utm_content=null; notify_2517=true; _gid=GA1.2.482221069.1718447108; _gat_UA-111397367-1=1; whitelist=true; _ga=GA1.1.1780038016.1718447108; _hjSessionUser_2509823=eyJpZCI6IjM2YTk4OGE5LTNiZWYtNTNkNi1hNGQ3LTBjYzAzM2RiOGFhMSIsImNyZWF0ZWQiOjE3MTg0NDcxMDg0OTYsImV4aXN0aW5nIjpmYWxzZX0=; _hjSession_2509823=eyJpZCI6IjQ3ZTMxOWJiLTBkY2ItNGUzYS1hY2U2LWVlNmUxMTQzNGExYSIsImMiOjE3MTg0NDcxMDg0OTcsInMiOjAsInIiOjAsInNiIjowLCJzciI6MCwic2UiOjAsImZzIjoxLCJzcCI6MH0=; _ga_P59W5KG65E=GS1.2.1718447108.1.0.1718447108.0.0.0; _ga_46CET3FGH7=GS1.1.1718447108.1.0.1718447120.0.0.0'),
+      (newHeaders['Priority'] = 'u=1, i');
     newHeaders['User-agent'] =
       'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0';
     newHeaders[

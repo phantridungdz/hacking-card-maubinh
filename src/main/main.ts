@@ -4,7 +4,6 @@ import { autoUpdater } from 'electron-updater';
 import path from 'path';
 import { loadExtensions } from './extension/installer';
 import { setupAccountHandlers } from './handler/accountsHandlers';
-import { setupArrangeCardHandlers } from './handler/arrangeCardHandlers';
 import { setupFileHandlers } from './handler/fileHandlers';
 import { setupHeaderHandlers } from './handler/headerHandlers';
 import { setupProxyHandler } from './handler/proxyHandler';
@@ -52,6 +51,7 @@ const createWindow = async () => {
     webPreferences: {
       webSecurity: false,
       contextIsolation: true,
+      sandbox: false,
       preload: app.isPackaged
         ? path.join(__dirname, 'preload.js')
         : path.join(__dirname, '../../.erb/dll/preload.js'),
@@ -107,7 +107,7 @@ const createWindow = async () => {
   setupReadHardwareHandlers();
   setupFileHandlers();
   setupAccountHandlers(mainWindow);
-  setupArrangeCardHandlers();
+  // setupArrangeCardHandlers();
   setupProxyWebsocketHandler();
   setupHeaderHandlers();
   setupProxyHandler();
@@ -135,9 +135,13 @@ const extensions = [
 app
   .whenReady()
   .then(async () => {
+    app.commandLine.appendSwitch('js-flags', '--max-old-space-size=4096');
+    app.commandLine.appendSwitch('renderer-process-limit', '100');
+    app.commandLine.appendSwitch('ignore-connections-limit', 'true');
+    app.commandLine.appendSwitch('disable-http2');
+
     await loadExtensions(extensions);
     await createWindow();
-
     app.on('activate', () => {
       if (mainWindow === null) createWindow();
     });

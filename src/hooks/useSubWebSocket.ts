@@ -194,6 +194,9 @@ export default function useSubWebSocket(sub: any, roomID: number) {
           }
 
           //send-Ready
+          if (message[1].cmd === 607 && message[1].T === 7000) {
+            sendMessage(`[5,"Simms",${roomID},{"cmd":5}]`);
+          }
           if (message[1].cmd === 204 || message[1].cmd === 203) {
             // updateSubStatus(sub.username, 'Sent ready');
             sendMessage(`[5,"Simms",${roomID},{"cmd":5}]`);

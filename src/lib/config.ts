@@ -2,7 +2,7 @@ export const roomTypes = [
   100, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000,
 ];
 export const cardTypes = ['set1', 'set2'];
-export const targetSites = ['RIK', 'HIT', 'SUNWIN'];
+export const targetSites = ['RIK', 'HIT'];
 export const fromHitSites = [
   // 'FIVE88',
   'HIT',
