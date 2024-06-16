@@ -60,7 +60,7 @@ export const HomePage: React.FC<any> = ({ cardDeck, setCardDeck }) => {
   return (
     <ResizablePanelGroup
       direction="horizontal"
-      className="mt-[120px] relative min-h-screen !overflow-visible"
+      className="mt-[160px] relative min-h-screen !overflow-visible"
     >
       <ResizablePanel defaultSize={65}>
         <Card>

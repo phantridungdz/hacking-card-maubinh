@@ -139,9 +139,7 @@ export const HandCard: React.FC<HandCardProps> = ({ index, cardProp }) => {
 
   useEffect(() => {
     setCards(cardProp ?? []);
-    if (index >= activeGame) {
-      handleArrange();
-    }
+    handleArrange();
   }, [cardProp]);
 
   function arraysAreEqual(array1: string | any[], array2: string | any[]) {

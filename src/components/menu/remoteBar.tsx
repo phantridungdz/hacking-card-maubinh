@@ -4,6 +4,7 @@ import {
   Loader2,
   LogIn,
   Moon,
+  RefreshCcwDot,
   SearchCheck,
   Settings,
   SquareMousePointer,
@@ -104,14 +105,6 @@ const RemoteBar: React.FC<any> = ({
           >
             <Bot />
           </Button>
-          {/* <Button
-            onClick={() => setIsOpenCreateAccount(true)}
-            size="sm"
-            className="h-8 gap-1"
-          >
-            <CirclePlus className="w-3.5 h-3.5" />
-            Create Account
-          </Button> */}
         </div>
         <div key={refreshKey}>
           <FindRoomSheet
@@ -121,12 +114,10 @@ const RemoteBar: React.FC<any> = ({
           />
         </div>
 
-        <div className="flex gap-2 items-center">
+        <div className="flex gap-2 items-center  flex-nowrap">
           {mainRoomID && (
-            <div className="flex p-[10px] rounded-sm border">
-              <Label className="">
-                Room ID: <span className="">{mainRoomID}</span>
-              </Label>
+            <div className="p-[10px] rounded-sm border inline-block">
+              <Label className="flex flex-row">Room ID: {mainRoomID}</Label>
             </div>
           )}
           <TargetSite />
@@ -142,7 +133,7 @@ const RemoteBar: React.FC<any> = ({
               )}
             </Button>
           </div>
-          <div className="h-full w-full rounded-[5px] flex justify-center items-center border cursor-pointer">
+          <div className="rounded-[5px] flex justify-center items-center border cursor-pointer">
             <Toggle
               pressed={flexCard}
               onPressedChange={setFlexCard}
@@ -198,6 +189,19 @@ const RemoteBar: React.FC<any> = ({
             </TooltipTrigger>
             <TooltipContent>
               <p>Scroll to current game</p>
+            </TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger>
+              <div
+                onClick={() => window.location.reload()}
+                className="h-8 gap-1 bg-white flex justify-center items-center px-[10px] rounded-sm cursor-pointer hover:opacity-70"
+              >
+                <RefreshCcwDot className="text-black" />
+              </div>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Reload app</p>
             </TooltipContent>
           </Tooltip>
           <Tooltip>

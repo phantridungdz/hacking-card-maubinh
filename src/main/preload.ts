@@ -20,6 +20,8 @@ const validChannels: string[] = [
   'generateFgReply',
   'login-hit',
   'update-header',
+  'backup-data',
+  'restore-data',
 ];
 
 contextBridge.exposeInMainWorld('backend', {

@@ -1,9 +1,16 @@
-import { X } from 'lucide-react';
+import { LoaderIcon, SaveIcon, X } from 'lucide-react';
 import React from 'react';
 import { Button } from '../ui/button';
 import { ScrollArea } from '../ui/scroll-area';
 
 const MainSetting: React.FC<any> = ({ children, setIsOpen, isOpen }) => {
+  const handleBackup = () => {
+    window.backend.sendMessage('backup-data');
+  };
+
+  const handleRestore = () => {
+    window.backend.sendMessage('restore-data');
+  };
   return (
     <div
       className={`fixed top-0 w-screen h-screen bg-black bg-opacity-60 z-[101] flex flex-row ${
@@ -25,7 +32,25 @@ const MainSetting: React.FC<any> = ({ children, setIsOpen, isOpen }) => {
             <X />
           </Button>
         </div>
-        <ScrollArea className="h-screen pr-4">
+        <ScrollArea className="h-screen pr-4 relative">
+          <div className="sticky top-0 flex justify-end  gap-2 z-[100] bg-background">
+            <Button
+              onClick={handleBackup}
+              size="sm"
+              className="h-8 gap-1 cursor-pointer hover:opacity-70"
+            >
+              <SaveIcon className="h-3.5 w-3.5" />
+              Backup
+            </Button>
+            <Button
+              onClick={handleRestore}
+              size="sm"
+              className="h-8 gap-1 cursor-pointer hover:opacity-70"
+            >
+              <LoaderIcon className="h-3.5 w-3.5" />
+              Restore
+            </Button>
+          </div>
           <div className="mt-4 flex flex-col gap-4 mb-[200px]">{children}</div>
         </ScrollArea>
       </div>

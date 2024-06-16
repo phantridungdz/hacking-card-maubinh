@@ -4,7 +4,6 @@ import { ColumnDef } from '@tanstack/react-table';
 import axios from 'axios';
 import {
   ArrowUpDown,
-  Check,
   CheckSquare,
   DollarSign,
   MapPin,
@@ -282,7 +281,7 @@ export const getAccountTableColumns = (
                 <RemoveFormatting className="w-3.5 h-3.5" />
                 Delete account
               </DropdownMenuItem>
-              <DropdownMenuItem
+              {/* <DropdownMenuItem
                 className="flex flex-row items-center gap-1"
                 onClick={() =>
                   checkBalance(
@@ -295,7 +294,7 @@ export const getAccountTableColumns = (
               >
                 <Check className="w-3.5 h-3.5" />
                 Check balance
-              </DropdownMenuItem>
+              </DropdownMenuItem> */}
               <DropdownMenuItem
                 onClick={() => removeProxy(rowData)}
                 className="flex flex-row items-center gap-1"
@@ -303,7 +302,7 @@ export const getAccountTableColumns = (
                 <Trash className="w-3.5 h-3.5" />
                 Remove Proxy
               </DropdownMenuItem>
-              <DropdownMenuItem
+              {/* <DropdownMenuItem
                 onClick={() => {
                   setDialogDepositOpen(true);
                   setRowSelected(rowData);
@@ -312,7 +311,7 @@ export const getAccountTableColumns = (
               >
                 <DollarSign className="w-3.5 h-3.5" />
                 Deposit
-              </DropdownMenuItem>
+              </DropdownMenuItem> */}
               <DropdownMenuItem
                 onClick={() => {
                   onCheckProxy(rowData);
