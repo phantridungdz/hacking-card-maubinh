@@ -56,6 +56,64 @@ const fetchViaProxy = async (
     return { data: { code: 404 } };
   }
 };
+const loginB52 = async (
+  botInfo: any,
+  accountType: string,
+  updateAccount: any,
+  loginUrl: string
+) => {
+  const credentials = {
+    username: botInfo.username,
+    password: botInfo.password,
+    app_id: 'b52.club',
+    os: getRandomOS(),
+    device: botInfo.device,
+    browser: botInfo.browser,
+    fg: generateRandomHex(16),
+    time: now(),
+    sign: generateRandomHex(16),
+    r_token:
+      '03AFcWeA4MlZ45f3WtP1m4nd6Pd-8iiHnwgdVDzKpLwzPAcvF9gjIW1Q5I6c72dScSu0tqIeOl5tVQ8PNvk2ykymVDdn78MD8HuIY8JwuvmJEDVMCa0BjUM780iu3lhhLcdfREnVNA3s0k2pTaZcxVo7Q-4QI4g55lk7qBhTILqLhuoWBrkji8Ui0fcVH6pPtQh1a8mR3lb5oDkqXqTGv_UBrx_oNX5xfOIzjtnsU8AiG_RXGaxotk7p9MghdRzenVFpJiFlq6CoGR-wRKww29gLhQf25I2Xmrh3yUXcoQaFSHxAW7PYGLLVg2mU-idOoJW_6To9Yv3z1SvhwVD5QPMofgu9MnlC9C8vVEp8kJlUTmnQuB-RQ-K3-IwrxmDkZPj8pQG_wOBu2wlIigpj0S_FdpRtysDePvXwuuv1H-BBUH-Ggxh1H2CbPQ1aim5KrCSfG8aWEzHL3J8eJLPzrfZ1JXuZ_0_EulhHIkAiLcta5ypQlImfxLdSyEQo9ufrCXOBOBEJXvWEyLDYIN83zPYPS2Xw8bw5jEo3YLj3tEZKMbYlC3DukuoQwWYsdoVqoVQEXtok1WkFzwnFPV6XytUYt8iPY4kKCOIxuAEZVo0e1RXGR0cDGaP2rU_oZ8pRTyCMvi00_DUG8fYgxVdKWGXRsvYF1IPVG03hasvP4_nP5RASOWYBlzbfT0YDUAGlAEkym9G-ryupYbv5CFS8BNPZCtoYPSAeMI683SXUProuHjqmNrD8AIzPFNlvz8Y-0JlaYWW2rjBhwFtMWA-WHLXHUPxNiR1oyaSEzrYzsGqN4LcwgHITY7fW_mkApUh-mnXsTMckYwKDF9d0MBZaS8tkO4k3IDyK_ObjhGRkzBQ3z8ZfKawAgt6NOHWF87tz3bd9rs6wPexO2nnr27XXarukRYOYawN9yoyLfry41zcXqkddVn9Uf71GCL3IM-EeVUNPilic3Btn0T-z_Br-TivipXkIb4vcbQpbkYpwzsK7Yoy_-M1n6NRdGQekHQqerrrKKAArZNPjUulblHzZKYXHxy1yPFy5FgWTaSFBqfvmc9dp9KArk_Hc_nZ2_wBrNgisTjI55EZ7y6WeIEeCPC-pfuDqTXzBa_Zadaf1f9qpiRyTPcvyOqEAzuWIe8w9xHtY6NIZr6zT_BkSVo7mosh6T7gHGX7tPQMoR7LbYa3zsbz89Dml3xR7Y1kHTqd0Z0-FZo0AFXpgla-ctRW_nDfSUNrh_pQHNAQ7CO6gKojPjSGd5dzQrxI_FagPcK0Gb58XhzhRO7LlDlgXX_uJ2p4fn72gYqLEyZNcEWk_cDX7a_plXL-yx3yTOCIcbsRG4AJIX_dAWpLNiZKsZPO1ia5R0F30Gji0v8Sf5snYoYVqgWUhrZGSNrge1mVuwZi4LMat6AOYlvvd3ifZxHRtIiYHnpZlMISW8y_p3BOZ-6ntC_HnVXecDF8VOPzfida-w-FWcFvBoHSsU06JnTzryKVg9iLbf2w20yLjO8R4YpdXXnh22WmIGqUvbHPE3Ux1dmsojZGML4qU59v5NK7EOI6uW2oH_KDCLogS0yOHA56-CWz0C-Ulri6MVoPdUg5XXzUVLgvtXnziRYj6YQZmegOTw925EqTi5kweYieBV3XEzD8nfhtwVYbmX4_AXmPaTEr8k1uJpy9CookDVCLZ7cxxzohwifkGwA5g',
+  };
+
+  const headers = {
+    Accept: '*/*',
+    'Content-Type': 'text/plain;charset=UTF-8',
+    'Sec-ch-ua': `"Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"`,
+    'User-agent':
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0',
+    Origin: 'https://web.b52.vin/',
+    Referer: 'https://web.b52.vin/',
+  };
+  try {
+    let response;
+    if (botInfo.isUseProxy) {
+      response = await fetchViaProxy(credentials, botInfo, headers, loginUrl);
+    } else {
+      response = await axios.post(loginUrl, credentials);
+    }
+    if (response.data.code === 200) {
+      const data = response.data.data[0];
+      updateAccount(accountType, botInfo.username, {
+        session_id: data.session_id,
+        main_balance: data.main_balance || 0,
+        token: data.token,
+        fullname: data.fullname,
+      });
+    } else {
+      updateAccount(accountType, botInfo.username, {
+        main_balance: response.data.message,
+      });
+    }
+    return response.data;
+  } catch (error) {
+    console.error(
+      'Login failed:',
+      axios.isAxiosError(error) ? error.response?.data : error
+    );
+    return null;
+  }
+};
 const loginRik = async (
   botInfo: any,
   accountType: string,
@@ -1005,6 +1063,13 @@ const login = async (bot: any, accountType: string, updateAccount: any) => {
     //     updateAccount,
     //     'https://api.mu9.vin/users/login'
     //   );
+    case 'B52':
+      return await loginB52(
+        bot,
+        accountType,
+        updateAccount,
+        'https://bfivegwlog.gwtenkges.com/user/login.aspx'
+      );
     default:
       throw new Error(`Unsupported target site: ${bot.targetSite}`);
   }

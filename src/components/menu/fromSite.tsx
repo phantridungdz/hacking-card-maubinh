@@ -1,5 +1,5 @@
 import { ChevronDown, GlobeLock } from 'lucide-react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -8,24 +8,48 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '../../components/ui/dropdown-menu';
-import { fromHitSites, fromRikSites, fromSunWinSites } from '../../lib/config';
+import {
+  fromB52Sites,
+  fromHitSites,
+  fromRikSites,
+  fromSunWinSites,
+} from '../../lib/config';
 import useGameConfigStore from '../../store/gameConfigStore';
 import useGameStore from '../../store/gameStore';
 import { Label } from '../ui/label';
 
 const FromSite: React.FC<any> = () => {
   const { roomType } = useGameStore();
-  const { currentFromSite } = useGameConfigStore();
-  const [fromSite, setFromSite] = useState(currentFromSite);
-  const handleFromSiteChange = (target: number) => {
-    setFromSite(target);
+  const { currentFromSite, setCurrentFromSite } = useGameConfigStore();
+
+  const [fromSites, setFromSites] = useState<any>([]);
+
+  useEffect(() => {
+    console.log('currentFromSite', currentFromSite);
+    switch (currentFromSite) {
+      case 'RIK':
+        setFromSites(fromRikSites);
+        break;
+      case 'HIT':
+        console.log('fromHitSites', fromHitSites);
+
+        setFromSites(fromHitSites);
+        break;
+      case 'B52':
+        console.log('fromB52Sites', fromB52Sites);
+        setFromSites(fromB52Sites);
+        break;
+      default:
+        setFromSites(fromSunWinSites);
+        break;
+    }
+  }, [currentFromSite]);
+
+  const handleFromSiteChange = (site: string) => {
+    console.log('site', site);
+    setCurrentFromSite(site);
   };
-  const fromSites =
-    currentFromSite === 'RIK'
-      ? fromRikSites
-      : currentFromSite === 'HIT'
-      ? fromHitSites
-      : fromSunWinSites;
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -42,14 +66,14 @@ const FromSite: React.FC<any> = () => {
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>From Site</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        {fromSites.map((fromSite: any) => (
+        {fromSites.map((site: string) => (
           <DropdownMenuCheckboxItem
-            key={fromSite}
+            key={site}
             className={`text-${roomType.toLowerCase()}-500`}
-            checked={fromSite}
-            onSelect={() => handleFromSiteChange(fromSite)}
+            checked={site === currentFromSite}
+            onSelect={() => handleFromSiteChange(site)}
           >
-            {fromSite}
+            {site}
           </DropdownMenuCheckboxItem>
         ))}
       </DropdownMenuContent>

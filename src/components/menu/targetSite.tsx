@@ -17,6 +17,7 @@ const TargetSite: React.FC<any> = () => {
   const { roomType, setRoomType } = useGameStore();
   const { currentTargetSite, setTargetSite } = useGameConfigStore();
   const handleTargetSiteChange = (target: number) => {
+    console.log('target:', target);
     setTargetSite(target);
     window.backend.sendMessage('update-header', target);
   };

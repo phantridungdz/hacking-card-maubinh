@@ -177,6 +177,9 @@ export const setupAccountHandlers = async (
         case 'HIT':
           targetSite = hitUrl;
           break;
+        case 'B52':
+          targetSite = 'https://web.b52.vin/';
+          break;
         case 'SUNWIN':
           targetSite = 'hitUrl';
           break;
