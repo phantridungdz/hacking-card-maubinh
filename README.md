@@ -13,7 +13,7 @@
 Clone the repo and install dependencies:
 
 ```bash
-git clone --depth 1 --branch main https://github.com/electron-react-boilerplate/electron-react-boilerplate.git your-project-name
+git clone --depth 1 --branch main https://github.com/matisse/matisse.git your-project-name
 cd your-project-name
 npm install
 ```
@@ -26,7 +26,7 @@ Use this to build Exe:
 electron-packager C:\Users\PC\Documents\Projects\x10binh\ rikmaubinh --platform=win32 --arch=x64
 ```
 
-**Having issues installing? See our [debugging guide](https://github.com/electron-react-boilerplate/electron-react-boilerplate/issues/400)**
+**Having issues installing? See our [debugging guide](https://github.com/matisse/matisse/issues/400)**
 
 ## Starting Development
 

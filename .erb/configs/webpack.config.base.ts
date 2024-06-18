@@ -7,7 +7,7 @@ import { dependencies as externals } from '../../release/app/package.json';
 import WebpackConfig from './webpack.config';
 import webpackPaths from './webpack.paths';
 
-// https://github.com/electron-react-boilerplate/electron-react-boilerplate/pull/3052
+// https://github.com/matisse/matisse/pull/3052
 export default <WebpackConfig>{
   externals: [...Object.keys(externals || {})],
 

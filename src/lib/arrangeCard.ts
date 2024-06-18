@@ -485,7 +485,7 @@ function getTextOfListCard(t: number) {
     ? 'Thú'
     : t > 68
     ? 'Đôi'
-    : 'Mậu Thầu';
+    : '';
 }
 
 function getTextofMauBinh(t: number) {

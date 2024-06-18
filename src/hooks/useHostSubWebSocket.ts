@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import { toast } from '../components/toast/use-toast';
 import { arrangeCard, binhLungCard } from '../lib/arrangeCard';
+import { delay } from '../lib/utils';
 import { fetchToken, login } from '../service/login';
 import useAccountStore from '../store/accountStore';
 import useBotRoomStore from '../store/botRoomStore';
@@ -190,9 +191,11 @@ export default function useHostWebSocket(sub: any, roomID: number) {
           }
 
           //send-Start
-          if (message[1].cmd === 204 || message[1].cmd === 607) {
-            updateSubStatus(sub.username, 'Sent start');
+          if (message[1].cmd === 204) {
+            updateSubStatus(sub.username, 'Bot joined');
             sendMessage(`[5,"Simms",${roomID},{"cmd":5}]`);
+          }
+          if (message[1].cmd === 607) {
             sendMessage(`[5,"Simms",${roomID},{"cmd":698}]`);
           }
           //end-game-> out room
@@ -287,16 +290,11 @@ export default function useHostWebSocket(sub: any, roomID: number) {
         if (message[0] === 6) {
           if (message[1] === 1) {
             if (isStartGame) {
-              setTimeout(() => {
-                sendMessage(`["7", "Simms", "1",${message[2] + 1}]`);
-                // if (sub.status != 'In lobby') {
-                //   setTimeout(() => {
-                //     sendMessage(
-                //       `[6,"Simms","channelPlugin",{"cmd":300,"aid":"1","gid":4}]`
-                //     );
-                //   }, 2000);
-                // }
-              }, 5000);
+              delay(5000).then(() => {
+                if (isStartGame) {
+                  sendMessage(`["7", "Simms", "1",${message[2] + 1}]`);
+                }
+              });
             }
           }
         }

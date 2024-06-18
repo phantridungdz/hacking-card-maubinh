@@ -48,3 +48,7 @@ export const isMatchCards = (cardPlayer1: any[], cardPlayer2: any[]) => {
 export const generateRandomFg = () => {
   return Math.random().toString(36).substring(2, 18);
 };
+
+export const delay = (ms: number | undefined) => {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+};

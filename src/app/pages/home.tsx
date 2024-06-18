@@ -86,7 +86,6 @@ export const HomePage: React.FC<any> = ({ cardDeck, setCardDeck }) => {
                           cards={card}
                           indexProps={index}
                           numPlayers={2}
-                          currentGame={state.currentGame}
                         />
                       </TableRow>
                     ))}
@@ -107,7 +106,6 @@ export const HomePage: React.FC<any> = ({ cardDeck, setCardDeck }) => {
                           cards={card}
                           indexProps={index}
                           numPlayers={3}
-                          currentGame={state.currentGame}
                         />
                       </TableRow>
                     ))}
@@ -128,7 +126,6 @@ export const HomePage: React.FC<any> = ({ cardDeck, setCardDeck }) => {
                           cards={card}
                           indexProps={index}
                           numPlayers={4}
-                          currentGame={state.currentGame}
                         />
                       </TableRow>
                     ))}

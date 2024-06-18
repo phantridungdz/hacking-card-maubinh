@@ -72,7 +72,7 @@ export const HandCard: React.FC<HandCardProps> = ({ index, cardProp }) => {
   const [isInstant, setIsInstant] = useState<boolean>(false);
   const [titleInstant, setTitleInstant] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const { mainCard, activeGame, setActiveGame } = useGameStore();
+  const { mainCard, setActiveGame } = useGameStore();
   const { cardType } = useGameConfigStore();
 
   const moveCard = useCallback(

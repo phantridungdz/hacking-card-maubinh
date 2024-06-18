@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import { toast } from '../components/toast/use-toast';
 import { binhLungCard } from '../lib/arrangeCard';
+import { delay } from '../lib/utils';
 import { fetchToken, login } from '../service/login';
 import useAccountStore from '../store/accountStore';
 import useBotRoomStore from '../store/botRoomStore';
@@ -16,6 +17,7 @@ export default function useBotWebSocket(bot: any, roomID: number) {
   const [fullName, setFullName] = useState('');
   const [botMoneyChange, setBotMoneyChange] = useState('');
   const [token, setToken] = useState('');
+  const [currentTimer, setCurrentTimer] = useState(0);
   const { sendMessage, lastMessage, readyState } = useWebSocket(
     socketUrl,
     {
@@ -185,6 +187,7 @@ export default function useBotWebSocket(bot: any, roomID: number) {
             }
             // updateBotStatus(bot.username, 'Joined Room');
           }
+
           if (message[1].cmd === 5 && message[1].dn === fullName) {
             if (!botsReady.includes(bot.userName)) {
               setTimeout(() => {
@@ -192,16 +195,19 @@ export default function useBotWebSocket(bot: any, roomID: number) {
               }, 100);
             }
           }
+          // if (message[1].cmd === 5 && message[1].dn !== fullName) {
+          //   sendMessage(`[5,"Simms",${roomID},{"cmd":5}]`);
+          // }
           if (message[1].cmd === 607 && message[1].T === 7000) {
-            sendMessage(`[5,"Simms",${roomID},{"cmd":5}]`);
+            sendMessage(`[5,"Simms",${roomID},{"cmd":698}]`);
           }
           //send-Ready
           if (message[1].cmd === 204 || message[1].cmd === 203) {
-            // updateBotStatus(bot.username, 'Sent ready');
+            updateBotStatus(bot.username, 'Sent ready');
             sendMessage(`[5,"Simms",${roomID},{"cmd":5}]`);
-            // if (!botsReady.includes(bot.userName)) {
-            // addBotReady(bot.username);
-            // }
+            if (!botsReady.includes(bot.userName)) {
+              addBotReady(bot.username);
+            }
           }
           //end-game-> out room
           if (message[1].cmd === 205 && message[1].ps) {
@@ -282,16 +288,12 @@ export default function useBotWebSocket(bot: any, roomID: number) {
         }
         if (message[0] === 6) {
           if (message[1] === 1) {
-            setTimeout(() => {
+            delay(5000).then(() => {
               if (isStartGame) {
                 sendMessage(`["7", "Simms", "1",${message[2] + 1}]`);
+                setCurrentTimer(message[2] + 1);
               }
-              // setTimeout(() => {
-              //   sendMessage(
-              //     `[6,"Simms","channelPlugin",{"cmd":300,"aid":"1","gid":4}]`
-              //   );
-              // }, 2000);
-            }, 5000);
+            });
           }
         }
       }

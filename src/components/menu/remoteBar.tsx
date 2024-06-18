@@ -82,7 +82,7 @@ const RemoteBar: React.FC<any> = ({
     onRefreshBot();
   };
   const onScrollToBoardCard = () => {
-    const boardCardId = `boardCard-active`;
+    const boardCardId = `boardCard-active-${cardDeck}`;
     const boardCardElement = document.getElementById(boardCardId);
 
     if (boardCardElement) {

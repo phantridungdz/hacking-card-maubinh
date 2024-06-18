@@ -13,21 +13,21 @@ export const setupFileHandlers = () => {
         userProfilePath = path.join(
           'C:/Users',
           usernamePc,
-          'AppData/Local/Programs/electron-react-boilerplate/resources',
+          'AppData/Local/Programs/matisse/resources',
           filePath[0]
         );
       } else if (os.platform() === 'darwin') {
         userProfilePath = path.join(
           '/Users',
           usernamePc,
-          'AppData/Local/Programs/electron-react-boilerplate/resources',
+          'AppData/Local/Programs/matisse/resources',
           filePath[0]
         );
       } else {
         userProfilePath = path.join(
           '/home',
           usernamePc,
-          'AppData/Local/Programs/electron-react-boilerplate/resources',
+          'AppData/Local/Programs/matisse/resources',
           filePath[0]
         );
       }
@@ -52,21 +52,21 @@ export const setupFileHandlers = () => {
         userProfilePath = path.join(
           'C:/Users',
           usernamePc,
-          'AppData/Local/Programs/electron-react-boilerplate/resources',
+          'AppData/Local/Programs/matisse/resources',
           filePath[0]
         );
       } else if (os.platform() === 'darwin') {
         userProfilePath = path.join(
           '/Users',
           usernamePc,
-          'AppData/Local/Programs/electron-react-boilerplate/resources',
+          'AppData/Local/Programs/matisse/resources',
           filePath[0]
         );
       } else {
         userProfilePath = path.join(
           '/home',
           usernamePc,
-          'AppData/Local/Programs/electron-react-boilerplate/resources',
+          'AppData/Local/Programs/matisse/resources',
           filePath[0]
         );
       }
@@ -105,19 +105,19 @@ export const setupFileHandlers = () => {
         userProfilePath = path.join(
           'C:/Users',
           usernamePc,
-          'AppData/Local/Programs/electron-react-boilerplate/resources/account'
+          'AppData/Local/Programs/matisse/resources/account'
         );
       } else if (os.platform() === 'darwin') {
         userProfilePath = path.join(
           '/Users',
           usernamePc,
-          'AppData/Local/Programs/electron-react-boilerplate/resources/account'
+          'AppData/Local/Programs/matisse/resources/account'
         );
       } else {
         userProfilePath = path.join(
           '/home',
           usernamePc,
-          'AppData/Local/Programs/electron-react-boilerplate/resources/account'
+          'AppData/Local/Programs/matisse/resources/account'
         );
       }
     } else {
@@ -163,19 +163,19 @@ export const setupFileHandlers = () => {
           userProfilePath = path.join(
             'C:/Users',
             usernamePc,
-            'AppData/Local/Programs/electron-react-boilerplate/resources/account'
+            'AppData/Local/Programs/matisse/resources/account'
           );
         } else if (os.platform() === 'darwin') {
           userProfilePath = path.join(
             '/Users',
             usernamePc,
-            'AppData/Local/Programs/electron-react-boilerplate/resources/account'
+            'AppData/Local/Programs/matisse/resources/account'
           );
         } else {
           userProfilePath = path.join(
             '/home',
             usernamePc,
-            'AppData/Local/Programs/electron-react-boilerplate/resources/account'
+            'AppData/Local/Programs/matisse/resources/account'
           );
         }
       } else {

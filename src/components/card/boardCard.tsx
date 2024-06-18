@@ -36,7 +36,7 @@ const BoardCard: React.FC<any> = ({ indexProps, cards, numPlayers }) => {
           } gap-[10px] py-6 bg-opacity-60 ${
             activeGame === indexProps && 'bg-gray-400'
           }`}
-          id={activeGame === indexProps ? 'boardCard-active' : id}
+          id={activeGame === indexProps ? `boardCard-active-${numPlayers}` : id}
         >
           <Label
             style={{ fontFamily: 'monospace' }}

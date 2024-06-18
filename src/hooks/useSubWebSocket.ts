@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import { toast } from '../components/toast/use-toast';
 import { arrangeCard, binhLungCard } from '../lib/arrangeCard';
+import { delay } from '../lib/utils';
 import { fetchToken, login } from '../service/login';
 import useAccountStore from '../store/accountStore';
 import useGameConfigStore from '../store/gameConfigStore';
@@ -194,11 +195,14 @@ export default function useSubWebSocket(sub: any, roomID: number) {
           }
 
           //send-Ready
+          // if (message[1].cmd === 5 && message[1].dn !== fullName) {
+          //   sendMessage(`[5,"Simms",${roomID},{"cmd":5}]`);
+          // }
           if (message[1].cmd === 607 && message[1].T === 7000) {
-            sendMessage(`[5,"Simms",${roomID},{"cmd":5}]`);
+            sendMessage(`[5,"Simms",${roomID},{"cmd":698}]`);
           }
           if (message[1].cmd === 204 || message[1].cmd === 203) {
-            // updateSubStatus(sub.username, 'Sent ready');
+            updateSubStatus(sub.username, 'Sent ready');
             sendMessage(`[5,"Simms",${roomID},{"cmd":5}]`);
           }
           //end-game-> out room
@@ -280,17 +284,11 @@ export default function useSubWebSocket(sub: any, roomID: number) {
         }
         if (message[0] === 6) {
           if (message[1] === 1) {
-            setTimeout(() => {
+            delay(5000).then(() => {
               if (isStartGame) {
                 sendMessage(`["7", "Simms", "1",${message[2] + 1}]`);
               }
-
-              // setTimeout(() => {
-              //   sendMessage(
-              //     `[6,"Simms","channelPlugin",{"cmd":300,"aid":"1","gid":4}]`
-              //   );
-              // }, 2000);
-            }, 5000);
+            });
           }
         }
       }

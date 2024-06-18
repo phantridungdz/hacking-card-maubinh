@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import { useToast } from '../components/toast/use-toast';
 import { binhLungCard } from '../lib/arrangeCard';
+import { delay } from '../lib/utils';
 import { fetchToken, login } from '../service/login';
 import useAccountStore from '../store/accountStore';
 import useBotRoomStore from '../store/botRoomStore';
@@ -227,20 +228,22 @@ export default function useHostWebSocket(bot: any, roomID: number) {
               // sendMessage(`[4,"Simms",${roomID}]`);
             }
           }
-
           //send-Start
-          if (message[1].cmd === 204 || message[1].cmd === 607) {
+          if (message[1].cmd === 204) {
+            updateBotStatus(bot.username, 'Bot joined');
+            sendMessage(`[5,"Simms",${roomID},{"cmd":5}]`);
+          }
+
+          if (message[1].cmd === 607) {
             if (isFoundedRoom && message[1].cmd === 607) {
               if (botsReady.length === 3) {
                 updateBotStatus(bot.username, 'Sent start');
-                sendMessage(`[5,"Simms",${roomID},{"cmd":5}]`);
                 sendMessage(`[5,"Simms",${roomID},{"cmd":698}]`);
                 clearBotReady();
               }
             }
             if (!isFoundedRoom) {
               updateBotStatus(bot.username, 'Sent start');
-              sendMessage(`[5,"Simms",${roomID},{"cmd":5}]`);
               sendMessage(`[5,"Simms",${roomID},{"cmd":698}]`);
               clearBotReady();
             }
@@ -361,18 +364,11 @@ export default function useHostWebSocket(bot: any, roomID: number) {
         //ping-pong
         if (message[0] === 6) {
           if (message[1] === 1) {
-            setTimeout(() => {
+            delay(5000).then(() => {
               if (isStartGame) {
                 sendMessage(`["7", "Simms", "1",${message[2] + 1}]`);
               }
-              // if (bot.status != 'In lobby') {
-              //   setTimeout(() => {
-              //     sendMessage(
-              //       `[6,"Simms","channelPlugin",{"cmd":300,"aid":"1","gid":4}]`
-              //     );
-              //   }, 2000);
-              // }
-            }, 5000);
+            });
           }
         }
       }
