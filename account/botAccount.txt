@@ -1,4 +1,8 @@
-DongTienVang5|Vanglamluon42|DongTienVang22|7700|true|undefined|undefined|undefined|undefined|false|B52|a7c23d6c15f1603bc97abf2c31e82b42|13-742d7d8706bc2073537a8af1f5edb90f|B52|undefined|undefined|undefined|
-GioTrongGio245|Mauxanh522|GioTrongGio24|8300|true|undefined|undefined|undefined|undefined|false|B52|cfed0affc55d397d27d7a4f4e87831cb|13-68340b6bad587834dec8dddeec58291e|B52|undefined|undefined|undefined|
-rungthietchom|Rungronqua232|rungthietcho4|8900|true|undefined|undefined|undefined|undefined|false|B52|8c7e42064c065305974ed93e36984f96|13-8df57d66dc0c2d6bdb61c077b9634f1c|B52|undefined|undefined|undefined|
-hieuquanghone|Hieuquangh23|hieuquanghone2|8900|true|undefined|undefined|undefined|undefined|false|B52|0b06c73352398e3110b50fd424f8c573|13-efc5552b2403332ff38952e63b177d20|B52|undefined|undefined|undefined|
+DongTienVang5|Vanglamluon42|DongTienVang22|7700|true|undefined|undefined|undefined|undefined|false|B52|27ef288058fe752730f589283a48d79c|13-ad7063f9b795d1530637c8ede718987a|B52|undefined|undefined|undefined|
+GioTrongGio245|Mauxanh522|GioTrongGio24|8300|true|undefined|undefined|undefined|undefined|false|B52|f87cb7e899cb2ba261a6303b695eabea|13-360329f0d4c3eeb2dcc201e5b35e43e6|B52|undefined|undefined|undefined|
+rungthietchom|Rungronqua232|rungthietcho4|8900|true|undefined|undefined|undefined|undefined|false|B52|56567bd225c21f52767e712964488aa2|13-3f335ee730637efd06a50f50686abfd2|B52|undefined|undefined|undefined|
+hieuquanghone|Hieuquangh23|hieuquanghone2|8900|true|undefined|undefined|undefined|undefined|false|B52|2bed18cd7b379eb6960e7fddc4bcb519|13-70b2686f2500da685a6b82b38767bae4|B52|undefined|undefined|undefined|
+tramvietquoc225|tramvietquoc225@A|tramvietquoc34|12108|true|undefined|undefined|undefined|undefined|false|HIT|undefined|31-f731f2fd1a80caff4d0bc2ee4c65567b|TA88|undefined|undefined|undefined|
+ucnghiadung265|ucnghiadung265BN|ucnghiadung2655|10310|true|undefined|undefined|undefined|undefined|false|HIT|undefined|24-529047d3a0d934b14dadd5c4a3a3a18e|MAY88|undefined|undefined|undefined|
+hoquochoai159|hoquochoai5656NNN|hoquochoai159223|11630|true|undefined|undefined|undefined|undefined|false|HIT|undefined|15-dd7a867e81228f66e4079657ab001407|SV88|undefined|undefined|undefined|
+vovietdung567|vovietdung567@%bbC|vovietdung567|9646|true|undefined|undefined|undefined|undefined|false|HIT|undefined|31-ca4a1061b3489cdda9dacad5db128364|TA88|undefined|undefined|undefined|

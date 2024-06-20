@@ -289,7 +289,7 @@ export const TerminalBoard: React.FC<any> = ({ main }) => {
                 className="flex items-center bg-background border bg-gray-500 p-[5px] w-[70px] h-[35px] flex-grow justify-center !font-extrabold text-[17px] rounded-full flex-row gap-[3px]"
               >
                 <MapPin className="w-5 h-5" />
-                {currentSit}1
+                {currentSit}
               </Label>
             </div>
           </div>

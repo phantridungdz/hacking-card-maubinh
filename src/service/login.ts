@@ -411,8 +411,8 @@ const loginMay88 = async (
     'Sec-ch-ua': `"Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"`,
     'User-agent':
       'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0',
-    Origin: 'https://may88.game',
-    Referer: 'https://may88.game',
+    Origin: 'https://may88.com',
+    Referer: 'https://may88.com',
     Cookie:
       'device=desktop; _gcl_au=1.1.732562051.1716726234; _ga_171YF2R0MV=GS1.1.1716726234.1.0.1716726234.0.0.0; _ga=GA1.2.314653449.1716726234; _gid=GA1.2.245976383.1716726234; _gat_UA-185855122-1=1; _ga_LNECPR22W8=GS1.2.1716726234.1.0.1716726234.60.0.0',
   };
@@ -1006,7 +1006,7 @@ const login = async (bot: any, accountType: string, updateAccount: any) => {
         bot,
         accountType,
         updateAccount,
-        'https://may88.game/api/v1/login'
+        'https://may88.com/api/v1/login'
       );
     case 'SV88':
       return await loginSv88(

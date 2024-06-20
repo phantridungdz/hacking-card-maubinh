@@ -1,2 +1,4 @@
-luckybingor|Luckybing322|luckybingor2|6886|true|undefined|undefined|undefined|undefined|false|B52|f09e0caab321936f72a94a8a55ef0ed7|13-34524f6d8cebec9b219d065719db86c6|B52|undefined|undefined|undefined|
-Badabumbada|Binhan8890|Badabumba|8768|true|undefined|undefined|undefined|undefined|false|B52|ad9ea4d8815ef9bd21cafd95ec9ea41a|13-9d32c670bb016f30003a0d1d9b1766f6|B52|undefined|undefined|undefined|
+luckybingor|Luckybing322|luckybingor2|6886|true|undefined|undefined|undefined|undefined|false|B52|13f9e90536b4961645963cd29296865c|13-b9e9b2ab94fd03288e785b21f0eb0bc7|B52|undefined|undefined|undefined|
+Badabumbada|Binhan8890|Badabumba|8768|true|undefined|undefined|undefined|undefined|false|B52|4b20036ab59836774059c02cc0fbb454|13-6fd33b34a3d3493d80cf2383e074bd7e|B52|undefined|undefined|undefined|
+Chaynhanhdi156|Chayvaotui155|caothiusa5|31200|true|undefined|undefined|undefined|undefined|false|HIT|undefined|40-953868bfafce4f31f794b790f6067754|UK88|undefined|undefined|undefined|
+taometroinha23223|taometroinha23223aB|taometroin12|42286|true|undefined|undefined|undefined|undefined|false|HIT|undefined|31-43536927de1fab5b1a35f26ba01494e8|TA88|undefined|undefined|undefined|

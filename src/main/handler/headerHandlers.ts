@@ -222,8 +222,8 @@ const setHeaderForMay88 = () => {
     const newHeaders = capitalizeRequestHeaderKeys(
       details.requestHeaders as Record<string, string>
     );
-    newHeaders['Referer'] = 'https://may88.game';
-    newHeaders['Origin'] = 'https://may88.game';
+    newHeaders['Referer'] = 'https://may88.com';
+    newHeaders['Origin'] = 'https://may88.com';
     newHeaders['Accept'] = 'application/json, text/plain, */*';
     newHeaders['Accept-encoding'] = 'gzip, deflate, br, zstd';
     newHeaders['Accept-language'] = 'en-US,en;q=0.9';

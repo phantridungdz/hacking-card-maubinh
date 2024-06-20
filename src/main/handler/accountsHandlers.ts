@@ -3,7 +3,11 @@ const os = require('os');
 const puppeteer = require('puppeteer');
 
 import path from 'path';
-import { loginHitCommand, loginRikCommand } from '../command/command';
+import {
+  loginB52Command,
+  loginHitCommand,
+  loginRikCommand,
+} from '../command/command';
 import { getTargetUrl } from './supabase';
 
 interface WebSocketCreatedData {
@@ -216,10 +220,10 @@ export const setupAccountHandlers = async (
             targetSite =
               'https://games.gnightfast.net/?token=' +
               account.token +
-              '&gameid=vgcg_4&brand=may88&ru=https://may88.game/games';
+              '&gameid=vgcg_4&brand=may88&ru=https://may88.com/games';
           } else {
             targetSite =
-              'https://games.prorichvip.com/?brand=may88&ru=https%3A%2F%2Fmay88.game%2Fgames%23card&token=' +
+              'https://games.prorichvip.com/?brand=may88&ru=https%3A%2F%2Fmay88.com%2Fgames%23card&token=' +
               account.token +
               '&gameid=vgcg_4';
           }
@@ -351,6 +355,8 @@ export const setupAccountHandlers = async (
       await page.evaluate(
         account.targetSite === 'RIK'
           ? loginRikCommand(account)
+          : account.targetSite === 'B52'
+          ? loginB52Command(account)
           : loginHitCommand(account)
       );
 
