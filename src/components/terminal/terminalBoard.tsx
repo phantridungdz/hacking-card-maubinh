@@ -203,7 +203,7 @@ export const TerminalBoard: React.FC<any> = ({ main }) => {
 
   useEffect(() => {
     if (mainRoomID) {
-      if (currentTargetSite === 'RIK') {
+      if (currentTargetSite === 'RIK' || currentTargetSite === 'B52') {
         window.backend.sendMessage(
           'execute-script',
           main,
@@ -286,10 +286,10 @@ export const TerminalBoard: React.FC<any> = ({ main }) => {
             <div>
               <Label
                 style={{ fontFamily: 'monospace' }}
-                className="flex items-center bg-background border p-[5px] w-[40px] h-[30px] flex-grow justify-center font-bold rounded-full flex-row gap-[3px]"
+                className="flex items-center bg-background border bg-gray-500 p-[5px] w-[70px] h-[35px] flex-grow justify-center !font-extrabold text-[17px] rounded-full flex-row gap-[3px]"
               >
-                <MapPin className="w-3.5 h-3.5" />
-                {currentSit}
+                <MapPin className="w-5 h-5" />
+                {currentSit}1
               </Label>
             </div>
           </div>

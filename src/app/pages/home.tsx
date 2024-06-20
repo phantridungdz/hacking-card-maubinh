@@ -60,97 +60,99 @@ export const HomePage: React.FC<any> = ({ cardDeck, setCardDeck }) => {
   return (
     <ResizablePanelGroup
       direction="horizontal"
-      className="mt-[160px] relative min-h-screen !overflow-visible"
+      className="relative min-h-screen !overflow-visible"
     >
-      <ResizablePanel defaultSize={65}>
-        <Card>
-          <CardHeader>
-            <CardTitle>All card in room</CardTitle>
-          </CardHeader>
-          <Tabs
-            defaultValue="2"
-            onValueChange={setCardDeck}
-            value={cardDeck}
-            className="w-full p-4"
-          >
-            <TabsContent forceMount hidden={'2' !== cardDeck} value="2">
-              <Card>
-                <Table>
-                  <TableBody>
-                    {cards.map((card, index) => (
-                      <TableRow
-                        key={index}
-                        className={`relative !rounded-[20px] bg-opacity-60 `}
-                      >
-                        <BoardCard
-                          cards={card}
-                          indexProps={index}
-                          numPlayers={2}
-                        />
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </Card>
-            </TabsContent>
-            <TabsContent forceMount hidden={'3' !== cardDeck} value="3">
-              <Card>
-                <Table>
-                  <TableBody>
-                    {cards.map((card, index) => (
-                      <TableRow
-                        key={index}
-                        className={`relative !rounded-[20px] bg-opacity-60 `}
-                      >
-                        <BoardCard
-                          cards={card}
-                          indexProps={index}
-                          numPlayers={3}
-                        />
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </Card>
-            </TabsContent>
-            <TabsContent forceMount hidden={'4' !== cardDeck} value="4">
-              <Card>
-                <Table>
-                  <TableBody>
-                    {cards.map((card, index) => (
-                      <TableRow
-                        key={index}
-                        className={`relative !rounded-[20px] bg-opacity-60 `}
-                      >
-                        <BoardCard
-                          cards={card}
-                          indexProps={index}
-                          numPlayers={4}
-                        />
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </Card>
-            </TabsContent>
-          </Tabs>
-          {process.env.NODE_ENV == 'development' && (
-            <CardFooter>
-              <div className="text-xs text-muted-foreground flex flex-row gap-2 items-center">
-                <Label>
-                  Showing <strong>{cards.length}</strong> of cards
-                </Label>
-                <Button
-                  variant="ghost"
-                  className="h-8 w-8 p-0"
-                  onClick={addRandomCards}
-                >
-                  <Plus />
-                </Button>
-              </div>
-            </CardFooter>
-          )}
-        </Card>
+      <ResizablePanel defaultSize={65} className="!p-4">
+        <div>
+          <Card className="">
+            <CardHeader>
+              <CardTitle>All card in room</CardTitle>
+            </CardHeader>
+            <Tabs
+              defaultValue="2"
+              onValueChange={setCardDeck}
+              value={cardDeck}
+              className="w-full p-4"
+            >
+              <TabsContent forceMount hidden={'2' !== cardDeck} value="2">
+                <Card>
+                  <Table>
+                    <TableBody>
+                      {cards.map((card, index) => (
+                        <TableRow
+                          key={index}
+                          className={`relative !rounded-[20px] bg-opacity-60 `}
+                        >
+                          <BoardCard
+                            cards={card}
+                            indexProps={index}
+                            numPlayers={2}
+                          />
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </Card>
+              </TabsContent>
+              <TabsContent forceMount hidden={'3' !== cardDeck} value="3">
+                <Card>
+                  <Table>
+                    <TableBody>
+                      {cards.map((card, index) => (
+                        <TableRow
+                          key={index}
+                          className={`relative !rounded-[20px] bg-opacity-60 `}
+                        >
+                          <BoardCard
+                            cards={card}
+                            indexProps={index}
+                            numPlayers={3}
+                          />
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </Card>
+              </TabsContent>
+              <TabsContent forceMount hidden={'4' !== cardDeck} value="4">
+                <Card>
+                  <Table>
+                    <TableBody>
+                      {cards.map((card, index) => (
+                        <TableRow
+                          key={index}
+                          className={`relative !rounded-[20px] bg-opacity-60 `}
+                        >
+                          <BoardCard
+                            cards={card}
+                            indexProps={index}
+                            numPlayers={4}
+                          />
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </Card>
+              </TabsContent>
+            </Tabs>
+            {process.env.NODE_ENV == 'development' && (
+              <CardFooter>
+                <div className="text-xs text-muted-foreground flex flex-row gap-2 items-center">
+                  <Label>
+                    Showing <strong>{cards.length}</strong> of cards
+                  </Label>
+                  <Button
+                    variant="ghost"
+                    className="h-8 w-8 p-0"
+                    onClick={addRandomCards}
+                  >
+                    <Plus />
+                  </Button>
+                </div>
+              </CardFooter>
+            )}
+          </Card>
+        </div>
       </ResizablePanel>
       <ResizableHandle className="mx-2" />
       <ResizablePanel className="!overflow-visible">

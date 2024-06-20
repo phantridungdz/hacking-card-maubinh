@@ -134,7 +134,9 @@ export const setupAccountHandlers = async (
             url.includes(
               account.targetSite === 'RIK'
                 ? 'wss://cardskgw.ryksockesg.net/websocket'
-                : 'wss://carkgwaiz.hytsocesk.com/websocket'
+                : account.targetSite === 'HIT'
+                ? 'wss://carkgwaiz.hytsocesk.com/websocket'
+                : 'wss://cardbodergs.weskb5gams.net/websocket'
             )
           ) {
             specificWebSocketRequestId = requestId;
@@ -401,10 +403,11 @@ export const setupAccountHandlers = async (
       event.reply('execute-script-reply', `Account ${username} not found.`);
     }
   });
-  ipcMain.on('generateFg', async (event, script) => {
+  ipcMain.on('generateFg', async (event, script, targetSites) => {
     // const instance = puppeteerInstances.find(
     //   (instance) => instance.username === 'hit'
     // );
+    console.log('targetSites', targetSites);
     const instance = puppeteerInstances[0];
     if (instance) {
       const { page } = instance;
@@ -415,7 +418,9 @@ export const setupAccountHandlers = async (
 
           if (
             requestUrl.includes(
-              'https://www.google.com/recaptcha/enterprise/reload?k=6LcRfskaAAAAAPLbAdyH3WCygmXJ4KWietpBc_UA'
+              targetSites === 'B52'
+                ? 'https://www.google.com/recaptcha/enterprise/reload?k=6Ld2h7chAAAAADTq4Dwn5_suHawrnqSV1IPjJiix'
+                : 'https://www.google.com/recaptcha/enterprise/reload?k=6LcRfskaAAAAAPLbAdyH3WCygmXJ4KWietpBc_UA'
             )
           ) {
             // Replace 'specific-endpoint' with your condition

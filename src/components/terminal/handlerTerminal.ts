@@ -34,7 +34,7 @@ export const joinRoom = (
   targetSite: string
 ): void => {
   if (mainRoomID) {
-    if (targetSite === 'RIK') {
+    if (targetSite === 'RIK' || targetSite === 'B52') {
       window.backend.sendMessage(
         'execute-script',
         account,
@@ -92,7 +92,7 @@ export const outInRoom = async (
   if (mainRoomID) {
     await outRoom(account);
     await new Promise((resolve) => setTimeout(resolve, 500));
-    if (account.targetSite === 'RIK') {
+    if (account.targetSite === 'RIK' || account.targetSite === 'B52') {
       window.backend.sendMessage(
         'execute-script',
         account,
@@ -142,6 +142,7 @@ export const openAccounts = async (account: any) => {
   if (
     account.fromSite === 'HIT' ||
     account.fromSite === 'RIK' ||
+    account.fromSite === 'B52' ||
     (account.token && account.token != 'undefined')
   ) {
     await window.backend.sendMessage('open-accounts', account);

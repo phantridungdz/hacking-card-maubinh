@@ -180,7 +180,11 @@ export const HandCard: React.FC<HandCardProps> = ({ index, cardProp }) => {
             <Label
               className={`py-2 px-[7px] mb-2 rounded-[5px] border font-semibold text-[13px] truncate bg-background `}
             >
-              {evaluation1} - {evaluation2} - {evaluation3}
+              {evaluation1}
+              {evaluation2 != '' && ' - '}
+              {evaluation2}
+              {evaluation3 != '' && ' - '}
+              {evaluation3}
             </Label>
 
             <div className="grid grid-rows-3 gap-[5px] relative text-center font-bold text-[15px] ">

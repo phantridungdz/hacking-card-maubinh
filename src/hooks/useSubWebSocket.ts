@@ -299,10 +299,10 @@ export default function useSubWebSocket(sub: any, roomID: number) {
 
   useEffect(() => {
     if (isReadyToJoin) {
-      if (currentTargetSite !== 'RIK') {
-        sendMessage(`[8,"Simms",${roomID},"",4]`);
-      } else {
+      if (currentTargetSite !== 'HIT') {
         sendMessage(`[3,"Simms",${roomID},"",true]`);
+      } else {
+        sendMessage(`[8,"Simms",${roomID},"",4]`);
       }
       updateSubStatus(sub.username, 'Joining Room');
     }

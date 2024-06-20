@@ -95,7 +95,7 @@ const RemoteBar: React.FC<any> = ({
     }
   };
   return (
-    <div className="flex items-center fixed top-0 left-0 right-0  py-[15px] bg-background border-b z-[21] px-[10px]">
+    <div className="flex items-center sticky top-0 left-0 right-0  py-[15px] bg-background border-b z-[21] px-[10px]">
       <div className="ml-auto w-full flex items-center gap-2 justify-between">
         <div className="flex justify-start items-center gap-2">
           <Button

@@ -48,6 +48,15 @@ const useGameConfigStore = create<any>(
             newDepositUrl = 'https://pmbodergw.dsrcgoms.net/payment/card/hit';
             newWsTargetUrl = 'wss://carkgwaiz.hytsocesk.com/websocket';
             break;
+          case 'B52':
+            newCheckBalanceUrl =
+              'https://bodergatez.dsrcgoms.net/gwms/v1/safe/load.aspx';
+            newLoginUrl = 'https://bodergatez.dsrcgoms.net/user/login.aspx';
+            newTrackingIPUrl = 'https://bodergatez.dsrcgoms.net/sw/collect';
+            newRegisterUrl = 'https://bodergatez.dsrcgoms.net/user';
+            newDepositUrl = 'https://pmbodergw.dsrcgoms.net/payment/card/hit';
+            newWsTargetUrl = 'wss://cardbodergs.weskb5gams.net/websocket';
+            break;
           case 'SUNWIN':
             newCheckBalanceUrl =
               'https://bodergatez.dsrcgoms.net/gwms/v1/safe/load.aspx';

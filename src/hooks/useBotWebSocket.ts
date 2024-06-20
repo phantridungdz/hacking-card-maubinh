@@ -304,10 +304,10 @@ export default function useBotWebSocket(bot: any, roomID: number) {
 
   useEffect(() => {
     if (isReadyToJoin) {
-      if (currentTargetSite !== 'RIK') {
-        sendMessage(`[8,"Simms",${roomID},"123123",4]`);
-      } else {
+      if (currentTargetSite !== 'HIT') {
         sendMessage(`[3,"Simms",${roomID},"",true]`);
+      } else {
+        sendMessage(`[8,"Simms",${roomID},"123123",4]`);
       }
       updateBotStatus(bot.username, 'Joining Room');
     }

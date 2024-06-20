@@ -34,7 +34,8 @@ const BoardCard: React.FC<any> = ({ indexProps, cards, numPlayers }) => {
           className={`${
             flexCard ? 'flex flex-row' : 'grid grid-cols-4'
           } gap-[10px] py-6 bg-opacity-60 ${
-            activeGame === indexProps && 'bg-gray-400'
+            activeGame === indexProps &&
+            'bg-gray-400 shadow-[0px_0px_10px_5px_rgba(255,_0,_0,_0.8)]'
           }`}
           id={activeGame === indexProps ? `boardCard-active-${numPlayers}` : id}
         >
