@@ -198,25 +198,29 @@ const setHeaderForFive88 = () => {
     const newHeaders = capitalizeRequestHeaderKeys(
       details.requestHeaders as Record<string, string>
     );
-    newHeaders['Referer'] = 'https://five88.vin';
-    newHeaders['Origin'] = 'https://five88.vin';
-    newHeaders['Accept'] = 'application/json, text/javascript, */*; q=0.01';
-    newHeaders['Accept-encoding'] = 'gzip, deflate, br, zstd';
-    newHeaders['Accept-language'] = 'en-US,en;q=0.9';
-    newHeaders['Content-Type'] =
+    newHeaders['accept'] = 'application/json, text/javascript, */*; q=0.01';
+    newHeaders['accept-language'] = 'en-US,en;q=0.9';
+    newHeaders['content-type'] =
       'application/x-www-form-urlencoded; charset=UTF-8';
-    newHeaders['Dnt'] = '1';
-    newHeaders['Cookie'] =
-      'PHPSESSID=5fce472f3e07e13f1673ddb99de973d7; _gcl_au=1.1.631577307.1716999653; _ga_V2TKQNQHHX=GS1.1.1716999652.1.0.1716999652.60.0.0; _gid=GA1.2.1444793540.1716999653; _gat_UA-238184817-1=1; _gat_UA-156072496-1=1; _stoken=f050d05650fd76c373aa9a79f854573c; _ga=GA1.2.802994207.1716999653; __utma=63665976.802994207.1716999653.1716999657.1716999657.1; __utmc=63665976; __utmz=63665976.1716999657.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); _ga_D2M74VZWV7=GS1.1.1716999652.1.0.1716999658.0.0.0; __utmb=63665976.3.9.1716999664228; _ga_5QSLVWX8N6=GS1.2.1716999653.1.1.1716999664.0.0.0';
-    newHeaders['Priority'] = 'u=1, i';
-    newHeaders['User-agent'] =
-      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0';
-    newHeaders[
-      'Sec-ch-ua'
-    ] = `"Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"`;
+    newHeaders['cookie'] =
+      '_gcl_au=1.1.543274646.1718973713; _gid=GA1.2.357644726.1718973713; PHPSESSID=1d52c1a616b4274f34f3ce0094b79449; io=qYUzxdMHo7CVTC-rAFI5; _stoken=1f1d9ec3f7ca4f86bbdcff3bff31b375; _gat_UA-238184817-1=1; _gat_UA-156072496-1=1; _ga_V2TKQNQHHX=GS1.1.1718983166.2.0.1718983166.60.0.0; _ga=GA1.2.1480773597.1718973713; __utma=63665976.1480773597.1718973713.1718983167.1718983167.1; __utmc=63665976; __utmz=63665976.1718983167.1.1.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=(not%20provided); _ga_D2M74VZWV7=GS1.1.1718983166.2.0.1718983170.0.0.0; __utmb=63665976.10.7.1718983187919; _ga_5QSLVWX8N6=GS1.2.1718983166.2.1.1718983187.0.0.0';
+    newHeaders['origin'] = 'https://five88.vin';
+    newHeaders['priority'] = 'u=1, i';
+    newHeaders['referer'] = 'https://five88.vin/';
+    newHeaders['sec-ch-ua'] =
+      '"Not/A)Brand";v="8", "Chromium";v="126", "Microsoft Edge";v="126"';
+    newHeaders['sec-ch-ua-mobile'] = '?0';
+    newHeaders['sec-ch-ua-platform'] = '"Windows"';
+    newHeaders['sec-fetch-dest'] = 'empty';
+    newHeaders['sec-fetch-mode'] = 'cors';
+    newHeaders['sec-fetch-site'] = 'same-origin';
+    newHeaders['user-agent'] =
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 Edg/126.0.0.0';
+    newHeaders['x-requested-with'] = 'XMLHttpRequest';
     callback({ requestHeaders: newHeaders });
   });
 };
+
 const setHeaderForMay88 = () => {
   session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
     const newHeaders = capitalizeRequestHeaderKeys(
@@ -245,15 +249,15 @@ const setHeaderForXo88 = () => {
     const newHeaders = capitalizeRequestHeaderKeys(
       details.requestHeaders as Record<string, string>
     );
-    newHeaders['Referer'] = 'https://xo88.us/game-bai';
-    newHeaders['Origin'] = 'https://xo88.us';
+    newHeaders['Referer'] = 'https://xo88.uk/game-bai';
+    newHeaders['Origin'] = 'https://xo88.uk';
     newHeaders['Accept'] = 'application/json, text/plain, */*';
     newHeaders['Accept-encoding'] = 'gzip, deflate, br, zstd';
     newHeaders['Accept-language'] = 'en-US,en;q=0.9';
     newHeaders['Content-Type'] = 'application/json';
     newHeaders['Dnt'] = '1';
     newHeaders['Cookie'] =
-      'device=desktop; domain=https%3A%2F%2Fxo88.us; host=xo88.us; showed=Wed%20May%2029%202024%2023%3A14%3A33%20GMT+0700%20%28Indochina%20Time%29';
+      'device=desktop; domain=https%3A%2F%2Fxo88.uk; host=xo88.uk; showed=Wed%20May%2029%202024%2023%3A14%3A33%20GMT+0700%20%28Indochina%20Time%29';
     newHeaders['Priority'] = 'u=1, i';
     newHeaders['User-agent'] =
       'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0';
@@ -337,15 +341,15 @@ const setHeaderForUk88 = () => {
     const newHeaders = capitalizeRequestHeaderKeys(
       details.requestHeaders as Record<string, string>
     );
-    newHeaders['Referer'] = 'https://uk88.com';
-    newHeaders['Origin'] = 'https://uk88.com';
+    newHeaders['Referer'] = 'https://uk88.win';
+    newHeaders['Origin'] = 'https://uk88.win';
     newHeaders['Accept'] = 'application/json';
     newHeaders['Accept-encoding'] = 'gzip, deflate, br, zstd';
     newHeaders['Accept-language'] = 'en-US,en;q=0.9';
     newHeaders['Content-Type'] = 'application/json';
     newHeaders['Dnt'] = '1';
     newHeaders['Cookie'] =
-      'device=desktop; os=desktop; source=uk88.com; saleAdvised=null; aff_id=null; utm_source=null; utm_medium=null; utm_campaign=null; utm_term=null; utm_content=null';
+      'device=desktop; os=desktop; source=uk88.win; saleAdvised=null; aff_id=null; utm_source=null; utm_medium=null; utm_campaign=null; utm_term=null; utm_content=null';
     newHeaders['Priority'] = 'u=1, i';
     newHeaders['User-agent'] =
       'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0';
@@ -383,15 +387,15 @@ const setHeaderForTa88 = () => {
     const newHeaders = capitalizeRequestHeaderKeys(
       details.requestHeaders as Record<string, string>
     );
-    newHeaders['Referer'] = 'https://ta88.com';
-    newHeaders['Origin'] = 'https://ta88.com';
+    newHeaders['Referer'] = 'https://ta88.me';
+    newHeaders['Origin'] = 'https://ta88.me';
     newHeaders['Accept'] = 'application/json';
     newHeaders['Accept-encoding'] = 'gzip, deflate, br, zstd';
     newHeaders['Accept-language'] = 'en-US,en;q=0.9';
     newHeaders['Content-Type'] = 'application/json';
     newHeaders['Dnt'] = '1';
     newHeaders['Cookie'] =
-      'device=desktop; os=desktop; source=ta88.com; saleAdvised=null; aff_id=null; utm_source=null; utm_medium=null; utm_campaign=null; utm_term=null; utm_content=null';
+      'device=desktop; os=desktop; source=ta88.me; saleAdvised=null; aff_id=null; utm_source=null; utm_medium=null; utm_campaign=null; utm_term=null; utm_content=null';
     newHeaders['Priority'] = 'u=1, i';
     newHeaders['User-agent'] =
       'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0';
@@ -414,7 +418,7 @@ const setHeaderForZbet = () => {
     newHeaders['Content-Type'] = 'application/json';
     newHeaders['Dnt'] = '1';
     newHeaders['Cookie'] =
-      'device=desktop; os=desktop; source=uk88.com; saleAdvised=null; aff_id=null; utm_source=null; utm_medium=null; utm_campaign=null; utm_term=null; utm_content=null';
+      'device=desktop; os=desktop; source=uk88.win; saleAdvised=null; aff_id=null; utm_source=null; utm_medium=null; utm_campaign=null; utm_term=null; utm_content=null';
     newHeaders['Priority'] = 'u=1, i';
     newHeaders['User-agent'] =
       'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0';
@@ -429,7 +433,7 @@ const setHeaderForLucky88 = () => {
     const newHeaders = capitalizeHeaderKeys(
       details.responseHeaders as Record<string, string[]>
     );
-    newHeaders['Access-control-allow-origin'] = ['https://lucky88.com'];
+    newHeaders['Access-control-allow-origin'] = ['https://lucky88.vip'];
     newHeaders['Cf-cache-status'] = ['DYNAMIC'];
     callback({ responseHeaders: newHeaders });
   });
@@ -438,15 +442,15 @@ const setHeaderForLucky88 = () => {
     const newHeaders = capitalizeRequestHeaderKeys(
       details.requestHeaders as Record<string, string>
     );
-    newHeaders['Referer'] = 'https://lucky88.com';
-    newHeaders['Origin'] = 'https://lucky88.com';
+    newHeaders['Referer'] = 'https://lucky88.vip';
+    newHeaders['Origin'] = 'https://lucky88.vip';
     newHeaders['Accept'] = '*/*';
     newHeaders['Accept-encoding'] = 'gzip, deflate, br, zstd';
     newHeaders['Accept-language'] = 'en-US,en;q=0.9';
     newHeaders['Content-Type'] = 'application/json';
     newHeaders['Dnt'] = '1';
     (newHeaders['Cookie'] =
-      'device=desktop; source=lucky88.com; saleAdvised=null; aff_id=null; utm_source=null; utm_medium=null; utm_campaign=null; utm_term=null; utm_content=null; notify_2517=true; _gid=GA1.2.482221069.1718447108; _gat_UA-111397367-1=1; whitelist=true; _ga=GA1.1.1780038016.1718447108; _hjSessionUser_2509823=eyJpZCI6IjM2YTk4OGE5LTNiZWYtNTNkNi1hNGQ3LTBjYzAzM2RiOGFhMSIsImNyZWF0ZWQiOjE3MTg0NDcxMDg0OTYsImV4aXN0aW5nIjpmYWxzZX0=; _hjSession_2509823=eyJpZCI6IjQ3ZTMxOWJiLTBkY2ItNGUzYS1hY2U2LWVlNmUxMTQzNGExYSIsImMiOjE3MTg0NDcxMDg0OTcsInMiOjAsInIiOjAsInNiIjowLCJzciI6MCwic2UiOjAsImZzIjoxLCJzcCI6MH0=; _ga_P59W5KG65E=GS1.2.1718447108.1.0.1718447108.0.0.0; _ga_46CET3FGH7=GS1.1.1718447108.1.0.1718447120.0.0.0'),
+      'device=desktop; source=lucky88.vip; saleAdvised=null; aff_id=null; utm_source=null; utm_medium=null; utm_campaign=null; utm_term=null; utm_content=null; notify_2517=true; _gid=GA1.2.482221069.1718447108; _gat_UA-111397367-1=1; whitelist=true; _ga=GA1.1.1780038016.1718447108; _hjSessionUser_2509823=eyJpZCI6IjM2YTk4OGE5LTNiZWYtNTNkNi1hNGQ3LTBjYzAzM2RiOGFhMSIsImNyZWF0ZWQiOjE3MTg0NDcxMDg0OTYsImV4aXN0aW5nIjpmYWxzZX0=; _hjSession_2509823=eyJpZCI6IjQ3ZTMxOWJiLTBkY2ItNGUzYS1hY2U2LWVlNmUxMTQzNGExYSIsImMiOjE3MTg0NDcxMDg0OTcsInMiOjAsInIiOjAsInNiIjowLCJzciI6MCwic2UiOjAsImZzIjoxLCJzcCI6MH0=; _ga_P59W5KG65E=GS1.2.1718447108.1.0.1718447108.0.0.0; _ga_46CET3FGH7=GS1.1.1718447108.1.0.1718447120.0.0.0'),
       (newHeaders['Priority'] = 'u=1, i');
     newHeaders['User-agent'] =
       'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0';
@@ -456,6 +460,141 @@ const setHeaderForLucky88 = () => {
     callback({ requestHeaders: newHeaders });
   });
 };
+const setHeaderForRed88 = () => {
+  session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
+    const newHeaders = capitalizeHeaderKeys(
+      details.responseHeaders as Record<string, string[]>
+    );
+    newHeaders['Access-control-allow-origin'] = ['https://red88.tv'];
+    newHeaders['Cf-cache-status'] = ['DYNAMIC'];
+    callback({ responseHeaders: newHeaders });
+  });
+
+  session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
+    const newHeaders = capitalizeRequestHeaderKeys(
+      details.requestHeaders as Record<string, string>
+    );
+    newHeaders['accept'] = 'application/json, text/plain, */*';
+    newHeaders['accept-language'] = 'en-US,en;q=0.9';
+    newHeaders['browser'] = 'Edge';
+    newHeaders['content-type'] = 'application/json';
+    newHeaders['device'] = 'pc';
+    newHeaders['origin'] = 'https://red88.tv';
+    newHeaders['os'] = 'Windows 10';
+    newHeaders['priority'] = 'u=1, i';
+    newHeaders['referer'] = 'https://red88.tv/';
+    newHeaders['sec-ch-ua'] =
+      '"Not/A)Brand";v="8", "Chromium";v="126", "Microsoft Edge";v="126"';
+    newHeaders['sec-ch-ua-mobile'] = '?0';
+    newHeaders['sec-ch-ua-platform'] = '"Windows"';
+    newHeaders['sec-fetch-dest'] = 'empty';
+    newHeaders['sec-fetch-mode'] = 'cors';
+    newHeaders['sec-fetch-site'] = 'same-site';
+    newHeaders['user-agent'] =
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 Edg/126.0.0.0';
+    callback({ requestHeaders: newHeaders });
+  });
+};
+const setHeaderLode88 = () => {
+  session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
+    const newHeaders = capitalizeHeaderKeys(
+      details.responseHeaders as Record<string, string[]>
+    );
+    newHeaders['Access-control-allow-origin'] = ['https://lode88.ai'];
+    newHeaders['Cf-cache-status'] = ['DYNAMIC'];
+    callback({ responseHeaders: newHeaders });
+  });
+
+  session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
+    const newHeaders = capitalizeRequestHeaderKeys(
+      details.requestHeaders as Record<string, string>
+    );
+    newHeaders['Referer'] = 'https://lode88.ai';
+    newHeaders['Origin'] = 'https://lode88.ai';
+    newHeaders['Accept'] = '*/*';
+    newHeaders['Accept-encoding'] = 'gzip, deflate, br, zstd';
+    newHeaders['Accept-language'] = 'en-US,en;q=0.9';
+    newHeaders['Content-Type'] = 'application/json';
+    newHeaders['Dnt'] = '1';
+    (newHeaders['Cookie'] =
+      '_gid=GA1.2.962535063.1718893045; device=desktop; domain=https%3A%2F%2Flode88.ai; host=lode88.ai; vgmnid=13145.92260958204761718970712433; mini-opened=%7B%22aviator%22%3A%7B%22left%22%3Anull%2C%22top%22%3A150%7D%2C%22taixiu%22%3A%7B%7D%2C%22hilo%22%3A%7B%7D%2C%22poker%22%3A%7B%7D%7D; notificationTime=%222024-06-22T11%3A52%3A23.084Z%22; reloadCount=0; _gat_UA-177224808-1=1; _ga=GA1.2.451142714.1718893045; _ga_GLGHQW1XYP=GS1.1.1718969217.2.1.1718970765.0.0.0; _ga_BDKVWDCWMC=GS1.2.1718969217.2.1.1718970768.0.0.0'),
+      (newHeaders['Priority'] = 'u=1, i');
+    newHeaders['User-agent'] =
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 Edg/126.0.0.0';
+    newHeaders[
+      'Sec-ch-ua'
+    ] = `"Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"`;
+    callback({ requestHeaders: newHeaders });
+  });
+};
+const setHeaderForOxbet = () => {
+  session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
+    const newHeaders = capitalizeHeaderKeys(
+      details.responseHeaders as Record<string, string[]>
+    );
+    newHeaders['Access-control-allow-origin'] = ['https://oxbet.in'];
+    newHeaders['Cf-cache-status'] = ['DYNAMIC'];
+    callback({ responseHeaders: newHeaders });
+  });
+
+  session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
+    const newHeaders = capitalizeRequestHeaderKeys(
+      details.requestHeaders as Record<string, string>
+    );
+    newHeaders['Referer'] = 'https://oxbet.in';
+    newHeaders['Origin'] = 'https://oxbet.in';
+    newHeaders['Accept'] = '*/*';
+    newHeaders['Accept-encoding'] = 'gzip, deflate, br, zstd';
+    newHeaders['Accept-language'] = 'en-US,en;q=0.9';
+    newHeaders['Content-Type'] = 'application/json';
+    newHeaders['Dnt'] = '1';
+    (newHeaders['Cookie'] =
+      '_gid=GA1.2.962535063.1718893045; device=desktop; domain=https%3A%2F%2Foxbet.in; host=oxbet.in; vgmnid=13145.92260958204761718970712433; mini-opened=%7B%22aviator%22%3A%7B%22left%22%3Anull%2C%22top%22%3A150%7D%2C%22taixiu%22%3A%7B%7D%2C%22hilo%22%3A%7B%7D%2C%22poker%22%3A%7B%7D%7D; notificationTime=%222024-06-22T11%3A52%3A23.084Z%22; reloadCount=0; _gat_UA-177224808-1=1; _ga=GA1.2.451142714.1718893045; _ga_GLGHQW1XYP=GS1.1.1718969217.2.1.1718970765.0.0.0; _ga_BDKVWDCWMC=GS1.2.1718969217.2.1.1718970768.0.0.0'),
+      (newHeaders['Priority'] = 'u=1, i');
+    newHeaders['User-agent'] =
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 Edg/126.0.0.0';
+    newHeaders[
+      'Sec-ch-ua'
+    ] = `"Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"`;
+    callback({ requestHeaders: newHeaders });
+  });
+};
+const setHeaderForSky88 = () => {
+  session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
+    const newHeaders = capitalizeHeaderKeys(
+      details.responseHeaders as Record<string, string[]>
+    );
+    newHeaders['Access-control-allow-origin'] = ['https://sky88.com'];
+    newHeaders['Cf-cache-status'] = ['DYNAMIC'];
+    callback({ responseHeaders: newHeaders });
+  });
+
+  session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
+    const newHeaders = capitalizeRequestHeaderKeys(
+      details.requestHeaders as Record<string, string>
+    );
+    newHeaders['accept'] = 'application/json, text/plain, */*';
+    newHeaders['accept-language'] = 'en-US,en;q=0.9';
+    newHeaders['browser'] = 'Edge';
+    newHeaders['content-type'] = 'application/json';
+    newHeaders['device'] = 'pc';
+    newHeaders['origin'] = 'https://sky88.com';
+    newHeaders['os'] = 'Windows 10';
+    newHeaders['priority'] = 'u=1, i';
+    newHeaders['referer'] = 'https://sky88.com/';
+    newHeaders['sec-ch-ua'] =
+      '"Not/A)Brand";v="8", "Chromium";v="126", "Microsoft Edge";v="126"';
+    newHeaders['sec-ch-ua-mobile'] = '?0';
+    newHeaders['sec-ch-ua-platform'] = '"Windows"';
+    newHeaders['sec-fetch-dest'] = 'empty';
+    newHeaders['sec-fetch-mode'] = 'cors';
+    newHeaders['sec-fetch-site'] = 'same-site';
+    newHeaders['user-agent'] =
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 Edg/126.0.0.0';
+    callback({ requestHeaders: newHeaders });
+  });
+};
+
 const setContentTypeJson = () => {
   session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
     const newHeaders = capitalizeRequestHeaderKeys(
@@ -531,6 +670,18 @@ export const setupHeaderHandlers = () => {
         break;
       case '11BET':
         setHeaderFor11BET();
+        break;
+      case 'OXBET':
+        setHeaderForOxbet();
+        break;
+      case 'SKY88':
+        setHeaderForSky88();
+        break;
+      case 'LODE88':
+        setHeaderLode88();
+        break;
+      case 'RED88':
+        setHeaderForRed88();
         break;
       case 'JSON':
         setContentTypeJson();

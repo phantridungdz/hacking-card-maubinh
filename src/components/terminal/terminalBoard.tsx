@@ -222,7 +222,11 @@ export const TerminalBoard: React.FC<any> = ({ main }) => {
           main.fromSite === 'ONE88' ||
           main.fromSite === 'MU99' ||
           main.fromSite === 'ZBET' ||
-          main.fromSite === '11BET'
+          main.fromSite === 'OXBET' ||
+          main.fromSite === '11BET' ||
+          main.fromSite === 'SKY88' ||
+          main.fromSite === 'LODE88' ||
+          main.fromSite === 'RED88'
         ) {
           window.backend.sendMessage(
             'execute-script',

@@ -178,7 +178,7 @@ export const HandCard: React.FC<HandCardProps> = ({ index, cardProp }) => {
         {!loading ? (
           <div className="flex flex-col">
             <Label
-              className={`py-2 px-[7px] mb-2 rounded-[5px] border font-semibold text-[13px] truncate bg-background `}
+              className={`py-1 px-[7px] mb-2 rounded-[5px] border font-semibold text-[13px] truncate bg-background `}
             >
               {evaluation1}
               {evaluation2 != '' && ' - '}

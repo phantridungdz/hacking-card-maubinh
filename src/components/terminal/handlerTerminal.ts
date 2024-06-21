@@ -33,42 +33,44 @@ export const joinRoom = (
   mainRoomID: any,
   targetSite: string
 ): void => {
-  if (mainRoomID) {
-    if (targetSite === 'RIK' || targetSite === 'B52') {
-      window.backend.sendMessage(
-        'execute-script',
-        account,
-        `__require('GamePlayManager').default.getInstance().joinRoom(${mainRoomID},0,'',true);`
-      );
+  if (!mainRoomID) return;
+
+  const joinRoomScript = (script: string) =>
+    window.backend.sendMessage('execute-script', account, script);
+
+  const commonScript = `__require('GamePlayManager').default.getInstance().joinRoom(${mainRoomID},0,'',true);`;
+  const specialScript = `__require('GamePlayManager').default.getInstance().joinRoomWithGameID(${mainRoomID},'',4);`;
+  const defaultScript = `__require('GamePlayManager').default.getInstance().joinRoomWithGameID(${mainRoomID},0,'',4);`;
+
+  if (targetSite === 'RIK' || targetSite === 'B52') {
+    joinRoomScript(commonScript);
+  } else {
+    const specialSites = [
+      'DEBET',
+      'LUCKY88',
+      'ZBET',
+      'MAY88',
+      'SV88',
+      'XO88',
+      'UK88',
+      'TA88',
+      'MU99',
+      'ONE88',
+      '11BET',
+      'OXBET',
+      'FIVE88',
+      'SKY88',
+      'LODE88',
+      'RED88',
+    ];
+    if (specialSites.includes(account.fromSite)) {
+      joinRoomScript(specialScript);
     } else {
-      if (
-        account.fromSite === 'LUCKY88' ||
-        account.fromSite === 'DEBET' ||
-        account.fromSite === 'MAY88' ||
-        account.fromSite === 'SV88' ||
-        account.fromSite === 'FIVE88' ||
-        account.fromSite === 'UK88' ||
-        account.fromSite === 'TA88' ||
-        account.fromSite === 'ONE88' ||
-        account.fromSite === 'ZBET' ||
-        account.fromSite === 'XO88' ||
-        account.fromSite === '11BET'
-      ) {
-        window.backend.sendMessage(
-          'execute-script',
-          account,
-          `__require('GamePlayManager').default.getInstance().joinRoomWithGameID(${mainRoomID},'',4);`
-        );
-      } else {
-        window.backend.sendMessage(
-          'execute-script',
-          account,
-          `__require('GamePlayManager').default.getInstance().joinRoomWithGameID(${mainRoomID},0,'',4);`
-        );
-      }
+      joinRoomScript(defaultScript);
     }
   }
 };
+
 export const checkPosition = (account: any): void => {
   window.backend.sendMessage('check-position', account, checkPositionCommand);
 };
@@ -92,39 +94,7 @@ export const outInRoom = async (
   if (mainRoomID) {
     await outRoom(account);
     await new Promise((resolve) => setTimeout(resolve, 500));
-    if (account.targetSite === 'RIK' || account.targetSite === 'B52') {
-      window.backend.sendMessage(
-        'execute-script',
-        account,
-        `__require('GamePlayManager').default.getInstance().joinRoom(${mainRoomID},0,'',true);`
-      );
-    } else {
-      if (
-        account.fromSite === 'LUCKY88' ||
-        account.fromSite === 'DEBET' ||
-        account.fromSite === 'MAY88' ||
-        account.fromSite === 'SV88' ||
-        account.fromSite === 'XO88' ||
-        account.fromSite === 'ZBET' ||
-        account.fromSite === 'UK88' ||
-        account.fromSite === 'TA88' ||
-        account.fromSite === 'MU99' ||
-        account.fromSite === 'ONE88' ||
-        account.fromSite === '11BET'
-      ) {
-        window.backend.sendMessage(
-          'execute-script',
-          account,
-          `__require('GamePlayManager').default.getInstance().joinRoomWithGameID(${mainRoomID},'',4);`
-        );
-      } else {
-        window.backend.sendMessage(
-          'execute-script',
-          account,
-          `__require('GamePlayManager').default.getInstance().joinRoomWithGameID(${mainRoomID},0,'',4);`
-        );
-      }
-    }
+    await joinRoom(account, mainRoomID, account.targetSite);
   }
 };
 export const joinLobby = (account: any): void => {
