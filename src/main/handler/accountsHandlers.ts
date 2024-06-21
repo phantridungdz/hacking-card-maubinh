@@ -290,6 +290,30 @@ export const setupAccountHandlers = async (
             'https%3A%2F%2Foxbet.in%2Fgame-bai'
           );
           break;
+        case 'RED88':
+          targetSite = generateUrl(
+            account.fromSite,
+            account.token,
+            account.targetSite,
+            'https%3A%2F%2red88.tv%2Fgame-bai'
+          );
+          break;
+        case 'SKY88':
+          targetSite = generateUrl(
+            account.fromSite,
+            account.token,
+            account.targetSite,
+            'https%3A%2F%2sky88.com%2Fgame-bai'
+          );
+          break;
+        case 'LODE88':
+          targetSite = generateUrl(
+            account.fromSite,
+            account.token,
+            account.targetSite,
+            'https%3A%2F%2lode88.ai%2Fgame-bai'
+          );
+          break;
         default:
           throw new Error(`Unsupported target site: ${account.fromSite}`);
       }

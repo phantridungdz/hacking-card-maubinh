@@ -12,13 +12,23 @@ import {
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
 import { HandCardIcon } from '../ui/icons';
-
+const getCardType = (cardT: any) => {
+  switch (cardT) {
+    case 'set1':
+      return 'Loại 1';
+    case 'set2':
+      return 'Loại 2';
+    default:
+      return 'Loại 3';
+  }
+};
 const CardType: React.FC<any> = () => {
   const { cardType, setCardType } = useGameConfigStore();
 
   const handleRoomTypeChange = (money: number) => {
     setCardType(money);
   };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -28,7 +38,7 @@ const CardType: React.FC<any> = () => {
           className="h-8 gap-1 !border-[#fff]"
         >
           <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-            {cardType === 'set1' ? 'Loại 1' : 'Loại 2'}
+            {getCardType(cardType)}
           </span>
           <HandCardIcon />
           <ChevronDown />
@@ -44,7 +54,7 @@ const CardType: React.FC<any> = () => {
             checked={cardType}
             onSelect={() => handleRoomTypeChange(cardT)}
           >
-            {cardT === 'set1' ? 'Loại 1' : 'Loại 2'}
+            {getCardType(cardT)}
           </DropdownMenuCheckboxItem>
         ))}
       </DropdownMenuContent>

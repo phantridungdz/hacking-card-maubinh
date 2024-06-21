@@ -47,9 +47,11 @@ export const generateUrl = (
       break;
     case 'B52':
       baseUrl = 'https://gamebai.b5richkids.net/';
+      ru = '';
       break;
     default:
       baseUrl = 'https://games.prorichvip.com/';
+
       break;
   }
 

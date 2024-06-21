@@ -64,7 +64,7 @@ const useGameConfigStore = create<any>(
             newTrackingIPUrl = 'https://bodergatez.dsrcgoms.net/sw/collect';
             newRegisterUrl = 'https://bodergatez.dsrcgoms.net/user';
             newDepositUrl = 'https://pmbodergw.dsrcgoms.net/payment/card/hit';
-            newWsTargetUrl = 'wss://websocket.azhkthg1.net/websocket4';
+            newWsTargetUrl = 'wss://websocket.azhkthg1.net/websocket2';
             break;
           default:
         }
