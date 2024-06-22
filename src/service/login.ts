@@ -355,6 +355,55 @@ const loginHit = async (
     }
   }
 };
+const loginIwin = async (
+  botInfo: any,
+  accountType: string,
+  updateAccount: any,
+  loginUrl: string
+) => {
+  let fgAndTime = (await getFg(botInfo)) as any;
+  if (fgAndTime) {
+    const credentials = {
+      username: botInfo.username,
+      password: botInfo.password,
+      app_id: 'iwin.club',
+      os: getRandomOS(),
+      device: botInfo.device,
+      browser: botInfo.browser,
+      aff_id: 'exo_7399af67d8e233f67257c12010ebfd22',
+      fg: fgAndTime?.data ? fgAndTime.data.fg : generateRandomHex(16),
+    };
+
+    try {
+      const response = await axios.post(loginUrl, JSON.stringify(credentials));
+
+      if (response.data.code === 200) {
+        const data = response.data.data[0];
+        updateAccount(accountType, botInfo.username, {
+          session_id: data.session_id,
+          main_balance:
+            data.main_balance === 0
+              ? 'Đăng nhập thành công'
+              : data.main_balance || 0,
+          token: data.token,
+          fullname: data.fullname,
+        });
+      } else {
+        updateAccount(accountType, botInfo.username, {
+          main_balance: response.data.message,
+        });
+      }
+
+      return response.data;
+    } catch (error) {
+      console.error(
+        'Login failed:',
+        axios.isAxiosError(error) ? error.response?.data : error
+      );
+      return null;
+    }
+  }
+};
 const loginB52 = async (
   botInfo: any,
   accountType: string,
@@ -1479,6 +1528,13 @@ const login = async (bot: any, accountType: string, updateAccount: any) => {
         accountType,
         updateAccount,
         targetSites.B52.login_url
+      );
+    case 'IWIN':
+      return await loginIwin(
+        bot,
+        accountType,
+        updateAccount,
+        targetSites.IWIN.login_url
       );
     case 'OXBET':
       return await loginOxbet(

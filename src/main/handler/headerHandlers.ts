@@ -241,6 +241,27 @@ const setHeaderForB52 = async () => {
     callback({ requestHeaders: newHeaders });
   });
 };
+const setHeaderForIwin = async () => {
+  session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
+    const newHeaders = capitalizeRequestHeaderKeys(
+      details.requestHeaders as Record<string, string>
+    );
+    newHeaders['Referer'] = `https://${targetSites.IWIN.domain}`;
+    newHeaders['Origin'] = `https://${targetSites.IWIN.domain}`;
+    newHeaders['Accept'] = '*/*';
+    newHeaders['Accept-encoding'] = 'gzip, deflate, br, zstd';
+    newHeaders['Accept-language'] = 'en-US,en;q=0.9';
+    newHeaders['Content-Type'] = 'text/plain;charset=UTF-8';
+    newHeaders['Dnt'] = '1';
+    newHeaders['Priority'] = 'u=1, i';
+    newHeaders['User-agent'] =
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0';
+    newHeaders[
+      'Sec-ch-ua'
+    ] = `"Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"`;
+    callback({ requestHeaders: newHeaders });
+  });
+};
 const setHeaderForSunWin = async () => {
   session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
     const newHeaders = capitalizeRequestHeaderKeys(
@@ -248,6 +269,27 @@ const setHeaderForSunWin = async () => {
     );
     newHeaders['Referer'] = 'https://web.sunwin.uk/';
     newHeaders['Origin'] = 'https://web.sunwin.uk/';
+    newHeaders['Accept'] = '*/*';
+    newHeaders['Accept-encoding'] = 'gzip, deflate, br, zstd';
+    newHeaders['Accept-language'] = 'en-US,en;q=0.9';
+    newHeaders['Content-Type'] = 'text/plain;charset=UTF-8';
+    newHeaders['Dnt'] = '1';
+    newHeaders['Priority'] = 'u=1, i';
+    newHeaders['User-agent'] =
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0';
+    newHeaders[
+      'Sec-ch-ua'
+    ] = `"Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"`;
+    callback({ requestHeaders: newHeaders });
+  });
+};
+const setHeaderForIWin = async () => {
+  session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
+    const newHeaders = capitalizeRequestHeaderKeys(
+      details.requestHeaders as Record<string, string>
+    );
+    newHeaders['Referer'] = 'https://play.iwin.net/';
+    newHeaders['Origin'] = 'https://play.iwin.net/';
     newHeaders['Accept'] = '*/*';
     newHeaders['Accept-encoding'] = 'gzip, deflate, br, zstd';
     newHeaders['Accept-language'] = 'en-US,en;q=0.9';
@@ -712,8 +754,14 @@ export const setupHeaderHandlers = () => {
       case 'B52':
         setHeaderForB52();
         break;
+      case 'IWIN':
+        setHeaderForIwin();
+        break;
       case 'SUNWIN':
         setHeaderForSunWin();
+        break;
+      case 'IWIN':
+        setHeaderForIWin();
         break;
       case 'LUCKY88':
         setHeaderForLucky88();

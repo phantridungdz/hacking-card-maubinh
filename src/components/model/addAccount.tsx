@@ -13,6 +13,7 @@ import { generateAccount } from '../../lib/account';
 import {
   fromB52Sites,
   fromHitSites,
+  fromIwinSites,
   fromRikSites,
   fromSunWinSites,
 } from '../../lib/config';
@@ -101,6 +102,9 @@ const AddAccount: React.FC<any> = ({
         break;
       case 'B52':
         selectedSites = fromB52Sites;
+        break;
+      case 'IWIN':
+        selectedSites = fromIwinSites;
         break;
       default:
         selectedSites = fromSunWinSites;

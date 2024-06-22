@@ -332,13 +332,16 @@ export const setupAccountHandlers = async (
 
       switch (account.fromSite) {
         case 'RIK':
-          targetSite = targetSites.HIT.url;
+          targetSite = targetSites.RIK.url;
           break;
         case 'HIT':
-          targetSite = targetSites.RIK.url;
+          targetSite = targetSites.HIT.url;
           break;
         case 'B52':
           targetSite = targetSites.B52.url;
+          break;
+        case 'IWIN':
+          targetSite = targetSites.IWIN.url;
           break;
         case 'SUNWIN':
           targetSite = 'hitUrl';

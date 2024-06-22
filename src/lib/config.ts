@@ -2,7 +2,7 @@ export const roomTypes = [
   100, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000,
 ];
 export const cardTypes = ['set1', 'set2', 'set3'];
-export const targetSites = ['RIK', 'HIT', 'B52'];
+export const targetSites = ['RIK', 'HIT', 'B52', 'SUNWIN', 'IWIN'];
 export const fromHitSites = [
   'HIT',
   'LUCKY88',
@@ -17,7 +17,7 @@ export const fromHitSites = [
   'ONE88',
   'M11BET',
   'OXBET',
-  // 'FIVE88',
+  'FIVE88',
   'SKY88',
   'LODE88',
 ];
@@ -35,7 +35,7 @@ export const fromRikSites = [
   'ONE88',
   'M11BET',
   'OXBET',
-  // 'FIVE88',
+  'FIVE88',
   'SKY88',
   'LODE88',
   'RED88',
@@ -54,11 +54,12 @@ export const fromB52Sites = [
   'ONE88',
   'M11BET',
   'OXBET',
-  // 'FIVE88',
+  'FIVE88',
   'SKY88',
   'LODE88',
   'RED88',
 ];
+export const fromIwinSites = ['IWIN'];
 export const fromSunWinSites = ['SUNWIN'];
 export const cardAmounts = [10000, 20000, 30000, 50000, 100000, 200000];
 export const accountType = ['BOT', 'SUB', 'MAIN'];

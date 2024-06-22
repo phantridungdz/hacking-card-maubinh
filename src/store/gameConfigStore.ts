@@ -50,12 +50,21 @@ const useGameConfigStore = create<any>(
             break;
           case 'B52':
             newCheckBalanceUrl =
-              'https://bodergatez.dsrcgoms.net/gwms/v1/safe/load.aspx';
-            newLoginUrl = 'https://bodergatez.dsrcgoms.net/user/login.aspx';
-            newTrackingIPUrl = 'https://bodergatez.dsrcgoms.net/sw/collect';
-            newRegisterUrl = 'https://bodergatez.dsrcgoms.net/user';
-            newDepositUrl = 'https://pmbodergw.dsrcgoms.net/payment/card/hit';
+              'https://bordergw.api-inovated.com/gwms/v1/safe/load.aspx';
+            newLoginUrl = 'https://bordergw.api-inovated.com/user/login.aspx';
+            newTrackingIPUrl = 'https://apirvp4.traskiprik.info/sw/collect';
+            newRegisterUrl = 'https://bordergw.api-inovated.com/user';
+            newDepositUrl = 'https://baymentes.gwrykgems.net/payment/card';
             newWsTargetUrl = 'wss://cardbodergs.weskb5gams.net/websocket';
+            break;
+          case 'IWIN':
+            newCheckBalanceUrl =
+              'https://bordergw.api-inovated.com/gwms/v1/safe/load.aspx';
+            newLoginUrl = 'https://bordergw.api-inovated.com/user/login.aspx';
+            newTrackingIPUrl = 'https://apirvp4.traskiprik.info/sw/collect';
+            newRegisterUrl = 'https://bordergw.api-inovated.com/user';
+            newDepositUrl = 'https://baymentes.gwrykgems.net/payment/card';
+            newWsTargetUrl = 'wss://cardsgwpry.ywinsockec.com/websocket';
             break;
           case 'SUNWIN':
             newCheckBalanceUrl =

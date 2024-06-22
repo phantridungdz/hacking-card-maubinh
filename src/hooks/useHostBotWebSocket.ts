@@ -382,14 +382,22 @@ export default function useHostWebSocket(bot: any, roomID: number) {
       (isReadyToFind && isReadyToCreate && !createdRoom) ||
       (isSubStart && !createdRoom)
     ) {
-      if (currentTargetSite === 'HIT') {
-        sendMessage(
-          '[6,"Simms","channelPlugin",{"cmd":308,"aid":1,"gid":4,"b":100,"Mu":4,"iJ":true,"inc":false,"pwd":"123123"}]'
-        );
-      } else {
-        sendMessage(
-          '[6,"Simms","channelPlugin",{"cmd":308,"aid":1,"gid":4,"b":100,"Mu":4,"iJ":true,"inc":false,"pwd":""}]'
-        );
+      switch (currentTargetSite) {
+        case 'HIT':
+          sendMessage(
+            '[6,"Simms","channelPlugin",{"cmd":308,"aid":1,"gid":4,"b":100,"Mu":4,"iJ":true,"inc":false,"pwd":"123123"}]'
+          );
+          break;
+        case 'IWIN':
+          sendMessage(
+            '[6,"Simms","channelPlugin",{"cmd":308,"aid":1,"gid":4,"b":500,"Mu":4,"iJ":true,"inc":false,"pwd":""}]'
+          );
+          break;
+        default:
+          sendMessage(
+            '[6,"Simms","channelPlugin",{"cmd":308,"aid":1,"gid":4,"b":100,"Mu":4,"iJ":true,"inc":false,"pwd":""}]'
+          );
+          break;
       }
 
       updateBotStatus(bot.username, 'Create Room');

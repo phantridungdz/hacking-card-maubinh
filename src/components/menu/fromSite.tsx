@@ -11,6 +11,7 @@ import {
 import {
   fromB52Sites,
   fromHitSites,
+  fromIwinSites,
   fromRikSites,
   fromSunWinSites,
 } from '../../lib/config';
@@ -31,13 +32,13 @@ const FromSite: React.FC<any> = () => {
         setFromSites(fromRikSites);
         break;
       case 'HIT':
-        console.log('fromHitSites', fromHitSites);
-
         setFromSites(fromHitSites);
         break;
       case 'B52':
-        console.log('fromB52Sites', fromB52Sites);
         setFromSites(fromB52Sites);
+        break;
+      case 'IWIN':
+        setFromSites(fromIwinSites);
         break;
       default:
         setFromSites(fromSunWinSites);
@@ -46,7 +47,6 @@ const FromSite: React.FC<any> = () => {
   }, [currentFromSite]);
 
   const handleFromSiteChange = (site: string) => {
-    console.log('site', site);
     setCurrentFromSite(site);
   };
 
