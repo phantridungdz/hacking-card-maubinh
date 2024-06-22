@@ -56,6 +56,7 @@ export const Active = () => {
               disabled={loading}
               type="submit"
               className="w-full"
+              size={'sm'}
               onClick={() => onActive()}
             >
               {loading ? (

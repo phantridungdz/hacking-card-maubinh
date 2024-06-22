@@ -1,6 +1,7 @@
 // import useBotWebSocket from '../../hooks/useBotWebSocket';
 import { Clock, DollarSign } from 'lucide-react';
 import useWaiterWebSocket from '../../hooks/useWaiterBotWebSocket';
+import { Badge } from '../ui/badge';
 import { Card } from '../ui/card';
 
 export const WaiterController: React.FC<any> = ({ bot, roomID }) => {
@@ -9,6 +10,9 @@ export const WaiterController: React.FC<any> = ({ bot, roomID }) => {
     <fieldset className=" rounded-lg border p-4 text-right">
       <legend className="-ml-1 px-1 text-sm font-medium flex gap-2 items-center">
         {connectionStatus}
+        <Badge className=" uppercase" variant={bot.fromSite.toLowerCase()}>
+          {bot.fromSite}
+        </Badge>
         <Clock />
       </legend>
 

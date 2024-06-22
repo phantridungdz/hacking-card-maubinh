@@ -19,6 +19,7 @@ import AddAccount from '../model/addAccount';
 import AddProxy from '../model/addProxy';
 import CaptCha from '../model/captcha';
 import Deposit from '../model/deposit';
+import Token from '../model/token';
 import { useToast } from '../toast/use-toast';
 import { Input } from '../ui/input';
 import {
@@ -42,6 +43,7 @@ export const AccountTable: React.FC<any> = ({ accountType }) => {
   const [isDialogAddAccountOpen, setDialogAddAccountOpen] = useState(false);
   const [isDialogDepositOpen, setDialogDepositOpen] = useState(false);
   const [isDialogCaptchaOpen, setDialogCaptchaOpen] = useState(false);
+  const [isDialogTokenOpen, setDialogTokenOpen] = useState(false);
   const [isDialogProxyOpen, setDialogProxyOpen] = useState(false);
   const [rowSelected, setRowSelected] = useState<any>();
   const [readedFile, setReadedFile] = useState(false);
@@ -140,6 +142,7 @@ export const AccountTable: React.FC<any> = ({ accountType }) => {
     removeProxy,
     setDialogDepositOpen,
     setDialogProxyOpen,
+    setDialogTokenOpen,
     setDialogCaptchaOpen,
     setRowSelected,
     accounts,
@@ -248,6 +251,12 @@ export const AccountTable: React.FC<any> = ({ accountType }) => {
       <CaptCha
         isDialogCaptchaOpen={isDialogCaptchaOpen}
         setDialogCaptchaOpen={setDialogCaptchaOpen}
+        rowSelected={rowSelected}
+        accountType={accountType}
+      />
+      <Token
+        isDialogTokenOpen={isDialogTokenOpen}
+        setDialogTokenOpen={setDialogTokenOpen}
         rowSelected={rowSelected}
         accountType={accountType}
       />

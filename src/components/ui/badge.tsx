@@ -28,6 +28,17 @@ const badgeVariants = cva(
         zbet: 'border-white border-transparent bg-[#5ECB33] text-white hover:bg-primary/80',
         five88:
           'border-white border-transparent bg-[#53A7B6] text-white hover:bg-primary/80',
+        oxbet:
+          'border-white border-transparent bg-[#FFA619] text-white hover:bg-primary/80',
+        m11bet:
+          'border-white border-transparent bg-[#E32C22] text-white hover:bg-primary/80',
+        red88:
+          'border-white border-transparent bg-[#E32C22] text-white hover:bg-primary/80',
+        b52: 'border-white border-transparent bg-[#A5B72F] text-white hover:bg-primary/80',
+        lode88:
+          'border-white border-transparent bg-[#D01C2D] text-white hover:bg-primary/80',
+        sky88:
+          'border-white border-transparent bg-[#203374] text-white hover:bg-primary/80',
         default:
           'border-transparent bg-primary text-primary-foreground hover:bg-primary/80',
         secondary:

@@ -155,7 +155,7 @@ export function FindRoomSheet({
         </Button>
       </div>
       <ScrollArea className="h-full rounded-md flex flex-col">
-        <div className="flex flex-col text-white space-y-4 flex-1 w-full">
+        <div className="flex flex-col  space-y-4 flex-1 w-full">
           <SubRoomController />
           <BotRoomController />
         </div>

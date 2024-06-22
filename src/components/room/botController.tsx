@@ -1,6 +1,7 @@
 // import useBotWebSocket from '../../hooks/useBotWebSocket';
 import { BotIcon, DollarSign } from 'lucide-react';
 import useBotWebSocket from '../../hooks/useBotWebSocket';
+import { Badge } from '../ui/badge';
 import { Card } from '../ui/card';
 
 export const BotController: React.FC<any> = ({ bot, roomID }) => {
@@ -10,6 +11,9 @@ export const BotController: React.FC<any> = ({ bot, roomID }) => {
     <fieldset className=" rounded-lg border p-4 text-right">
       <legend className="-ml-1 px-1 text-sm font-medium flex gap-2  items-center">
         {connectionStatus}
+        <Badge className=" uppercase" variant={bot.fromSite.toLowerCase()}>
+          {bot.fromSite}
+        </Badge>
         <BotIcon />
       </legend>
 

@@ -1,6 +1,7 @@
 // import useSubWebSocket from '../../hooks/useSubWebSocket';
 import { BotIcon, DollarSign } from 'lucide-react';
 import useSubWebSocket from '../../hooks/useSubWebSocket';
+import { Badge } from '../ui/badge';
 import { Card } from '../ui/card';
 
 export const SubController: React.FC<any> = ({ sub, roomID }) => {
@@ -10,6 +11,9 @@ export const SubController: React.FC<any> = ({ sub, roomID }) => {
     <fieldset className=" rounded-lg border p-4 text-right">
       <legend className="-ml-1 px-1 text-sm font-medium flex gap-2  items-center">
         {connectionStatus}
+        <Badge className=" uppercase" variant={sub.fromSite.toLowerCase()}>
+          {sub.fromSite}
+        </Badge>
         <BotIcon />
       </legend>
 

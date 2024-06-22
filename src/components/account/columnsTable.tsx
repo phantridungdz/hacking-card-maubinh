@@ -5,6 +5,7 @@ import axios from 'axios';
 import {
   ArrowUpDown,
   CheckSquare,
+  Code,
   DollarSign,
   MapPin,
   MoreHorizontal,
@@ -35,6 +36,7 @@ export const getAccountTableColumns = (
   removeProxy: any,
   setDialogDepositOpen: any,
   setDialogProxyOpen: any,
+  setDialogTokenOpen: any,
   setDialogCaptchaOpen: any,
   setRowSelected: any,
   accounts: any[],
@@ -331,6 +333,16 @@ export const getAccountTableColumns = (
               >
                 <Plug className="w-3.5 h-3.5" />
                 Set proxy
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="flex flex-row items-center gap-1"
+                onClick={() => {
+                  setDialogTokenOpen(true);
+                  setRowSelected(rowData);
+                }}
+              >
+                <Code className="w-3.5 h-3.5" />
+                Set Token
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

@@ -12,6 +12,7 @@ import {
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
 import { HandCardIcon } from '../ui/icons';
+import { Label } from '../ui/label';
 const getCardType = (cardT: any) => {
   switch (cardT) {
     case 'set1':
@@ -46,7 +47,10 @@ const CardType: React.FC<any> = () => {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent align="end">
-        <DropdownMenuLabel>Room Type</DropdownMenuLabel>
+        <DropdownMenuLabel className="flex flex-row items-center">
+          <HandCardIcon />
+          <Label>Card Type</Label>
+        </DropdownMenuLabel>
         <DropdownMenuSeparator />
         {cardTypes.map((cardT: any) => (
           <DropdownMenuCheckboxItem

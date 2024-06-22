@@ -66,7 +66,7 @@ export const HomePage: React.FC<any> = ({ cardDeck, setCardDeck }) => {
         <div>
           <Card className="">
             <CardHeader>
-              <CardTitle>All card in room</CardTitle>
+              <CardTitle>Matisse</CardTitle>
             </CardHeader>
             <Tabs
               defaultValue="2"
@@ -142,6 +142,7 @@ export const HomePage: React.FC<any> = ({ cardDeck, setCardDeck }) => {
                     Showing <strong>{cards.length}</strong> of cards
                   </Label>
                   <Button
+                    size={'sm'}
                     variant="ghost"
                     className="h-8 w-8 p-0"
                     onClick={addRandomCards}
