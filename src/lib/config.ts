@@ -2,12 +2,11 @@ export const roomTypes = [
   100, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000,
 ];
 export const cardTypes = ['set1', 'set2', 'set3'];
-export const targetSites = ['RIK', 'B52'];
+export const targetSites = ['RIK', 'HIT', 'B52'];
 export const fromHitSites = [
   'HIT',
   'LUCKY88',
   'DEBET',
-  'LUCKY88',
   'ZBET',
   'MAY88',
   'SV88',
@@ -16,7 +15,7 @@ export const fromHitSites = [
   'TA88',
   'MU99',
   'ONE88',
-  '11BET',
+  'M11BET',
   'OXBET',
   // 'FIVE88',
   'SKY88',
@@ -34,7 +33,7 @@ export const fromRikSites = [
   'TA88',
   'MU99',
   'ONE88',
-  '11BET',
+  'M11BET',
   'OXBET',
   // 'FIVE88',
   'SKY88',
@@ -53,7 +52,7 @@ export const fromB52Sites = [
   'TA88',
   'MU99',
   'ONE88',
-  '11BET',
+  'M11BET',
   'OXBET',
   // 'FIVE88',
   'SKY88',

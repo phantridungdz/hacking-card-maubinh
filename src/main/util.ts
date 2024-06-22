@@ -51,7 +51,6 @@ export const generateUrl = (
       break;
     default:
       baseUrl = 'https://games.prorichvip.com/';
-
       break;
   }
 

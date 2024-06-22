@@ -17,21 +17,26 @@ interface WebSocketFrameReceivedData {
     payloadData: string;
   };
 }
+let targetSites: any;
+const setupLink = async () => {
+  let targetUrls = await getTargetUrl();
+
+  if (Array.isArray(targetUrls) && targetUrls.length > 0) {
+    targetSites = targetUrls.reduce((acc, current) => {
+      acc[current.target_name] = current;
+      return acc;
+    }, {});
+    console.log('mappedObject', targetSites.HIT);
+  } else {
+    console.log('mappedObject', {});
+  }
+};
+
+setupLink();
 export const setupAccountHandlers = async (
   mainWindow: Electron.CrossProcessExports.BrowserWindow
 ) => {
   let puppeteerInstances: any[] = [];
-  let targetUrls = await getTargetUrl();
-
-  const hitTarget = targetUrls
-    ? targetUrls.find((target) => target.target_name === 'HIT')
-    : '';
-  const rikTarget = targetUrls
-    ? targetUrls.find((target) => target.target_name === 'RIK')
-    : '';
-
-  const hitUrl = hitTarget ? hitTarget.url : '';
-  const rikUrl = rikTarget ? rikTarget.url : '';
 
   async function startPuppeteerForAccount(account: any) {
     const existingInstance = puppeteerInstances.find(
@@ -175,13 +180,13 @@ export const setupAccountHandlers = async (
 
       switch (account.fromSite) {
         case 'RIK':
-          targetSite = rikUrl;
+          targetSite = targetSites.HIT.url;
           break;
         case 'HIT':
-          targetSite = hitUrl;
+          targetSite = targetSites.RIK.url;
           break;
         case 'B52':
-          targetSite = 'https://web.b52.vin/';
+          targetSite = targetSites.B52.url;
           break;
         case 'SUNWIN':
           targetSite = 'hitUrl';
@@ -191,7 +196,7 @@ export const setupAccountHandlers = async (
             account.fromSite,
             account.token,
             account.targetSite,
-            'https%3A%2F%2Flucky88.vip'
+            targetSites.LUCKY88.url
           );
           break;
         case 'DEBET':
@@ -199,15 +204,15 @@ export const setupAccountHandlers = async (
             account.fromSite,
             account.token,
             account.targetSite,
-            'https%3A%2F%2Fdebet.net'
+            targetSites.DEBET.url
           );
           break;
         case 'MAY88':
           targetSite = generateUrl(
             account.fromSite,
             account.token,
-            'may88.com/games%23card',
-            'https://may88.com/games'
+            account.targetSite,
+            targetSites.MAY88.url + 'games'
           );
           break;
         case 'SV88':
@@ -215,7 +220,7 @@ export const setupAccountHandlers = async (
             account.fromSite,
             account.token,
             account.targetSite,
-            'https%3A%2F%2Fsv88.top%2Fgame-bai'
+            targetSites.SV88.url + 'game-bai'
           );
           break;
         case 'XO88':
@@ -223,7 +228,7 @@ export const setupAccountHandlers = async (
             account.fromSite,
             account.token,
             account.targetSite,
-            'https%3A%2F%xo88.uk%2Fgame-bai'
+            targetSites.XO88.url + 'game-bai'
           );
           break;
         case 'ZBET':
@@ -231,7 +236,7 @@ export const setupAccountHandlers = async (
             account.fromSite,
             account.token,
             account.targetSite,
-            'https%3A%2F%2Fzbet.bet%2Fgame-bai'
+            targetSites.ZBET.url + 'game-bai'
           );
           break;
         case 'UK88':
@@ -239,7 +244,7 @@ export const setupAccountHandlers = async (
             account.fromSite,
             account.token,
             account.targetSite,
-            'https%3A%2F%2Fuk88.win%2Fgame-bai'
+            targetSites.UK88.url + 'game-bai'
           );
           break;
         case 'MU99':
@@ -247,7 +252,7 @@ export const setupAccountHandlers = async (
             account.fromSite,
             account.token,
             account.targetSite,
-            'https%3A%2F%2Fmu99.vin%2Fgame-bai'
+            targetSites.MU99.url + 'game-bai'
           );
           break;
         case 'TA88':
@@ -255,7 +260,7 @@ export const setupAccountHandlers = async (
             account.fromSite,
             account.token,
             account.targetSite,
-            'https%3A%2F%ta88.me%2Fgame-bai'
+            targetSites.TA88.url + 'game-bai'
           );
           break;
         case 'ONE88':
@@ -263,15 +268,15 @@ export const setupAccountHandlers = async (
             account.fromSite,
             account.token,
             account.targetSite,
-            'https%3A%2F%2Fone88.in%2Flobby%2Fgame-bai'
+            targetSites.ONE88.url + 'game-bai'
           );
           break;
-        case '11BET':
+        case 'M11BET':
           targetSite = generateUrl(
             account.fromSite,
             account.token,
             account.targetSite,
-            'https%3A%2F%211bet.com%2Fgame-bai'
+            targetSites.M11BET.url + 'game-bai'
           );
           break;
         case 'FIVE88':
@@ -279,7 +284,7 @@ export const setupAccountHandlers = async (
             account.fromSite,
             account.token,
             account.targetSite,
-            'https%3A%2F%five88.vin%2Fgame-bai'
+            targetSites.FIVE88.url + 'game-bai'
           );
           break;
         case 'OXBET':
@@ -287,7 +292,7 @@ export const setupAccountHandlers = async (
             account.fromSite,
             account.token,
             account.targetSite,
-            'https%3A%2F%2Foxbet.in%2Fgame-bai'
+            targetSites.OXBET.url + 'game-bai'
           );
           break;
         case 'RED88':
@@ -295,7 +300,7 @@ export const setupAccountHandlers = async (
             account.fromSite,
             account.token,
             account.targetSite,
-            'https%3A%2F%2red88.tv%2Fgame-bai'
+            targetSites.RED88.url + 'game-bai'
           );
           break;
         case 'SKY88':
@@ -303,7 +308,7 @@ export const setupAccountHandlers = async (
             account.fromSite,
             account.token,
             account.targetSite,
-            'https%3A%2F%2sky88.com%2Fgame-bai'
+            targetSites.SKY88.url + 'game-bai'
           );
           break;
         case 'LODE88':
@@ -311,7 +316,7 @@ export const setupAccountHandlers = async (
             account.fromSite,
             account.token,
             account.targetSite,
-            'https%3A%2F%2lode88.ai%2Fgame-bai'
+            targetSites.LODE88.url + 'game-bai'
           );
           break;
         default:

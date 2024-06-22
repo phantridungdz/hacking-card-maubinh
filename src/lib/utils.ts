@@ -72,3 +72,13 @@ export const generateRandomFg = () => {
 export const delay = (ms: number | undefined) => {
   return new Promise((resolve) => setTimeout(resolve, ms));
 };
+
+export const getDomainName = (url: string) => {
+  try {
+    const parsedUrl = new URL(url);
+    return parsedUrl.hostname;
+  } catch (e) {
+    console.error('Invalid URL:', e);
+    return null;
+  }
+};

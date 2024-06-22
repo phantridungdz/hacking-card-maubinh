@@ -56,7 +56,7 @@ export const joinRoom = (
       'TA88',
       'MU99',
       'ONE88',
-      '11BET',
+      'M11BET',
       'OXBET',
       'FIVE88',
       'SKY88',

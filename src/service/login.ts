@@ -1,7 +1,8 @@
 import axios from 'axios';
 import CryptoJS from 'crypto-js';
 import { now } from 'lodash';
-import { generateRandomHex, getRandomOS } from '../lib/utils';
+import { getTargetUrl } from '../lib/supabase';
+import { generateRandomHex, getDomainName, getRandomOS } from '../lib/utils';
 
 const getFg = (botInfo: any) => {
   return new Promise((resolve) => {
@@ -78,6 +79,20 @@ const fetchViaProxy = async (
     return { data: { code: 404 } };
   }
 };
+let targetSites: any;
+const setupLink = async () => {
+  let targetUrls = await getTargetUrl();
+
+  if (Array.isArray(targetUrls) && targetUrls.length > 0) {
+    targetSites = targetUrls.reduce((acc, current) => {
+      acc[current.target_name] = current;
+      return acc;
+    }, {});
+  } else {
+    console.log('mappedObject', {});
+  }
+};
+setupLink();
 
 const loginRik = async (
   botInfo: any,
@@ -254,8 +269,8 @@ const loginLucky88 = async (
     'Sec-ch-ua': `"Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"`,
     'User-agent':
       'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0',
-    Origin: 'https://lucky88.vip',
-    Referer: 'https://lucky88.vip',
+    Origin: `https://${getDomainName(targetSites.LUCKY88.url)}`,
+    Referer: `https://${getDomainName(targetSites.LUCKY88.url)}`,
     Cookie:
       'source=lucky88.vip; saleAdvised=null; aff_id=null; utm_source=null; utm_medium=null; utm_campaign=null; utm_term=null; utm_content=null; device=desktop; vgmnid=13971.55342598229111716553376008; mini-opened=%7B%22aviator%22%3A%7B%22left%22%3Anull%2C%22top%22%3A150%7D%2C%22taixiu%22%3A%7B%7D%2C%22hilo%22%3A%7B%7D%2C%22poker%22%3A%7B%7D%7D; whitelist=true',
   };
@@ -305,16 +320,16 @@ const loginDebet = async (
     username: botInfo.username,
     password: botInfo.password,
   };
+  console.log('targetSites', targetSites);
   const headers = {
     Accept: '*/*',
     'Content-Type': 'application/json, text/plain, */*',
     'Sec-ch-ua': `"Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"`,
     'User-agent':
       'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0',
-    Origin: 'https://debet.net',
-    Referer: 'https://debet.net',
-    Cookie:
-      '_gid=GA1.2.704473547.1716609101; strongPassword=1; _pk_id.4.d164=a9d05cad470f262c.1716609101.; domain=https%3A%2F%2Fdebet.net; host=debet.net; device=desktop; _gcl_au=1.1.1510002727.1716609102; luckyNumber=54; showPopupDomain=true; whitelist=true; _pk_ses.4.d164=1; _clck=1l21aao%7C2%7Cfm2%7C0%7C1606; vgmnid=13838.84719695447221716609103001; mini-opened=%7B%22aviator%22%3A%7B%22left%22%3Anull%2C%22top%22%3A150%7D%2C%22taixiu%22%3A%7B%7D%2C%22hilo%22%3A%7B%7D%2C%22poker%22%3A%7B%7D%7D; _ga=GA1.1.512047530.1716312616; _ga_YB99BJW0HQ=GS1.1.1716608406.3.1.1716609185.59.0.0; _clsk=rr7nm6%7C1716609424069%7C3%7C1%7Cx.clarity.ms%2Fcollect; _ga_WX6RHFP3H4=GS1.1.1716607825.3.1.1716609451.0.0.0',
+    Origin: `https://${getDomainName(targetSites.DEBET.url)}`,
+    Referer: `https://${getDomainName(targetSites.DEBET.url)}`,
+    Cookie: `_gid=GA1.2.704473547.1716609101; strongPassword=1; _pk_id.4.d164=a9d05cad470f262c.1716609101.; domain=https%3A%2F%2F${targetSites.DEBET.url}; host=${targetSites.DEBET.url}; device=desktop; _gcl_au=1.1.1510002727.1716609102; luckyNumber=54; showPopupDomain=true; whitelist=true; _pk_ses.4.d164=1; _clck=1l21aao%7C2%7Cfm2%7C0%7C1606; vgmnid=13838.84719695447221716609103001; mini-opened=%7B%22aviator%22%3A%7B%22left%22%3Anull%2C%22top%22%3A150%7D%2C%22taixiu%22%3A%7B%7D%2C%22hilo%22%3A%7B%7D%2C%22poker%22%3A%7B%7D%7D; _ga=GA1.1.512047530.1716312616; _ga_YB99BJW0HQ=GS1.1.1716608406.3.1.1716609185.59.0.0; _clsk=rr7nm6%7C1716609424069%7C3%7C1%7Cx.clarity.ms%2Fcollect; _ga_WX6RHFP3H4=GS1.1.1716607825.3.1.1716609451.0.0.0`,
   };
   try {
     let response;
@@ -361,8 +376,8 @@ const loginFive88 = async (
     'Sec-ch-ua': `"Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"`,
     'User-agent':
       'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0',
-    Origin: 'https://five88.vin',
-    Referer: 'https://five88.vin',
+    Origin: `https://${getDomainName(targetSites.FIVE88.url)}`,
+    Referer: `https://${getDomainName(targetSites.FIVE88.url)}`,
     Cookie:
       'PHPSESSID=5fce472f3e07e13f1673ddb99de973d7; _gcl_au=1.1.631577307.1716999653; _ga_V2TKQNQHHX=GS1.1.1716999652.1.0.1716999652.60.0.0; _gid=GA1.2.1444793540.1716999653; _gat_UA-238184817-1=1; _gat_UA-156072496-1=1; _stoken=f050d05650fd76c373aa9a79f854573c; _ga=GA1.2.802994207.1716999653; __utma=63665976.802994207.1716999653.1716999657.1716999657.1; __utmc=63665976; __utmz=63665976.1716999657.0.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); _ga_D2M74VZWV7=GS1.1.1716999652.1.0.1716999658.0.0.0; __utmb=63665976.3.9.1716999664228; _ga_5QSLVWX8N6=GS1.2.1716999653.1.1.1716999664.0.0.0', // Use actual cookie value
   };
@@ -411,8 +426,8 @@ const loginMay88 = async (
     'Sec-ch-ua': `"Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"`,
     'User-agent':
       'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0',
-    Origin: 'https://may88.com',
-    Referer: 'https://may88.com',
+    Origin: `https://${getDomainName(targetSites.MAY88.url)}`,
+    Referer: `https://${getDomainName(targetSites.MAY88.url)}`,
     Cookie:
       'device=desktop; _gcl_au=1.1.732562051.1716726234; _ga_171YF2R0MV=GS1.1.1716726234.1.0.1716726234.0.0.0; _ga=GA1.2.314653449.1716726234; _gid=GA1.2.245976383.1716726234; _gat_UA-185855122-1=1; _ga_LNECPR22W8=GS1.2.1716726234.1.0.1716726234.60.0.0',
   };
@@ -461,10 +476,13 @@ const loginXo88 = async (
     'Sec-ch-ua': `"Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"`,
     'User-agent':
       'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0',
-    Origin: 'https://xo88.com',
-    Referer: 'https://xo88.com',
-    Cookie:
-      'device=desktop; domain=https%3A%2F%xo88.com; host=xo88.com; showed=Wed%20May%2029%202024%2023%3A14%3A33%20GMT+0700%20%28Indochina%20Time%29',
+    Origin: `https://${getDomainName(targetSites.XO88.url)}`,
+    Referer: `https://${getDomainName(targetSites.XO88.url)}`,
+    Cookie: `device=desktop; domain=${
+      targetSites.XO88.url
+    }; host=${getDomainName(
+      targetSites.XO88.url
+    )}; showed=Wed%20May%2029%202024%2023%3A14%3A33%20GMT+0700%20%28Indochina%20Time%29`,
   };
   try {
     let response;
@@ -511,10 +529,13 @@ const loginSv88 = async (
     'Sec-ch-ua': `"Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"`,
     'User-agent':
       'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0',
-    Origin: 'https://sv88.top',
-    Referer: 'https://sv88.top/game-bai',
-    Cookie:
-      'device=desktop; domain=https%3A%2F%2Fsv88.top; host=sv88.top; showed=Wed%20May%2029%202024%2023%3A14%3A33%20GMT+0700%20%28Indochina%20Time%29',
+    Origin: `https://${getDomainName(targetSites.SV88.url)}`,
+    Referer: `https://${getDomainName(targetSites.SV88.url)}/game-bai`,
+    Cookie: `device=desktop; domain=https%3A%2F%2F${getDomainName(
+      targetSites.SV88.url
+    )}; host=${getDomainName(
+      targetSites.SV88.url
+    )}; showed=Wed%20May%2029%202024%2023%3A14%3A33%20GMT+0700%20%28Indochina%20Time%29`,
   };
   try {
     let response;
@@ -561,10 +582,11 @@ const loginOne88 = async (
     'Sec-ch-ua': `"Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"`,
     'User-agent':
       'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0',
-    Origin: 'https://one88.in',
-    Referer: 'https://one88.in',
-    Cookie:
-      'device=desktop; os=desktop; source=one88.in; saleAdvised=null; aff_id=null; utm_source=null; utm_medium=null; utm_campaign=null; utm_term=null; utm_content=null',
+    Origin: `https://${getDomainName(targetSites.ONE88.url)}`,
+    Referer: `https://${getDomainName(targetSites.ONE88.url)}`,
+    Cookie: `device=desktop; os=desktop; source=${getDomainName(
+      targetSites.ONE88.url
+    )}; saleAdvised=null; aff_id=null; utm_source=null; utm_medium=null; utm_campaign=null; utm_term=null; utm_content=null`,
   };
   try {
     let response;
@@ -682,10 +704,11 @@ const loginUk88 = async (
     'Sec-ch-ua': `"Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"`,
     'User-agent':
       'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0',
-    Origin: 'https://uk88.win',
-    Referer: 'https://uk88.win',
-    Cookie:
-      'device=desktop; os=desktop; source=uk88.win; saleAdvised=null; aff_id=null; utm_source=null; utm_medium=null; utm_campaign=null; utm_term=null; utm_content=null',
+    Origin: `https://${getDomainName(targetSites.UK88.url)}`,
+    Referer: `https://${getDomainName(targetSites.UK88.url)}`,
+    Cookie: `device=desktop; os=desktop; source=${getDomainName(
+      targetSites.UK88.url
+    )}; saleAdvised=null; aff_id=null; utm_source=null; utm_medium=null; utm_campaign=null; utm_term=null; utm_content=null`,
   };
   try {
     let response;
@@ -732,10 +755,11 @@ const loginTa88 = async (
     'Sec-ch-ua': `"Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"`,
     'User-agent':
       'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0',
-    Origin: 'https://ta88.me',
-    Referer: 'https://ta88.me',
-    Cookie:
-      'device=desktop; os=desktop; source=ta88.me; saleAdvised=null; aff_id=null; utm_source=null; utm_medium=null; utm_campaign=null; utm_term=null; utm_content=null',
+    Origin: `https://${getDomainName(targetSites.TA88.url)}`,
+    Referer: `https://${getDomainName(targetSites.TA88.url)}`,
+    Cookie: `device=desktop; os=desktop; source=${getDomainName(
+      targetSites.TA88.url
+    )}; saleAdvised=null; aff_id=null; utm_source=null; utm_medium=null; utm_campaign=null; utm_term=null; utm_content=null`,
   };
   try {
     let response;
@@ -782,10 +806,11 @@ const loginMu99 = async (
     'Sec-ch-ua': `"Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"`,
     'User-agent':
       'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0',
-    Origin: 'https://mu99.vin',
-    Referer: 'https://mu99.vin',
-    Cookie:
-      'device=desktop; os=desktop; source=mu99.vin; saleAdvised=null; aff_id=null; utm_source=null; utm_medium=null; utm_campaign=null; utm_term=null; utm_content=null',
+    Origin: `https://${getDomainName(targetSites.MU99.url)}`,
+    Referer: `https://${getDomainName(targetSites.MU99.url)}`,
+    Cookie: `device=desktop; os=desktop; source=${getDomainName(
+      targetSites.MU99.url
+    )}; saleAdvised=null; aff_id=null; utm_source=null; utm_medium=null; utm_campaign=null; utm_term=null; utm_content=null`,
   };
   try {
     let response;
@@ -832,10 +857,11 @@ const loginZbet = async (
     'Sec-ch-ua': `"Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"`,
     'User-agent':
       'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0',
-    Origin: 'https://zbet.bet',
-    Referer: 'https://zbet.bet',
-    Cookie:
-      'device=desktop; os=desktop; source=zbet.bet; saleAdvised=null; aff_id=null; utm_source=null; utm_medium=null; utm_campaign=null; utm_term=null; utm_content=null',
+    Origin: `https://${getDomainName(targetSites.ZBET.url)}`,
+    Referer: `https://${getDomainName(targetSites.ZBET.url)}`,
+    Cookie: `device=desktop; os=desktop; source=${getDomainName(
+      targetSites.ZBET.url
+    )}; saleAdvised=null; aff_id=null; utm_source=null; utm_medium=null; utm_campaign=null; utm_term=null; utm_content=null`,
   };
   try {
     let response;
@@ -882,10 +908,11 @@ const login11bet = async (
     'Sec-ch-ua': `"Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"`,
     'User-agent':
       'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0',
-    Origin: 'https://11bet.com',
-    Referer: 'https://11bet.com',
-    Cookie:
-      'device=desktop; os=desktop; source=11bet.com; saleAdvised=null; aff_id=null; utm_source=null; utm_medium=null; utm_campaign=null; utm_term=null; utm_content=null; mien-bac=1717067700000; mien-trung=1717064100000; mien-nam=1717060500000; whitelist=true; hideTooltipScheduleHome=true',
+    Origin: `https://${getDomainName(targetSites.M11BET.url)}`,
+    Referer: `https://${getDomainName(targetSites.M11BET.url)}`,
+    Cookie: `device=desktop; os=desktop; source=${getDomainName(
+      targetSites.M11BET.url
+    )}; saleAdvised=null; aff_id=null; utm_source=null; utm_medium=null; utm_campaign=null; utm_term=null; utm_content=null; mien-bac=1717067700000; mien-trung=1717064100000; mien-nam=1717060500000; whitelist=true; hideTooltipScheduleHome=true`,
   };
   try {
     let response;
@@ -932,10 +959,13 @@ const loginOxbet = async (
     'Sec-ch-ua': `"Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"`,
     'User-agent':
       'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0',
-    Origin: 'https://oxbet.in',
-    Referer: 'https://oxbet.in',
-    Cookie:
-      '_gid=GA1.2.962535063.1718893045; device=desktop; domain=https%3A%2F%2Foxbet.in; host=oxbet.in; vgmnid=13145.92260958204761718970712433; mini-opened=%7B%22aviator%22%3A%7B%22left%22%3Anull%2C%22top%22%3A150%7D%2C%22taixiu%22%3A%7B%7D%2C%22hilo%22%3A%7B%7D%2C%22poker%22%3A%7B%7D%7D; notificationTime=%222024-06-22T11%3A52%3A23.084Z%22; reloadCount=0; _gat_UA-177224808-1=1; _ga=GA1.2.451142714.1718893045; _ga_GLGHQW1XYP=GS1.1.1718969217.2.1.1718970765.0.0.0; _ga_BDKVWDCWMC=GS1.2.1718969217.2.1.1718970768.0.0.0',
+    Origin: `https://${getDomainName(targetSites.OXBET.url)}`,
+    Referer: `https://${getDomainName(targetSites.OXBET.url)}`,
+    Cookie: `_gid=GA1.2.962535063.1718893045; device=desktop; domain=https%3A%2F%2F${getDomainName(
+      targetSites.OXBET.url
+    )}; host=${getDomainName(
+      targetSites.OXBET.url
+    )}; vgmnid=13145.92260958204761718970712433; mini-opened=%7B%22aviator%22%3A%7B%22left%22%3Anull%2C%22top%22%3A150%7D%2C%22taixiu%22%3A%7B%7D%2C%22hilo%22%3A%7B%7D%2C%22poker%22%3A%7B%7D%7D; notificationTime=%222024-06-22T11%3A52%3A23.084Z%22; reloadCount=0; _gat_UA-177224808-1=1; _ga=GA1.2.451142714.1718893045; _ga_GLGHQW1XYP=GS1.1.1718969217.2.1.1718970765.0.0.0; _ga_BDKVWDCWMC=GS1.2.1718969217.2.1.1718970768.0.0.0`,
   };
   try {
     let response;
@@ -982,10 +1012,13 @@ const loginSky88 = async (
     'Sec-ch-ua': `"Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"`,
     'User-agent':
       'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0',
-    Origin: 'https://sky88.com',
-    Referer: 'https://sky88.com',
-    Cookie:
-      '_gid=GA1.2.962535063.1718893045; device=desktop; domain=https%3A%2F%2Fsky88.com; host=sky88.com; vgmnid=13145.92260958204761718970712433; mini-opened=%7B%22aviator%22%3A%7B%22left%22%3Anull%2C%22top%22%3A150%7D%2C%22taixiu%22%3A%7B%7D%2C%22hilo%22%3A%7B%7D%2C%22poker%22%3A%7B%7D%7D; notificationTime=%222024-06-22T11%3A52%3A23.084Z%22; reloadCount=0; _gat_UA-177224808-1=1; _ga=GA1.2.451142714.1718893045; _ga_GLGHQW1XYP=GS1.1.1718969217.2.1.1718970765.0.0.0; _ga_BDKVWDCWMC=GS1.2.1718969217.2.1.1718970768.0.0.0',
+    Origin: `https://${getDomainName(targetSites.SKY88.url)}`,
+    Referer: `https://${getDomainName(targetSites.SKY88.url)}`,
+    Cookie: `_gid=GA1.2.962535063.1718893045; device=desktop; domain=https%3A%2F%2F${getDomainName(
+      targetSites.SKY88.url
+    )}; host=${getDomainName(
+      targetSites.SKY88.url
+    )}; vgmnid=13145.92260958204761718970712433; mini-opened=%7B%22aviator%22%3A%7B%22left%22%3Anull%2C%22top%22%3A150%7D%2C%22taixiu%22%3A%7B%7D%2C%22hilo%22%3A%7B%7D%2C%22poker%22%3A%7B%7D%7D; notificationTime=%222024-06-22T11%3A52%3A23.084Z%22; reloadCount=0; _gat_UA-177224808-1=1; _ga=GA1.2.451142714.1718893045; _ga_GLGHQW1XYP=GS1.1.1718969217.2.1.1718970765.0.0.0; _ga_BDKVWDCWMC=GS1.2.1718969217.2.1.1718970768.0.0.0`,
   };
   try {
     let response;
@@ -1033,10 +1066,13 @@ const loginLode88 = async (
     'Sec-ch-ua': `"Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"`,
     'User-agent':
       'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0',
-    Origin: 'https://lode88.ai',
-    Referer: 'https://lode88.ai',
-    Cookie:
-      '_gid=GA1.2.962535063.1718893045; device=desktop; domain=https%3A%2F%2Flode88.ai; host=lode88.ai; vgmnid=13145.92260958204761718970712433; mini-opened=%7B%22aviator%22%3A%7B%22left%22%3Anull%2C%22top%22%3A150%7D%2C%22taixiu%22%3A%7B%7D%2C%22hilo%22%3A%7B%7D%2C%22poker%22%3A%7B%7D%7D; notificationTime=%222024-06-22T11%3A52%3A23.084Z%22; reloadCount=0; _gat_UA-177224808-1=1; _ga=GA1.2.451142714.1718893045; _ga_GLGHQW1XYP=GS1.1.1718969217.2.1.1718970765.0.0.0; _ga_BDKVWDCWMC=GS1.2.1718969217.2.1.1718970768.0.0.0',
+    Origin: `https://${getDomainName(targetSites.LODE88.url)}`,
+    Referer: `https://${getDomainName(targetSites.LODE88.url)}`,
+    Cookie: `_gid=GA1.2.962535063.1718893045; device=desktop; domain=https%3A%2F%2F${getDomainName(
+      targetSites.LODE88.url
+    )}; host=${getDomainName(
+      targetSites.LODE88.url
+    )}; vgmnid=13145.92260958204761718970712433; mini-opened=%7B%22aviator%22%3A%7B%22left%22%3Anull%2C%22top%22%3A150%7D%2C%22taixiu%22%3A%7B%7D%2C%22hilo%22%3A%7B%7D%2C%22poker%22%3A%7B%7D%7D; notificationTime=%222024-06-22T11%3A52%3A23.084Z%22; reloadCount=0; _gat_UA-177224808-1=1; _ga=GA1.2.451142714.1718893045; _ga_GLGHQW1XYP=GS1.1.1718969217.2.1.1718970765.0.0.0; _ga_BDKVWDCWMC=GS1.2.1718969217.2.1.1718970768.0.0.0`,
   };
   try {
     let response;
@@ -1083,10 +1119,13 @@ const loginRed88 = async (
     'Sec-ch-ua': `"Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"`,
     'User-agent':
       'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0',
-    Origin: 'https://sky88.com',
-    Referer: 'https://sky88.com',
-    Cookie:
-      '_gid=GA1.2.962535063.1718893045; device=desktop; domain=https%3A%2F%2Fsky88.com; host=sky88.com; vgmnid=13145.92260958204761718970712433; mini-opened=%7B%22aviator%22%3A%7B%22left%22%3Anull%2C%22top%22%3A150%7D%2C%22taixiu%22%3A%7B%7D%2C%22hilo%22%3A%7B%7D%2C%22poker%22%3A%7B%7D%7D; notificationTime=%222024-06-22T11%3A52%3A23.084Z%22; reloadCount=0; _gat_UA-177224808-1=1; _ga=GA1.2.451142714.1718893045; _ga_GLGHQW1XYP=GS1.1.1718969217.2.1.1718970765.0.0.0; _ga_BDKVWDCWMC=GS1.2.1718969217.2.1.1718970768.0.0.0',
+    Origin: `https://${getDomainName(targetSites.RED88.url)}`,
+    Referer: `https://${getDomainName(targetSites.RED88.url)}`,
+    Cookie: `_gid=GA1.2.962535063.1718893045; device=desktop; domain=https%3A%2F%2F${getDomainName(
+      targetSites.RED88.url
+    )}; host=${getDomainName(
+      targetSites.RED88.url
+    )}; vgmnid=13145.92260958204761718970712433; mini-opened=%7B%22aviator%22%3A%7B%22left%22%3Anull%2C%22top%22%3A150%7D%2C%22taixiu%22%3A%7B%7D%2C%22hilo%22%3A%7B%7D%2C%22poker%22%3A%7B%7D%7D; notificationTime=%222024-06-22T11%3A52%3A23.084Z%22; reloadCount=0; _gat_UA-177224808-1=1; _ga=GA1.2.451142714.1718893045; _ga_GLGHQW1XYP=GS1.1.1718969217.2.1.1718970765.0.0.0; _ga_BDKVWDCWMC=GS1.2.1718969217.2.1.1718970768.0.0.0`,
   };
   try {
     let response;
@@ -1174,104 +1213,105 @@ const getCaptcha = async (sessionId: string, loginUrl: string) => {
 
 const login = async (bot: any, accountType: string, updateAccount: any) => {
   await window.backend.sendMessage('update-header', bot.fromSite);
+  console.log('targetSites', targetSites);
   switch (bot.fromSite) {
     case 'RIK':
       return await loginRik(
         bot,
         accountType,
         updateAccount,
-        'https://bordergw.api-inovated.com/user/login.aspx'
+        targetSites.RIK.login_url
       );
     case 'HIT':
       return await loginHit(
         bot,
         accountType,
         updateAccount,
-        'https://bodergatez.dsrcgoms.net/user/login.aspx'
+        targetSites.HIT.login_url
       );
     case 'LUCKY88':
       return await loginLucky88(
         bot,
         accountType,
         updateAccount,
-        'https://lucky88.vip/api/v1/login'
+        targetSites.LUCKY88.login_url
       );
     case 'DEBET':
       return await loginDebet(
         bot,
         accountType,
         updateAccount,
-        'https://debet.net/api/v1/login'
+        targetSites.DEBET.login_url
       );
     case 'MAY88':
       return await loginMay88(
         bot,
         accountType,
         updateAccount,
-        'https://may88.com/api/v1/login'
+        targetSites.MAY88.login_url
       );
     case 'SV88':
       return await loginSv88(
         bot,
         accountType,
         updateAccount,
-        'https://sv88.top/api/v1/login'
+        targetSites.SV88.login_url
       );
     case 'XO88':
       return await loginXo88(
         bot,
         accountType,
         updateAccount,
-        'https://xo88.com/api/v1/login'
+        targetSites.XO88.login_url
       );
     case 'FIVE88':
       return await loginFive88(
         bot,
         accountType,
         updateAccount,
-        'https://five88.vin/login.aspx'
+        targetSites.FIVE88.login_url
       );
     case 'UK88':
       return await loginUk88(
         bot,
         accountType,
         updateAccount,
-        'https://uk88.win/api/v1/login'
+        targetSites.UK88.login_url
       );
     case 'TA88':
       return await loginTa88(
         bot,
         accountType,
         updateAccount,
-        'https://ta88.me/api/v1/login'
+        targetSites.TA88.login_url
       );
     case 'ONE88':
       return await loginOne88(
         bot,
         accountType,
         updateAccount,
-        'https://one88.in/api/v1/login'
+        targetSites.ONE88.login_url
       );
     case 'ZBET':
       return await loginZbet(
         bot,
         accountType,
         updateAccount,
-        'https://zbet.bet/api-v1/v1/login'
+        targetSites.ZBET.login_url
       );
-    case '11BET':
+    case 'M11BET':
       return await login11bet(
         bot,
         accountType,
         updateAccount,
-        'https://11bet.com/api/v1/login'
+        targetSites.M11BET.login_url
       );
     case 'MU99':
       return await loginMu99(
         bot,
         accountType,
         updateAccount,
-        'https://api.mu9.vin/users/login'
+        targetSites.MU99.login_url
       );
     // case 'SUNWIN':
     //   return await loginSunWin(
@@ -1285,35 +1325,35 @@ const login = async (bot: any, accountType: string, updateAccount: any) => {
         bot,
         accountType,
         updateAccount,
-        'https://bfivegwlog.gwtenkges.com/user/login.aspx'
+        targetSites.B52.login_url
       );
     case 'OXBET':
       return await loginOxbet(
         bot,
         accountType,
         updateAccount,
-        'https://oxbet.in/api/v1/login'
+        targetSites.OXBET.login_url
       );
     case 'SKY88':
       return await loginSky88(
         bot,
         accountType,
         updateAccount,
-        'https://api.sky88.com/users/login'
+        targetSites.SKY88.login_url
       );
     case 'LODE88':
       return await loginLode88(
         bot,
         accountType,
         updateAccount,
-        'https://lode88.ai/api/v1/login'
+        targetSites.LODE88.login_url
       );
     case 'RED88':
       return await loginRed88(
         bot,
         accountType,
         updateAccount,
-        'https://api.red88.com/users/login'
+        targetSites.RED88.login_url
       );
 
     default:
