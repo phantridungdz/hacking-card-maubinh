@@ -31,6 +31,7 @@ export function App() {
 
   useEffect(() => {
     if (subCards.length == 2 && botCards.length == 2 && !isFoundedRoom) {
+      console.log('botCards', botCards);
       botCards.map((botCard: any) => {
         if (isMatchCards(botCard, subCards[0])) {
           setRoomFoundStatus(true);

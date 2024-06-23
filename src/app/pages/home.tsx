@@ -2,7 +2,7 @@ import BoardCard from 'components/card/boardCard';
 import { Table, TableBody, TableRow } from 'components/ui/table';
 import { Tabs, TabsContent } from 'components/ui/tabs';
 import { Plus } from 'lucide-react';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { TerminalBoard } from '../../components/terminal/terminalBoard';
 import { Button } from '../../components/ui/button';
 import {
@@ -18,14 +18,12 @@ import {
   ResizablePanelGroup,
 } from '../../components/ui/resizablePanelGroup';
 import { getRandomCards } from '../../lib/card';
-import { AppContext } from '../../renderer/providers/app';
 import useAccountStore from '../../store/accountStore';
 import useGameConfigStore from '../../store/gameConfigStore';
 import useGameStore from '../../store/gameStore';
 
 export const HomePage: React.FC<any> = ({ cardDeck, setCardDeck }) => {
   const [cards, setCards] = useState<number[][]>([]);
-  const { state } = useContext(AppContext);
   const { crawledCards, isFoundedRoom } = useGameStore();
   const { accounts } = useAccountStore();
   const { currentTargetSite } = useGameConfigStore();
@@ -53,7 +51,6 @@ export const HomePage: React.FC<any> = ({ cardDeck, setCardDeck }) => {
   }, [crawledCards]);
 
   const addRandomCards = () => {
-    setCards((prevCards) => [...prevCards, getRandomCards()]);
     setCards((prevCards) => [...prevCards, getRandomCards()]);
   };
 
