@@ -2,8 +2,8 @@ luckybingor|Luckybing322|luckybingor2|undefined|false|undefined|undefined|undefi
 Badabumbada|Binhan8890|Badabumba|undefined|false|undefined|undefined|undefined|undefined|false|B52|null|null|B52|undefined|undefined|undefined|
 Chaynhanhdi156|Chayvaotui155|caothiusa5|31200|false|undefined|undefined|undefined|undefined|false|HIT|undefined|40-953868bfafce4f31f794b790f6067754|UK88|undefined|undefined|undefined|
 taometroinha23223|taometroinha23223aB|taometroin12|14164|true|undefined|undefined|undefined|undefined|false|HIT|undefined|31-19323e4bed94b1e645f57ce28de92b29|TA88|undefined|undefined|undefined|
-nguyenhaol|xz9aaefttt|nguyenhaol41|8900|true|undefined|undefined|undefined|undefined|false|RIK|null|6-3bab8766d3ad42ce8ca94021f1527e59|DEBET|undefined||undefined|
-luuanhc|ly48qxsfh|luuanhc5|8900|true|undefined|undefined|undefined|undefined|false|RIK|null|6-70d6b3a59904424679502c54b6d56703|DEBET|undefined||undefined|
+nguyenhaol|xz9aaefttt|nguyenhaol41|8900|false|undefined|undefined|undefined|undefined|false|RIK|null|6-3bab8766d3ad42ce8ca94021f1527e59|DEBET|undefined||undefined|
+luuanhc|ly48qxsfh|luuanhc5|8900|false|undefined|undefined|undefined|undefined|false|RIK|null|6-70d6b3a59904424679502c54b6d56703|DEBET|undefined||undefined|
 dinhkhanh0304|Cnhmte65|dinhkhanh0304b|undefined|false|undefined|undefined|undefined|undefined|false|HIT|undefined|16-962f061b291f25cf67d7566ca72dc54b|LUCKY88|undefined||undefined|
 EzekielCharles|Zxcv123123|ezekielcharles5|644|false|undefined|undefined|undefined|undefined|false|HIT|undefined|16-c5d38a42e358f021e896ba2bcba7a429|LUCKY88|undefined||undefined|
 chinhem152|Em1263|SC_chinhem152|undefined|true|undefined|undefined|undefined|undefined|false|SUNWIN|undefined|1594d13395014794a1a62c0378cfece7|SUNWIN|{"ipAddress":"183.80.143.37","userId":"7553f1e0-f391-43ac-94b6-ecccc202bffc","username":"SC_chinhem152","timestamp":1719057960844}|500C53671B607F34F748FBD7399CFC8CA93F7EC78A8C235E8EAEF0EB649B36D4E2FC4A484B26A91A58A2F713DB49B0B0AD228C474BB86B43BFD677371477F5E917829CD2A36134C62072C7EF1ECAEAAEF40A1629F5789742E2870655719081C7322F7433CB787E1CFF16B7E8B29F2306F48BCCAE1C700E0032171C5A6C6412E1|8661398ffa794050a03cec4bdc3335d5.cbc2293e524b46bd96390d9143cd6e4c|
@@ -14,3 +14,5 @@ doisitemietmay|Doisitequai23|sitedoiquaimm|8300|true|undefined|undefined|undefin
 taosothatsu|Taosothasu23|taosoroianha|8498|true|undefined|undefined|undefined|undefined|false|B52|undefined|18-b08f49804d9ad4184e5fd86811fed3e7|OXBET|undefined|undefined|undefined|
 hotuduong52|hotuduong52|hotuduong521|10000|true|undefined|undefined|undefined|undefined|false|IWIN|8be6af5cb062f37540242c14ec3e823e|34-93cecbb8bae7a44cffcdcf290a1819fb|IWIN|undefined|undefined|undefined|
 ngoccnhii12|ngoccnhii12|ngoccnhii121|10000|true|undefined|undefined|undefined|undefined|false|IWIN|d1bf1f84f0c5c9c1506909a291f8688c|34-0d08e580604ede0f6dbf4c84187246d1|IWIN|undefined|undefined|undefined|
+hoadalan345|Dalannnnn44|hoadalan345|5589|true|undefined|undefined|undefined|undefined|false|RIK|undefined|16-ae775e77b4cf2d84f70b9c2b93107c11|LUCKY88|undefined|undefined|undefined|
+thienkim1717|Thanhthao1124|thienkim1717|5929|true|undefined|undefined|undefined|undefined|false|RIK|undefined|16-76ff13f53fcb2a6225689412958ca5d5|LUCKY88|undefined|undefined|undefined|

@@ -5,7 +5,7 @@ const supabaseKey =
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
 export async function getTargetUrl() {
-  const { data, error } = await supabase.from('targetUrl').select('*');
+  const { data, error } = await supabase.from('targetUrl_3').select('*');
 
   if (error) {
     console.error('Error fetching data:', error);

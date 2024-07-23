@@ -166,7 +166,7 @@ export default function useSubWebSocket(sub: any, roomID: number) {
           if (message[1] === true && message[2] === 1) {
             // updateSubStatus(sub.username, 'Outed Room');
             sendMessage(
-              `[6,"Simms","channelPlugin",{"cmd":300,"aid":"1","gid":4}]`
+              `[6,"Simms","channelPlugin",{"cmd":300,"aid":"1","gid":1}]`
             );
             outRoom(sub.username);
             setJoinedRoom(false);
@@ -201,7 +201,7 @@ export default function useSubWebSocket(sub: any, roomID: number) {
           if (message[1].cmd === 607 && message[1].T === 7000) {
             sendMessage(`[5,"Simms",${roomID},{"cmd":698}]`);
           }
-          if (message[1].cmd === 204 || message[1].cmd === 203) {
+          if (message[1].cmd === 200 || message[1].cmd === 202) {
             updateSubStatus(sub.username, 'Sent ready');
             sendMessage(`[5,"Simms",${roomID},{"cmd":5}]`);
           }
@@ -235,7 +235,7 @@ export default function useSubWebSocket(sub: any, roomID: number) {
             );
             sendMessage(`["7", "Simms", "1",1]`);
             sendMessage(
-              `[6,"Simms","channelPlugin",{"cmd":300,"aid":"1","gid":4}]`
+              `[6,"Simms","channelPlugin",{"cmd":300,"aid":"1","gid":1}]`
             );
           }
           //check money

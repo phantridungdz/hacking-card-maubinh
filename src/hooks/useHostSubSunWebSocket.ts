@@ -262,7 +262,7 @@ export default function useHostSubSunWebSocket(sub: any, roomID: number) {
             );
             sendMessage(`["7", "Simms", "1",1]`);
             sendMessage(
-              `[6,"Simms","channelPlugin",{"cmd":300,"gid":4,"aid":1}]`
+              `[6,"Simms","channelPlugin",{"cmd":300,"gid":1,"aid":1}]`
             );
           }
           //check money
@@ -331,10 +331,10 @@ export default function useHostSubSunWebSocket(sub: any, roomID: number) {
     if (isReadyToFind && isReadyToCreate && !createdRoom) {
       if (!isFoundedRoom) {
         // sendMessage(
-        //   `[6,"Simms","channelPlugin",{"cmd":308,"aid":1,"gid":4,"b":${roomType},"Mu":4,"iJ":true,"inc":false,"pwd":""}]`
+        //   `[6,"Simms","channelPlugin",{"cmd":308,"aid":1,"gid":1,"b":${roomType},"Mu":4,"iJ":true,"inc":false,"pwd":""}]`
         // );
         sendMessage(
-          `[6,"Simms","channelPlugin",{"cmd":308,"gid":4,"aid":1,"b":${roomType},"Mu":4,"pwd":"123123","iJ":true}]`
+          `[6,"Simms","channelPlugin",{"cmd":308,"gid":1,"aid":1,"b":${roomType},"Mu":4,"pwd":"123123","iJ":true}]`
         );
         updateSubStatus(sub.username, 'Create Room');
         updateStatus('Create Room');

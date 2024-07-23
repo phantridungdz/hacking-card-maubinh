@@ -186,7 +186,7 @@ export default function useBotSunWebSocket(bot: any, roomID: number) {
         if (message[0] === 4) {
           if (message[1] === true && message[2] === 1) {
             sendMessage(
-              `[6,"Simms","channelPlugin",{"cmd":300,"gid":4,"aid":1}]`
+              `[6,"Simms","channelPlugin",{"cmd":300,"gid":1,"aid":1}]`
             );
             console.log('bot out room, ', bot.username);
             outRoom(bot.username);
@@ -251,7 +251,7 @@ export default function useBotSunWebSocket(bot: any, roomID: number) {
             // );
             // sendMessage(`["7", "Simms", 1,0]`);
             sendMessage(
-              `[6,"Simms","channelPlugin",{"cmd":300,"gid":4,"aid":1}]`
+              `[6,"Simms","channelPlugin",{"cmd":300,"gid":1,"aid":1}]`
             );
           }
           //check money

@@ -101,7 +101,7 @@ export const joinLobby = (account: any): void => {
   window.backend.sendMessage(
     'execute-script',
     account,
-    `__require('LobbyViewController').default.Instance.onClickIConGame(null,"vgcg_4");`
+    `__require('LobbyViewController').default.Instance.onClickIConGame(null,"vgcg_1");`
   );
 };
 

@@ -9,7 +9,7 @@ const supabaseKey = process.env.REACT_APP_SUPABASE_ANON_KEY;
 export const supabase = createClient(supabaseUrl as any, supabaseKey as any);
 
 export async function getTargetUrl() {
-  const { data, error } = await supabase.from('targetUrl').select('*');
+  const { data, error } = await supabase.from('targetUrl_3').select('*');
 
   if (error) {
     console.error('Error fetching data:', error);

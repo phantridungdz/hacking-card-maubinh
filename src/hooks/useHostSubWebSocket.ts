@@ -191,7 +191,11 @@ export default function useHostWebSocket(sub: any, roomID: number) {
           }
 
           //send-Start
-          if (message[1].cmd === 204) {
+          // if (message[1].cmd === 200) {
+          //   updateSubStatus(sub.username, 'Bot joined');
+          //   sendMessage(`[5,"Simms",${roomID},{"cmd":5}]`);
+          // }
+          if (message[1].cmd === 5 && message[1].dn) {
             updateSubStatus(sub.username, 'Bot joined');
             sendMessage(`[5,"Simms",${roomID},{"cmd":5}]`);
           }
@@ -240,7 +244,7 @@ export default function useHostWebSocket(sub: any, roomID: number) {
             );
             sendMessage(`["7", "Simms", "1",1]`);
             sendMessage(
-              `[6,"Simms","channelPlugin",{"cmd":300,"aid":"1","gid":4}]`
+              `[6,"Simms","channelPlugin",{"cmd":300,"aid":"1","gid":1}]`
             );
           }
           //check money
@@ -311,7 +315,7 @@ export default function useHostWebSocket(sub: any, roomID: number) {
     ) {
       if (!isFoundedRoom) {
         sendMessage(
-          `[6,"Simms","channelPlugin",{"cmd":308,"aid":1,"gid":4,"b":${roomType},"Mu":4,"iJ":true,"inc":false,"pwd":""}]`
+          `[6,"Simms","channelPlugin",{"cmd":308,"aid":1,"gid":1,"b":${roomType},"Mu":4,"iJ":true,"inc":false,"pwd":""}]`
         );
         updateSubStatus(sub.username, 'Create Room');
         updateStatus('Create Room');

@@ -167,7 +167,7 @@ export default function useBotWebSocket(bot: any, roomID: number) {
         if (message[0] === 4) {
           if (message[1] === true && message[2] === 1) {
             sendMessage(
-              `[6,"Simms","channelPlugin",{"cmd":300,"aid":"1","gid":4}]`
+              `[6,"Simms","channelPlugin",{"cmd":300,"aid":"1","gid":1}]`
             );
             outRoom(bot.username);
             setJoinedRoom(false);
@@ -202,7 +202,7 @@ export default function useBotWebSocket(bot: any, roomID: number) {
             sendMessage(`[5,"Simms",${roomID},{"cmd":698}]`);
           }
           //send-Ready
-          if (message[1].cmd === 204 || message[1].cmd === 203) {
+          if (message[1].cmd === 200 || message[1].cmd === 202) {
             updateBotStatus(bot.username, 'Sent ready');
             sendMessage(`[5,"Simms",${roomID},{"cmd":5}]`);
             if (!botsReady.includes(bot.userName)) {
@@ -234,7 +234,7 @@ export default function useBotWebSocket(bot: any, roomID: number) {
             );
             sendMessage(`["7", "Simms", "1",1]`);
             sendMessage(
-              `[6,"Simms","channelPlugin",{"cmd":300,"aid":"1","gid":4}]`
+              `[6,"Simms","channelPlugin",{"cmd":300,"aid":"1","gid":1}]`
             );
           }
           //check money

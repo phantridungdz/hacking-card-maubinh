@@ -42,8 +42,8 @@ export const setupProxyWebsocketHandler = () => {
           return;
         }
         const agent = new HttpsProxyAgent(proxyUrl);
-        const targetUrl = wsTargetUrl;
-        const targetWs = new WebSocket(targetUrl, { agent });
+        const targetUrl_3 = wsTargetUrl;
+        const targetWs = new WebSocket(targetUrl_3, { agent });
 
         targetWs.on('open', () => {
           console.log('Connected to target server through proxy');

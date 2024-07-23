@@ -229,7 +229,11 @@ export default function useHostWebSocket(bot: any, roomID: number) {
             }
           }
           //send-Start
-          if (message[1].cmd === 204) {
+          // if (message[1].cmd === 200) {
+          //   updateBotStatus(bot.username, 'Bot joined');
+          //   sendMessage(`[5,"Simms",${roomID},{"cmd":5}]`);
+          // }
+          if (message[1].cmd === 5 && message[1].dn) {
             updateBotStatus(bot.username, 'Bot joined');
             sendMessage(`[5,"Simms",${roomID},{"cmd":5}]`);
           }
@@ -293,7 +297,7 @@ export default function useHostWebSocket(bot: any, roomID: number) {
             );
             sendMessage(`["7", "Simms", "1",1]`);
             sendMessage(
-              `[6,"Simms","channelPlugin",{"cmd":300,"aid":"1","gid":4}]`
+              `[6,"Simms","channelPlugin",{"cmd":300,"aid":"1","gid":1}]`
             );
           }
           //check money
@@ -385,17 +389,17 @@ export default function useHostWebSocket(bot: any, roomID: number) {
       switch (currentTargetSite) {
         case 'HIT':
           sendMessage(
-            '[6,"Simms","channelPlugin",{"cmd":308,"aid":1,"gid":4,"b":100,"Mu":4,"iJ":true,"inc":false,"pwd":"123123"}]'
+            '[6,"Simms","channelPlugin",{"cmd":308,"aid":1,"gid":1,"b":100,"Mu":4,"iJ":true,"inc":false,"pwd":"123123"}]'
           );
           break;
         case 'IWIN':
           sendMessage(
-            '[6,"Simms","channelPlugin",{"cmd":308,"aid":1,"gid":4,"b":500,"Mu":4,"iJ":true,"inc":false,"pwd":""}]'
+            '[6,"Simms","channelPlugin",{"cmd":308,"aid":1,"gid":1,"b":500,"Mu":4,"iJ":true,"inc":false,"pwd":""}]'
           );
           break;
         default:
           sendMessage(
-            '[6,"Simms","channelPlugin",{"cmd":308,"aid":1,"gid":4,"b":100,"Mu":4,"iJ":true,"inc":false,"pwd":""}]'
+            '[6,"Simms","channelPlugin",{"cmd":308,"aid":1,"gid":1,"b":100,"Mu":4,"iJ":true,"inc":false,"pwd":""}]'
           );
           break;
       }

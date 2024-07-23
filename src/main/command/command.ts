@@ -46,7 +46,7 @@ export const loginRikCommand = (account: any) => {
           }
       }, 500);
       setTimeout(() => {
-        __require('LobbyViewController').default.Instance.onClickIConGame(null,"vgcg_4");
+        __require('LobbyViewController').default.Instance.onClickIConGame(null,"vgcg_1");
       }, 3500);
       `;
 };
@@ -96,7 +96,7 @@ setTimeout(() => {
           }
       },200);
       setTimeout(() => {
-        __require('LobbyViewController').default.Instance.onClickIConGame(null,"vgcg_4");
+        __require('LobbyViewController').default.Instance.onClickIConGame(null,"vgcg_1");
      }, 3500);
      `;
 };
@@ -150,7 +150,7 @@ if(!btnDangnhap){
           }, 500)
       }, 500);
       setTimeout(() => {
-        __require('LobbyViewController').default.Instance.onClickIConGame(null,"vgcg_4");
+        __require('LobbyViewController').default.Instance.onClickIConGame(null,"vgcg_1");
      }, 3500);
      `;
 };

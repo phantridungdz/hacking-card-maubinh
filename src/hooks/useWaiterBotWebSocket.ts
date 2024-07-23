@@ -165,7 +165,7 @@ export default function useWaiterWebSocket(bot: any, roomID: number) {
         if (message[0] === 4) {
           if (message[1] === true && message[2] === 1) {
             sendMessage(
-              `[6,"Simms","channelPlugin",{"cmd":300,"aid":"1","gid":4}]`
+              `[6,"Simms","channelPlugin",{"cmd":300,"aid":"1","gid":1}]`
             );
             // updateBotStatus(bot.username, 'Outed Room');
             outRoom(bot.username);
@@ -238,7 +238,7 @@ export default function useWaiterWebSocket(bot: any, roomID: number) {
             );
             sendMessage(`["7", "Simms", "1",1]`);
             sendMessage(
-              `[6,"Simms","channelPlugin",{"cmd":300,"aid":"1","gid":4}]`
+              `[6,"Simms","channelPlugin",{"cmd":300,"aid":"1","gid":1}]`
             );
           }
           //check money
@@ -289,7 +289,7 @@ export default function useWaiterWebSocket(bot: any, roomID: number) {
 
               // setTimeout(() => {
               //   sendMessage(
-              //     `[6,"Simms","channelPlugin",{"cmd":300,"aid":"1","gid":4}]`
+              //     `[6,"Simms","channelPlugin",{"cmd":300,"aid":"1","gid":1}]`
               //   );
               // }, 2000);
             }, 5000);

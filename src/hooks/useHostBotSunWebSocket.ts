@@ -312,7 +312,7 @@ export default function useHostBotSunWebSocket(bot: any, roomID: number) {
             // sendMessage(`[6,"Simms","channelPlugin",{"cmd":310}]`);
             // sendMessage(`["7", "Simms", "1",0]`);
             sendMessage(
-              `[6,"Simms","channelPlugin",{"cmd":300,"gid":4,"aid":1}]`
+              `[6,"Simms","channelPlugin",{"cmd":300,"gid":1,"aid":1}]`
             );
           }
           //check money
@@ -402,9 +402,9 @@ export default function useHostBotSunWebSocket(bot: any, roomID: number) {
   useEffect(() => {
     if (isReadyToFind && isReadyToCreate && !createdRoom) {
       sendMessage(
-        '[6,"Simms","channelPlugin",{"cmd":308,"gid":4,"aid":1,"b":100,"Mu":4,"pwd":"123123","iJ":true}]'
+        '[6,"Simms","channelPlugin",{"cmd":308,"gid":1,"aid":1,"b":100,"Mu":4,"pwd":"123123","iJ":true}]'
       );
-      // [6,"Simms","channelPlugin",{"cmd":308,"gid":4,"aid":1,"b":100,"Mu":4,"pwd":"","iJ":true}]
+      // [6,"Simms","channelPlugin",{"cmd":308,"gid":1,"aid":1,"b":100,"Mu":4,"pwd":"","iJ":true}]
 
       updateBotStatus(bot.username, 'Create Room');
       updateStatus('Create Room');

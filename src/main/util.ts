@@ -54,5 +54,5 @@ export const generateUrl = (
       break;
   }
 
-  return `${baseUrl}?brand=${brand.toLowerCase()}&token=${token}&gameid=vgcg_4&ru=${ru}`;
+  return `${baseUrl}?brand=${brand.toLowerCase()}&token=${token}&gameid=vgcg_1&ru=${ru}`;
 };

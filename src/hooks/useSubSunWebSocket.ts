@@ -186,7 +186,7 @@ export default function useSubSunWebSocket(sub: any, roomID: number) {
           if (message[1] === true && message[2] === 1) {
             // updateSubStatus(sub.username, 'Outed Room');
             sendMessage(
-              `[6,"Simms","channelPlugin",{"cmd":300,"gid":4,"aid":1}]`
+              `[6,"Simms","channelPlugin",{"cmd":300,"gid":1,"aid":1}]`
             );
             outRoom(sub.username);
             setJoinedRoom(false);
@@ -253,7 +253,7 @@ export default function useSubSunWebSocket(sub: any, roomID: number) {
             // );
             // sendMessage(`["7", "Simms", 1,0]`);
             sendMessage(
-              `[6,"Simms","channelPlugin",{"cmd":300,"gid":4,"aid":1}]`
+              `[6,"Simms","channelPlugin",{"cmd":300,"gid":1,"aid":1}]`
             );
           }
           //check money
